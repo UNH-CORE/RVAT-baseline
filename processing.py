@@ -14,6 +14,11 @@ import matplotlib
 from scipy.signal import decimate
 from scipy.interpolate import interp1d
 
+# Some constants
+R = 0.5
+U = 1.0
+d_shaft = 0.095
+
 def styleplot():
     font = {'family':'serif','serif':'cmr10','size':23}
     lines = {'markersize':9, 'markeredgewidth':0.9}
@@ -25,6 +30,19 @@ def styleplot():
     matplotlib.rc('xtick', **{'major.pad':12})
     plt.grid(True)
     plt.tight_layout()
+    
+def import_testplan():
+    wb = xlrd.open_workbook("Test plan, 2013.03 VAT, Rev4.xlsx")
+    ws = wb.sheet_by_index(0)
+    runs = ws.col_values(0)
+    # Find row with run 1 in it
+    firstrow = runs.index(1)
+    runs = [int(run) for run in runs[firstrow:]]
+    tsr = ws.col_values(1)[firstrow:]
+    y_R = ws.col_values(2)[firstrow:]
+    z_H = ws.col_values(4)[firstrow:]
+    return {"runs" : np.asarray(runs), "tsr" : np.asarray(tsr), 
+            "y/R" : np.asarray(y_R), "z/H" : np.asarray(z_H)}
     
 def loadvec(run):
     """Load Vectrino files. Could use numpy read text function probably."""
@@ -279,6 +297,48 @@ def velprofiles(z_H, tsr, plotChoice):
         plt.savefig('Figures/test.pdf')
     return y_R
 
+def plot_vel_spec(y_R=0, z_H=0, tsr=1.9):
+    """Plots the velocity spectrum for a single run."""
+    # Find index for the desired parameters
+    tp = import_testplan()
+    i = np.where(np.logical_and(tp["y/R"]==y_R, 
+                                tp["z/H"]==z_H,
+                                tp["tsr"]==tsr))[0][0]
+    print "Plotting spectra from run", tp["runs"][i]
+    t1 = 13
+    t2 = np.load('Processed/t2.npy')[i]
+    t, u, v, w = loadvec(tp["runs"][i])
+    v_seg = v[200*t1:200*t2] - np.mean(v[200*t1:200*t2])
+    f, spec = psd(t, v_seg)
+    f_turbine = tsr*U/R/(2*np.pi)
+    f_blade = f_turbine*3
+    # Calculate shaft shedding frequency
+    St = 0.19 # Approximate for Re_d = 1e5
+    f_cyl = St*U/d_shaft
+    plt.figure()
+    plt.loglog(f/f_turbine, spec, 'k')
+    plt.xlim((0, 25))
+    plt.xlabel(r"$f/f_{\mathrm{turbine}}$")
+    plt.ylabel(r"Power spectral density ($\mathrm{m}^2/\mathrm{s}^2$)")
+    plot_vertical_lines([1, 3])
+    plt.ylim((1e-5, 1e-1))
+    f_line = np.linspace(6,25)
+    spec_line = f_line**(-5./3)*0.1
+    plt.hold(True)
+    plt.loglog(f_line, spec_line)
+    styleplot()
+    plt.grid()
+    plt.show()
+    
+def plot_vertical_lines(x):
+    ymin = plt.axis()[2]
+    ymax = plt.axis()[3]*1.1
+    plt.vlines(x, ymin, ymax,
+               color='gray', linestyles='dashed')
+    plt.ylim((ymin, ymax))
+    
+def plot_vel_histogram():
+    pass
 
 def batchvec():
     runs = range(1, 378)
@@ -977,7 +1037,6 @@ def export_data():
     
     datestring = datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")
     rev = 0
-    sep = None
     sep = "----------------------------------------------------"
     
     runs = range(31)
@@ -1017,7 +1076,7 @@ def export_data():
     clabels = ["Run".center(s), "U".center(s), "TSR".center(s),
                "C_p".center(s), "C_d".center(s)]
     
-    with open('Processed/csv/unh-rvat-perf-3-2013-rev'+str(rev)+".txt",'wb') \
+    with open('Processed/csv/unh-rvat-perf-2013-03-rev'+str(rev)+".txt",'wb') \
     as csvfile:
         fwriter = csv.writer(csvfile, delimiter='\t')
         for i in range(len(metadata)):
@@ -1031,18 +1090,17 @@ def export_data():
                              ("%.3f" %cp[run]).center(s), 
                              ("%.3f" %cd[run]).center(s)])
     
-    
 def main():
     """This is the main function"""
     plt.close("all")    
     ts = time.time()
     
     #velprofiles(0.25, 1.9)
-    plotsinglerun(13, perf=True, wake=False)
+#    plotsinglerun(13, perf=True, wake=False)
     #ens_ave()
+    plot_vel_spec(y_R=-1, z_H=0.25, tsr=1.9)
     
-
-#    batchperf(range(1, 32))
+#    batchperf()
 #    batchvec()
     
     savepath = '../../Papers/ASME FEDSM 2013/Figures/'
