@@ -297,7 +297,7 @@ def velprofiles(z_H, tsr, plotChoice):
         plt.savefig('Figures/test.pdf')
     return y_R
 
-def plot_vel_spec(y_R=0, z_H=0, tsr=1.9):
+def vel_spec(y_R=0, z_H=0, tsr=1.9, show=False):
     """Plots the velocity spectrum for a single run."""
     # Find index for the desired parameters
     tp = import_testplan()
@@ -309,30 +309,37 @@ def plot_vel_spec(y_R=0, z_H=0, tsr=1.9):
     t2 = np.load('Processed/t2.npy')[i]
     t, u, v, w = loadvec(tp["runs"][i])
     v_seg = v[200*t1:200*t2] - np.mean(v[200*t1:200*t2])
-    f, spec = psd(t, v_seg)
+    f, spec = psd(t, v_seg, window="Hanning")
     f_turbine = tsr*U/R/(2*np.pi)
     f_blade = f_turbine*3
-    # Calculate shaft shedding frequency
-    St = 0.19 # Approximate for Re_d = 1e5
-    f_cyl = St*U/d_shaft
-    plt.figure()
-    plt.loglog(f/f_turbine, spec, 'k')
-    plt.xlim((0, 25))
-    plt.xlabel(r"$f/f_{\mathrm{turbine}}$")
-    plt.ylabel(r"Power spectral density ($\mathrm{m}^2/\mathrm{s}^2$)")
-    plot_vertical_lines([1, 3])
-    plt.ylim((1e-5, 1e-1))
-    f_line = np.linspace(6,25)
-    spec_line = f_line**(-5./3)*0.1
-    plt.hold(True)
-    plt.loglog(f_line, spec_line)
-    styleplot()
-    plt.grid()
-    plt.show()
+    # Find maximum frequency and its relative strength
+    f_max = f[np.where(spec==np.max(spec))[0][0]]
+    strength = np.max(spec)/np.var(v_seg)
+    if show:
+        print "Strongest frequency f/f_turbine:", f_max/f_turbine,
+        print "Relative strength:", strength
+        # Calculate shaft shedding frequency
+        St = 0.19 # Approximate for Re_d = 1e5
+        f_cyl = St*U/d_shaft
+        plt.figure()
+        plt.loglog(f/f_turbine, spec, 'k')
+        plt.xlim((0, 50))
+        plt.xlabel(r"$f/f_{\mathrm{turbine}}$")
+        plt.ylabel(r"Power spectral density")
+        # Should the spectrum be normalized?
+        plot_vertical_lines([1, 3])
+        plt.ylim((1e-6, 1e-1))
+        f_line = np.linspace(10,40)
+        spec_line = f_line**(-5./3)*0.05
+        plt.hold(True)
+        plt.loglog(f_line, spec_line)
+        styleplot()
+        plt.grid()
+        plt.show()
     
 def plot_vertical_lines(x):
     ymin = plt.axis()[2]
-    ymax = plt.axis()[3]*1.1
+    ymax = plt.axis()[3]*100
     plt.vlines(x, ymin, ymax,
                color='gray', linestyles='dashed')
     plt.ylim((ymin, ymax))
@@ -345,7 +352,8 @@ def batchvec():
     y_R = np.hstack([-3.,-2.75,-2.5,-2.25,-2.,-1.8,np.arange(-1.6,0.1,0.1)])
     y_R = np.hstack([y_R, -np.flipud(y_R[0:-1])])
     t1 = 13
-    t2 = np.load('Processed/t2.npy')
+    t2 = np.load("Processed/t2.npy")
+    tsr = np.load("Processed/tsr.npy")
     meanu = np.zeros(len(runs))
     meanv = np.zeros(len(runs))
     meanw = np.zeros(len(runs))
@@ -361,6 +369,8 @@ def batchvec():
     phi = np.zeros(len(runs))
     meanu2 = np.zeros(len(runs))
     vectemp = np.zeros(len(runs))
+    fpeak = np.zeros(len(runs))
+    fstrength = np.zeros(len(runs))
     
     for n in range(len(runs)):
         print 'Processing Vectrino data from run', runs[n]
@@ -385,7 +395,14 @@ def batchvec():
         phi[n] = np.mean(phi_s[t1*200:t2[n]*200])
         meanu2[n] = np.mean(u2[t1*200:t2[n]*200])
         vectemp[n] = loadvectemp(runs[n])
-        
+        # Spectral calculations
+        v_seg = v[200*t1:200*t2[n]] - np.mean(v[200*t1:200*t2[n]])
+        f, spec = psd(tv, v_seg, window="Hanning")
+        f_turbine = tsr[n]*U/R/(2*np.pi)
+        # Find maximum frequency and its relative strength
+        f_max = f[np.where(spec==np.max(spec))[0][0]]
+        fstrength[n] = np.max(spec)/np.var(v_seg)
+        fpeak[n] = f_max/f_turbine
     np.save('Processed/meanu', meanu)
     np.save('Processed/meanv', meanv)
     np.save('Processed/meanw', meanw)
@@ -401,7 +418,8 @@ def batchvec():
     np.save('Processed/meanww', meanww)
     np.save('Processed/meanuu', meanuu)
     np.save('Processed/vectemp', vectemp)
-    
+    np.save('Processed/fpeak', fpeak)
+    np.save('Processed/fstrength', fstrength)
 
 def perfplots(savechoice=False, savepath="", savetype=".pdf"):
     i = range(31)
@@ -466,6 +484,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
     meanuu = np.load('Processed/meanuu.npy')
     phi = np.load('Processed/phi.npy')
     meanu2 = np.load('Processed/meanu2.npy')
+    fpeak = np.load('Processed/fpeak.npy')
     
     meanu_a = np.zeros((len(z_H), len(y_R)))
     meanv_a = np.zeros((len(z_H), len(y_R)))
@@ -481,6 +500,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
     meanuu_a = np.zeros((len(z_H), len(y_R)))
     phi_a = np.zeros((len(z_H), len(y_R)))
     meanu2_a = np.zeros((len(z_H), len(y_R)))
+    fpeak_a = np.zeros((len(z_H), len(y_R)))
     
     # Construct 2D arrays for velocity fields
     for n in range(len(z_H)):
@@ -500,6 +520,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         meanuu_a[n,:] = meanuu[ind]
         phi_a[n,:] = phi[ind]
         meanu2_a[n,:] = meanu2[ind]
+        fpeak_a[n,:] = fpeak[ind]
         
     plt.close('all')
     
@@ -514,13 +535,14 @@ def velplots(savechoice, savepath, savetype, plotlist):
                     'meanv_2tsrs', 'meanw_2tsrs', 'stdu_2tsrs', 'stdv_2tsrs',
                     'stdw_2tsrs', 'uw_2tsrs', 'uv_2tsrs','vw_2tsrs', 'uvcont',
                     'vwcont', 'uwcont', 'vvcont', 'wwcont', 'uucont', 
-                    'vv_2tsrs']
+                    'vv_2tsrs', 'fpeak', 'fstrength']
                     
     if 'none' in plotlist:
         plotlist = 'none'
         
     if 'meanucont' in plotlist:
         # Plot contours of mean streamwise velocity
+        plt.figure()
         cs = plt.contourf(y_R, z_H, meanu_a, 20)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -537,7 +559,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
             
     if 'v-wquiver' in plotlist:
         # Make quiver plot of v and w velocities
-        fig = plt.figure(2)
+        fig = plt.figure()
         Q = plt.quiver(y_R, z_H,meanv_a, meanw_a, angles='xy')
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -562,7 +584,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
             
     if 'meanu_2tsrs' in plotlist:
         # Plot mean velocities at two different TSRs
-        plt.figure(3)
+        plt.figure()
         runs = getruns(0.25, 1.9)
         ind = [run-1 for run in runs]
         plt.plot(y_R, meanu[ind], '-ok', markerfacecolor='none', 
@@ -581,7 +603,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
             
     if 'stdu_2tsrs' in plotlist:
         # Plot stdu velocities at two different TSRs
-        plt.figure(4)
+        plt.figure()
         runs = getruns(0.25, 1.9)
         ind = [run-1 for run in runs]
         plt.plot(y_R, stdu[ind], '-ok', markerfacecolor='none', 
@@ -599,7 +621,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
             plt.savefig(savepath+'stdu_2tsrs'+savetype)
     if 'uw_2tsrs' in plotlist:
         # Plot uw Re stress at two different TSRs
-        plt.figure(5)
+        plt.figure()
         runs = getruns(0.25, 1.9)
         ind = [run-1 for run in runs]
         plt.plot(y_R, meanuw[ind], '-ok', markerfacecolor='none', 
@@ -621,14 +643,12 @@ def velplots(savechoice, savepath, savetype, plotlist):
         tsr = np.load('Processed/tsr.npy')
         runs = range(1,32)
         ind = [run-1 for run in runs]
-        plt.figure(6)
-        plt.plot(tsr[ind], meanu[ind], '-ok', markerfacecolor='none',
-                 )
+        plt.figure()
+        plt.plot(tsr[ind], meanu[ind], '-ok', markerfacecolor='none')
         plt.xlabel(r'$\lambda$')
         plt.ylabel(r'$\overline{u}/U_\infty$')
         plt.hold(True)
-        plt.plot(tsr[ind], meanv[ind], '-sk', markerfacecolor='none',
-                 )
+        plt.plot(tsr[ind], meanv[ind], '-sk', markerfacecolor='none')
         plt.plot(tsr[ind], meanw[ind], '-^k', markerfacecolor='none')
         runs = range(347,378)
         ind = [run-1 for run in runs]
@@ -645,7 +665,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
             
     if 'stducont' in plotlist:
         # Plot contours of streamwise turbulence intensity
-        plt.figure(7)
+        plt.figure()
         cs2 = plt.contourf(y_R, z_H, stdu_a, 20)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -662,7 +682,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
             
     if 'uvcont' in plotlist:
         # Plot contours of uv Reynolds stress
-        plt.figure(8)
+        plt.figure()
         cs2 = plt.contourf(y_R, z_H, meanuv_a, 20)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -680,7 +700,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
             
     if 'meanw_2tsrs' in plotlist:
         # Plot mean vertical velocity profiles at two TSRs
-        plt.figure(9)
+        plt.figure()
         runs = getruns(0.25, 1.9)
         ind = [run-1 for run in runs]
         plt.plot(y_R, meanw[ind], '-ok', markerfacecolor='none', 
@@ -699,7 +719,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
             
     if 'meanv_2tsrs' in plotlist:
         # Plot mean cross stream velocity profiles at two TSRs
-        plt.figure(10)
+        plt.figure()
         runs = getruns(0.25, 1.9)
         ind = [run-1 for run in runs]
         plt.plot(y_R, meanv[ind], '-ok', markerfacecolor='none', 
@@ -719,7 +739,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
             
     if 'stdv_2tsrs' in plotlist:
         # Plot stdv velocities at two different TSRs
-        plt.figure(11)
+        plt.figure()
         runs = getruns(0.25, 1.9)
         ind = [run-1 for run in runs]
         plt.plot(y_R, stdv[ind], '-ok', markerfacecolor='none', 
@@ -738,7 +758,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
             
     if 'stdw_2tsrs' in plotlist:
         # Plot stdw velocities at two different TSRs
-        plt.figure(12)
+        plt.figure()
         runs = getruns(0.25, 1.9)
         ind = [run-1 for run in runs]
         plt.plot(y_R, stdw[ind], '-ok', markerfacecolor='none', 
@@ -757,7 +777,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
             
     if 'uv_2tsrs' in plotlist:
         # Plot uv Re stress at two different TSRs
-        plt.figure(13)
+        plt.figure()
         runs = getruns(0.25, 1.9)
         ind = [run-1 for run in runs]
         plt.plot(y_R, meanuv[ind], '-ok', markerfacecolor='none', 
@@ -776,7 +796,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
             
     if 'phicont' in plotlist:
         # Plot contours of phi
-        plt.figure(14)
+        plt.figure()
         csphi = plt.contourf(y_R, z_H, phi_a, 20)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -790,7 +810,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
             
     if 'meanvcont' in plotlist:
         # Plot contours of meanv
-        plt.figure(15)
+        plt.figure()
         cmv = plt.contourf(y_R, z_H, meanv_a, 20)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -807,7 +827,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
             
     if 'stdvcont' in plotlist:
         # Plot contours of stdv
-        plt.figure(16)
+        plt.figure()
         cstdv = plt.contourf(y_R, z_H, stdv_a, 20)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -824,7 +844,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
             
     if 'meanwcont' in plotlist:
         # Plot contours of meanw
-        plt.figure(17)
+        plt.figure()
         cmv = plt.contourf(y_R, z_H, meanw_a, 20)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -838,7 +858,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
             
     if 'stdwcont' in plotlist:
         # Plot contours of stdw
-        plt.figure(18)
+        plt.figure()
         cmv = plt.contourf(y_R, z_H, stdw_a, 20)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -855,7 +875,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
             
     if 'vw_2tsrs' in plotlist:
         # Plot vw Re stress at two different TSRs
-        plt.figure(19)
+        plt.figure()
         runs = getruns(0.25, 1.9)
         ind = [run-1 for run in runs]
         plt.plot(y_R, meanvw[ind], '-ok', markerfacecolor='none', 
@@ -874,13 +894,13 @@ def velplots(savechoice, savepath, savetype, plotlist):
             
     if 'vwcont' in plotlist:
         # Plot contours of vw Reynolds stress
-        plt.figure(20)
+        plt.figure()
         cs2 = plt.contourf(y_R, z_H, meanvw_a, 20)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
         styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                          orientation='horizontal', pad=0.2)
+                           orientation='horizontal', pad=0.2)
         cb2.set_label(r"$\overline{v'w'}$")
         cb2.set_ticks(np.linspace(-.008,.006,6), update_ticks=True)
         turb_lines()
@@ -892,13 +912,13 @@ def velplots(savechoice, savepath, savetype, plotlist):
             
     if 'uwcont' in plotlist:
         # Plot contours of vw Reynolds stress
-        plt.figure(21)
+        plt.figure()
         cs2 = plt.contourf(y_R, z_H, meanuw_a, 20)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
         styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                          orientation='horizontal', pad=0.2)
+                           orientation='horizontal', pad=0.2)
         cb2.set_label(r"$\overline{u'w'}$")
         cb2.set_ticks(np.linspace(-.015,.013,6), update_ticks=True)
         turb_lines()
@@ -910,7 +930,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
             
     if 'vvcont' in plotlist:
         # Plot contours of vv Reynolds stress
-        plt.figure(22)
+        plt.figure()
         cs2 = plt.contourf(y_R, z_H, meanvv_a, 20)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -928,7 +948,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
             
     if 'wwcont' in plotlist:
         # Plot contours of vv Reynolds stress
-        plt.figure(23)
+        plt.figure()
         cs2 = plt.contourf(y_R, z_H, meanww_a, 20)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -945,14 +965,14 @@ def velplots(savechoice, savepath, savetype, plotlist):
             plt.savefig(savepath+'wwcont'+savetype)
             
     if 'uucont' in plotlist:
-        # Plot contours of vv Reynolds stress
-        plt.figure(24)
+        # Plot contours of uu Reynolds stress
+        plt.figure()
         cs2 = plt.contourf(y_R, z_H, meanuu_a, 20)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
         styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                          orientation='horizontal', pad=0.2)
+                           orientation='horizontal', pad=0.2)
         cb2.set_label(r"$\overline{u'u'}$")
         cb2.set_ticks(np.linspace(0,.108,6), update_ticks=True)
         turb_lines()
@@ -964,7 +984,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
             
     if 'vv_2tsrs' in plotlist:
         # Plot vw Re stress at two different TSRs
-        plt.figure(25)
+        plt.figure()
         runs = getruns(0.25, 1.9)
         ind = [run-1 for run in runs]
         plt.plot(y_R, meanvv[ind], '-ok', markerfacecolor='none', 
@@ -980,9 +1000,28 @@ def velplots(savechoice, savepath, savetype, plotlist):
         styleplot()
         if savechoice == True:
             plt.savefig(savepath+'vv_2tsrs'+savetype)
+            
+    if "fpeak" in plotlist:
+        plt.figure()
+        cs2 = plt.contourf(y_R, z_H, fpeak_a, 20, cmap=plt.cm.coolwarm,
+                           levels=np.linspace(0,6,13))
+        plt.xlabel(r'$y/R$')
+        plt.ylabel(r'$z/H$')
+        styleplot()
+        cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
+                           orientation='horizontal', pad=0.2)
+        cb2.set_label(r"$f_{\mathrm{peak}}/f_{\mathrm{turbine}}$")
+        cb2.set_ticks(np.linspace(0,6,7), update_ticks=True)
+        turb_lines()
+        ax = plt.axes()
+        ax.set_aspect(2)
+        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
+        if savechoice == True:
+            plt.savefig(savepath+'fpeak'+savetype)
+        
     plt.show()
         
-    # Do some crazy shit to look a kex efficiency
+    # Look at exergy efficiency
     A2 = 3*0.625*2
     A1 = A2*np.mean(meanu_a) # Solve for A1 using continuity
     cdt = 0.964 # .964
@@ -996,7 +1035,6 @@ def velplots(savechoice, savepath, savetype, plotlist):
     eta2 = 500*0.255/pd
     print "Eta2 =", eta2, "Cd =", cd, "A1/A2 =", A1/A2
     print "p2 =", p2
-   
    
 def calc_re():
     a = np.load('Processed/a.npy')    
@@ -1098,7 +1136,7 @@ def main():
     #velprofiles(0.25, 1.9)
 #    plotsinglerun(13, perf=True, wake=False)
     #ens_ave()
-    plot_vel_spec(y_R=-1, z_H=0.25, tsr=1.9)
+#    plot_vel_spec(y_R=-0.1, z_H=0, tsr=1.9)
     
 #    batchperf()
 #    batchvec()
@@ -1109,13 +1147,13 @@ def main():
     savepath = '../../Conte Report/Figures/'
     
 #    perfplots(True, savepath, savetype)
-#    velplots(False, savepath, savetype, ['meanu_2tsrs'])
+    velplots(False, savepath, savetype, ['fpeak'])
 
 #    export_data()
 #    plot_torque_ripple()
     
     te = time.time()
-    print "Elapsed time:", te-ts
+    print "Elapsed time:", te-ts, "s"
     
 
 if __name__ == "__main__":
