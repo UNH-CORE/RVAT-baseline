@@ -13,6 +13,7 @@ import time
 import matplotlib
 from scipy.signal import decimate
 from scipy.interpolate import interp1d
+import fdiff
 
 # Some constants
 R = 0.5
@@ -423,13 +424,12 @@ def batchvec():
 
 def perfplots(savechoice=False, savepath="", savetype=".pdf"):
     i = range(31)
-    
     cp = np.load('Processed/cp.npy')
     cd = np.load('Processed/cd.npy')
     tsr = np.load('Processed/tsr.npy')
     eta2 = np.load('Processed/eta2.npy')
     
-    plt.close('all')
+    plt.figure()
     plt.plot(tsr[i], eta2[i], '-ok', markerfacecolor = 'none')
     plt.xlabel(r'$\lambda$', labelpad=20)
     plt.ylabel(r'$\eta_{II}$')
@@ -437,7 +437,7 @@ def perfplots(savechoice=False, savepath="", savetype=".pdf"):
     if savechoice == True:
         plt.savefig(savepath+'eta2'+savetype)
         
-    plt.figure(2)
+    plt.figure()
     plt.plot(tsr[i], cp[i], '-ok', markerfacecolor = 'none')
     plt.xlabel(r'$\lambda$', labelpad=20)
     plt.ylabel(r'$C_P$')
@@ -445,7 +445,7 @@ def perfplots(savechoice=False, savepath="", savetype=".pdf"):
     if savechoice == True:
         plt.savefig(savepath+'cpvstsr'+savetype)
         
-    plt.figure(3)
+    plt.figure()
     plt.plot(tsr[i], cd[i], '-ok', markerfacecolor = 'none')
     plt.xlabel(r'$\lambda$', labelpad=20)
     plt.ylabel(r'$C_D$')
@@ -453,7 +453,6 @@ def perfplots(savechoice=False, savepath="", savetype=".pdf"):
     styleplot()
     if savechoice == True:
         plt.savefig(savepath+'cdvstsr'+savetype)
-        
     # Create torque coefficient plot
     ct = cp/tsr
     plt.figure(4)
@@ -464,7 +463,6 @@ def perfplots(savechoice=False, savepath="", savetype=".pdf"):
     if savechoice == True:
         plt.savefig(savepath+'ctvstsr'+savetype)
     
-
 def velplots(savechoice, savepath, savetype, plotlist):
     z_H = np.arange(0, 0.75, 0.125)
     y_R = np.hstack([-3.,-2.75,-2.5,-2.25,-2.,-1.8,np.arange(-1.6,0.1,0.1)])
@@ -485,6 +483,8 @@ def velplots(savechoice, savepath, savetype, plotlist):
     phi = np.load('Processed/phi.npy')
     meanu2 = np.load('Processed/meanu2.npy')
     fpeak = np.load('Processed/fpeak.npy')
+    fstrength = np.load('Processed/fstrength.npy')
+    k = 0.5*(stdu**2 + stdv**2 + stdw**2)
     
     meanu_a = np.zeros((len(z_H), len(y_R)))
     meanv_a = np.zeros((len(z_H), len(y_R)))
@@ -499,8 +499,10 @@ def velplots(savechoice, savepath, savetype, plotlist):
     meanww_a = np.zeros((len(z_H), len(y_R)))
     meanuu_a = np.zeros((len(z_H), len(y_R)))
     phi_a = np.zeros((len(z_H), len(y_R)))
+    k_a = np.zeros((len(z_H), len(y_R)))
     meanu2_a = np.zeros((len(z_H), len(y_R)))
     fpeak_a = np.zeros((len(z_H), len(y_R)))
+    fstrength_a = np.zeros((len(z_H), len(y_R)))
     
     # Construct 2D arrays for velocity fields
     for n in range(len(z_H)):
@@ -519,10 +521,10 @@ def velplots(savechoice, savepath, savetype, plotlist):
         meanww_a[n,:] = meanww[ind]
         meanuu_a[n,:] = meanuu[ind]
         phi_a[n,:] = phi[ind]
+        k_a[n,:] = k[ind]
         meanu2_a[n,:] = meanu2[ind]
         fpeak_a[n,:] = fpeak[ind]
-        
-    plt.close('all')
+        fstrength_a[n,:] = fstrength[ind]
     
     def turb_lines():
         plt.hlines(0.5, -1, 1, linestyles='solid', linewidth=1.5)
@@ -536,9 +538,6 @@ def velplots(savechoice, savepath, savetype, plotlist):
                     'stdw_2tsrs', 'uw_2tsrs', 'uv_2tsrs','vw_2tsrs', 'uvcont',
                     'vwcont', 'uwcont', 'vvcont', 'wwcont', 'uucont', 
                     'vv_2tsrs', 'fpeak', 'fstrength']
-                    
-    if 'none' in plotlist:
-        plotlist = 'none'
         
     if 'meanucont' in plotlist:
         # Plot contours of mean streamwise velocity
@@ -683,12 +682,12 @@ def velplots(savechoice, savepath, savetype, plotlist):
     if 'uvcont' in plotlist:
         # Plot contours of uv Reynolds stress
         plt.figure()
-        cs2 = plt.contourf(y_R, z_H, meanuv_a, 20)
+        cs2 = plt.contourf(y_R, z_H, meanuv_a, 15, cmap=plt.cm.coolwarm)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
         styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                          orientation='horizontal', pad=0.2)
+                           orientation='horizontal', pad=0.2)
         cb2.set_label(r"$\overline{u'v'}$")
         cb2.set_ticks(np.arange(-0.02, 0.025, 0.005), update_ticks=True)
         turb_lines()
@@ -794,19 +793,22 @@ def velplots(savechoice, savepath, savetype, plotlist):
         if savechoice == True:
             plt.savefig(savepath+'uv_2tsrs'+savetype)
             
-    if 'phicont' in plotlist:
-        # Plot contours of phi
+    if 'kcont' in plotlist:
+        # Plot contours of k
         plt.figure()
-        csphi = plt.contourf(y_R, z_H, phi_a, 20)
+        csphi = plt.contourf(y_R, z_H, k_a, 20, cmap=plt.cm.coolwarm)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
         styleplot()
         cbphi = plt.colorbar(csphi, shrink=1, extend='both', 
-                          orientation='horizontal', pad=0.2)
-        cbphi.set_label(r'$\overline{\phi}/U_{\infty}$')
+                             orientation='horizontal', pad=0.2)
+        cbphi.set_label(r'$k$')
         turb_lines()
+        ax = plt.axes()
+        ax.set_aspect(2)
+        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if savechoice == True:
-            plt.savefig(savepath+'phicont'+savetype)
+            plt.savefig(savepath+'kcont'+savetype)
             
     if 'meanvcont' in plotlist:
         # Plot contours of meanv
@@ -1003,21 +1005,67 @@ def velplots(savechoice, savepath, savetype, plotlist):
             
     if "fpeak" in plotlist:
         plt.figure()
-        cs2 = plt.contourf(y_R, z_H, fpeak_a, 20, cmap=plt.cm.coolwarm,
-                           levels=np.linspace(0,6,13))
+        cs2 = plt.contourf(y_R, z_H, fpeak_a, cmap=plt.cm.coolwarm,
+                           levels=np.linspace(0,10,11))
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
         styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
                            orientation='horizontal', pad=0.2)
         cb2.set_label(r"$f_{\mathrm{peak}}/f_{\mathrm{turbine}}$")
-        cb2.set_ticks(np.linspace(0,6,7), update_ticks=True)
+        cb2.set_ticks(np.linspace(0,10,11), update_ticks=True)
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if savechoice == True:
             plt.savefig(savepath+'fpeak'+savetype)
+            
+    if "fstrength" in plotlist:
+        plt.figure()
+        cs2 = plt.contourf(y_R, z_H, fstrength_a, 20, cmap=plt.cm.coolwarm)
+        plt.xlabel(r'$y/R$')
+        plt.ylabel(r'$z/H$')
+        styleplot()
+        cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
+                           orientation='horizontal', pad=0.2)
+        cb2.set_label(r"$\Phi_{\max}/\sigma^2_v$")
+        turb_lines()
+        ax = plt.axes()
+        ax.set_aspect(2)
+        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
+        if savechoice == True:
+            plt.savefig(savepath+'fstrength'+savetype)
+            
+    # Plot estimate for production of turbulence kinetic energy
+    if "kprod" in plotlist:
+        z = 1.0*z_H
+        y = R*y_R
+        dUdy = np.zeros(np.shape(meanu_a))
+        dUdz = np.zeros(np.shape(meanu_a))
+        dVdz = np.zeros(np.shape(meanu_a))
+        dWdy = np.zeros(np.shape(meanu_a))
+        for n in xrange(len(z)):
+            dUdy[n,:] = fdiff.second_order_diff(meanu_a[n,:], y)
+            dWdy[n,:] = fdiff.second_order_diff(meanw_a[n,:], y)
+        for n in xrange(len(y)):
+            dUdz[:,n] = fdiff.second_order_diff(meanu_a[:,n], z)
+            dVdz[:,n] = fdiff.second_order_diff(meanv_a[:,n], z)
+        prod = -meanuv_a*dUdy - meanuw_a*dUdz - meanvw_a*dVdz - meanvw_a*dWdy
+        plt.figure()
+        cs = plt.contourf(y_R, z_H, prod, 20, cmap=plt.cm.coolwarm)
+        plt.xlabel(r'$y/R$')
+        plt.ylabel(r'$z/H$')
+        styleplot()
+        cb = plt.colorbar(cs, shrink=1, extend='both', 
+                          orientation='horizontal', pad=0.2)
+        cb.set_label(r"$-\overline{u_i' u_j'}\frac{\partial U_i}{\partial x_j}$")
+        turb_lines()
+        ax = plt.axes()
+        ax.set_aspect(2)
+        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
+        if savechoice == True:
+            plt.savefig(savepath+'kprodcont'+savetype)
         
     plt.show()
         
@@ -1129,11 +1177,9 @@ def export_data():
                              ("%.3f" %cd[run]).center(s)])
     
 def main():
-    """This is the main function"""
     plt.close("all")    
     ts = time.time()
     
-    #velprofiles(0.25, 1.9)
 #    plotsinglerun(13, perf=True, wake=False)
     #ens_ave()
 #    plot_vel_spec(y_R=-0.1, z_H=0, tsr=1.9)
@@ -1141,13 +1187,11 @@ def main():
 #    batchperf()
 #    batchvec()
     
-    savepath = '../../Papers/ASME FEDSM 2013/Figures/'
+    savepath = 'C:/Users/Pete/Google Drive/Research/Papers/JOT VAT near-wake/Figures/'
     savetype = '.pdf'
-    savepath = '../../Presentations/2013.4.11 Renewable Energy/Figures/'
-    savepath = '../../Conte Report/Figures/'
     
 #    perfplots(True, savepath, savetype)
-    velplots(False, savepath, savetype, ['fpeak'])
+    velplots(False, savepath, savetype, ["kprod", "kcont"])
 
 #    export_data()
 #    plot_torque_ripple()
@@ -1155,6 +1199,5 @@ def main():
     te = time.time()
     print "Elapsed time:", te-ts, "s"
     
-
 if __name__ == "__main__":
     main()
