@@ -485,6 +485,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
     fpeak = np.load('Processed/fpeak.npy')
     fstrength = np.load('Processed/fstrength.npy')
     k = 0.5*(stdu**2 + stdv**2 + stdw**2)
+    meank = 0.5*(meanu**2 + meanv**2 + meanw**2)
     
     meanu_a = np.zeros((len(z_H), len(y_R)))
     meanv_a = np.zeros((len(z_H), len(y_R)))
@@ -500,6 +501,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
     meanuu_a = np.zeros((len(z_H), len(y_R)))
     phi_a = np.zeros((len(z_H), len(y_R)))
     k_a = np.zeros((len(z_H), len(y_R)))
+    meank_a = np.zeros((len(z_H), len(y_R)))
     meanu2_a = np.zeros((len(z_H), len(y_R)))
     fpeak_a = np.zeros((len(z_H), len(y_R)))
     fstrength_a = np.zeros((len(z_H), len(y_R)))
@@ -522,6 +524,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         meanuu_a[n,:] = meanuu[ind]
         phi_a[n,:] = phi[ind]
         k_a[n,:] = k[ind]
+        meank_a[n,:] = meank[ind]
         meanu2_a[n,:] = meanu2[ind]
         fpeak_a[n,:] = fpeak[ind]
         fstrength_a[n,:] = fstrength[ind]
@@ -810,6 +813,23 @@ def velplots(savechoice, savepath, savetype, plotlist):
         if savechoice == True:
             plt.savefig(savepath+'kcont'+savetype)
             
+    if 'meankcont' in plotlist:
+        # Plot contours of k
+        plt.figure()
+        csphi = plt.contourf(y_R, z_H, meank_a, 20, cmap=plt.cm.coolwarm)
+        plt.xlabel(r'$y/R$')
+        plt.ylabel(r'$z/H$')
+        styleplot()
+        cbphi = plt.colorbar(csphi, shrink=1, extend='both', 
+                             orientation='horizontal', pad=0.2)
+        cbphi.set_label(r'$K$')
+        turb_lines()
+        ax = plt.axes()
+        ax.set_aspect(2)
+        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
+        if savechoice == True:
+            plt.savefig(savepath+'meankcont'+savetype)
+            
     if 'meanvcont' in plotlist:
         # Plot contours of meanv
         plt.figure()
@@ -1036,7 +1056,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if savechoice == True:
             plt.savefig(savepath+'fstrength'+savetype)
-            
+
     # Plot estimate for production of turbulence kinetic energy
     if "kprod" in plotlist:
         z = 1.0*z_H
@@ -1066,6 +1086,41 @@ def velplots(savechoice, savepath, savetype, plotlist):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if savechoice == True:
             plt.savefig(savepath+'kprodcont'+savetype)
+            
+    if 'meankadv' in plotlist:
+        z = 1.0*z_H
+        y = R*y_R
+        dKdy = np.zeros(np.shape(meanu_a))
+        dKdz = np.zeros(np.shape(meanu_a))
+        for n in xrange(len(z)):
+            dKdy[n,:] = fdiff.second_order_diff(meank_a[n,:], y)
+        for n in xrange(len(y)):
+            dKdz[:,n] = fdiff.second_order_diff(meank_a[:,n], z)
+        # Make quiver plot of K advection
+        fig = plt.figure()
+        Q = plt.quiver(y_R, z_H, meanv_a*dKdy, meanw_a*dKdz, scale=4,
+                       angles='xy')
+        plt.xlabel(r'$y/R$')
+        plt.ylabel(r'$z/H$')
+        plt.ylim(-0.2, 0.78)
+        plt.xlim(-3.2, 3.2)
+        # m^2/s^3
+        qk = quiverkey(Q, 0.75, 0.29, 0.2, r'$0.2 \mathrm{\, m^2/s^3}$',
+                       labelpos='E',
+                       coordinates='figure',
+                       fontproperties={'size': 'small'})
+        plt.tight_layout()
+        plt.hlines(0.5, -1, 1, linestyles='solid', colors='r',
+                   linewidth=2)
+        plt.vlines(-1, -0.2, 0.5, linestyles='solid', colors='r',
+                   linewidth=2)
+        plt.vlines(1, -0.2, 0.5, linestyles='solid', colors='r',
+                   linewidth=2)
+        ax = plt.axes()
+        ax.set_aspect(2)
+        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
+        if savechoice == True:
+            plt.savefig(savepath+'meankadv'+savetype)
         
     plt.show()
         
@@ -1191,7 +1246,7 @@ def main():
     savetype = '.pdf'
     
 #    perfplots(True, savepath, savetype)
-    velplots(False, savepath, savetype, ["kprod", "kcont"])
+    velplots(False, savepath, savetype, ["v-wquiver", "meankadv", "meankcont"])
 
 #    export_data()
 #    plot_torque_ripple()
