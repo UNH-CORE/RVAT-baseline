@@ -463,7 +463,7 @@ def perfplots(savechoice=False, savepath="", savetype=".pdf"):
     if savechoice == True:
         plt.savefig(savepath+'ctvstsr'+savetype)
     
-def velplots(savechoice, savepath, savetype, plotlist):
+def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
     z_H = np.arange(0, 0.75, 0.125)
     y_R = np.hstack([-3.,-2.75,-2.5,-2.25,-2.,-1.8,np.arange(-1.6,0.1,0.1)])
     y_R = np.hstack([y_R, -np.flipud(y_R[0:-1])])
@@ -556,7 +556,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'meanucont'+savetype)
             
     if 'v-wquiver' in plotlist:
@@ -581,7 +581,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'v-wquiver'+savetype)
             
     if 'meanu_2tsrs' in plotlist:
@@ -600,7 +600,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         plt.ylabel(r'$\overline{u}/U_\infty$')
         plt.legend(loc=4)
         styleplot()
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'meanu_2tsrs'+savetype)
             
     if 'stdu_2tsrs' in plotlist:
@@ -619,7 +619,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         plt.ylabel(r'$\sigma_u/U_\infty$')
         plt.legend(loc=1)
         styleplot()
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'stdu_2tsrs'+savetype)
     if 'uw_2tsrs' in plotlist:
         # Plot uw Re stress at two different TSRs
@@ -637,7 +637,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         plt.ylabel(r"$\overline{u'w'}$")
         plt.legend(loc=4)
         styleplot()
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'uw_2tsrs'+savetype)
             
     if 'meanuvstsr' in plotlist:
@@ -662,7 +662,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
              label=r'$\overline{w}$')
         plt.legend(ncol=3)
         styleplot()
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'meanuvstsr'+savetype)
             
     if 'stducont' in plotlist:
@@ -679,7 +679,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'stducont'+savetype)
             
     if 'uvcont' in plotlist:
@@ -697,7 +697,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'uvcont'+savetype)
             
     if 'meanw_2tsrs' in plotlist:
@@ -716,7 +716,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         plt.ylabel(r'$\overline{w}/U_\infty$')
         plt.legend(loc=4)
         styleplot()
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'meanw_2tsrs'+savetype)
             
     if 'meanv_2tsrs' in plotlist:
@@ -736,7 +736,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         plt.ylim(-0.1501, 0.1001)
         plt.legend(loc=4)
         styleplot()
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'meanv_2tsrs'+savetype)
             
     if 'stdv_2tsrs' in plotlist:
@@ -755,7 +755,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         plt.ylabel(r'$\sigma_v/U_\infty$')
         plt.legend(loc=1)
         styleplot()
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'stdv_2tsrs'+savetype)
             
     if 'stdw_2tsrs' in plotlist:
@@ -774,7 +774,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         plt.ylabel(r'$\sigma_w/U_\infty$')
         plt.legend(loc=1)
         styleplot()
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'stdw_2tsrs'+savetype)
             
     if 'uv_2tsrs' in plotlist:
@@ -793,7 +793,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         plt.ylabel(r"$\overline{u'v'}$")
         plt.legend()
         styleplot()
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'uv_2tsrs'+savetype)
             
     if 'kcont' in plotlist:
@@ -810,7 +810,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'kcont'+savetype)
             
     if 'meankcont' in plotlist:
@@ -827,7 +827,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'meankcont'+savetype)
             
     if 'meanvcont' in plotlist:
@@ -844,7 +844,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'meanvcont'+savetype)
             
     if 'stdvcont' in plotlist:
@@ -861,7 +861,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'stdvcont'+savetype)
             
     if 'meanwcont' in plotlist:
@@ -875,7 +875,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
                           orientation='horizontal', pad=0.2)
         cbmv.set_label(r'$\overline{w}/U_{\infty}$')
         turb_lines()
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'meanwcont'+savetype)
             
     if 'stdwcont' in plotlist:
@@ -892,7 +892,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'stdwcont'+savetype)
             
     if 'vw_2tsrs' in plotlist:
@@ -911,7 +911,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         plt.ylabel(r"$\overline{v'w'}$")
         plt.legend(loc=4)
         styleplot()
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'vw_2tsrs'+savetype)
             
     if 'vwcont' in plotlist:
@@ -929,7 +929,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'vwcont'+savetype)
             
     if 'uwcont' in plotlist:
@@ -947,7 +947,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'uwcont'+savetype)
             
     if 'vvcont' in plotlist:
@@ -965,7 +965,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'vvcont'+savetype)
             
     if 'wwcont' in plotlist:
@@ -983,7 +983,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'wwcont'+savetype)
             
     if 'uucont' in plotlist:
@@ -1001,7 +1001,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'uucont'+savetype)
             
     if 'vv_2tsrs' in plotlist:
@@ -1020,7 +1020,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         plt.ylabel(r"$\overline{v'v'}$")
         plt.legend()
         styleplot()
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'vv_2tsrs'+savetype)
             
     if "fpeak" in plotlist:
@@ -1038,7 +1038,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         styleplot()
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'fpeak'+savetype)
             
     if "fstrength" in plotlist:
@@ -1054,7 +1054,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'fstrength'+savetype)
 
     # Plot estimate for production of turbulence kinetic energy
@@ -1084,7 +1084,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'kprodcont'+savetype)
             
     if 'meankadv' in plotlist:
@@ -1119,7 +1119,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if savechoice == True:
+        if save:
             plt.savefig(savepath+'meankadv'+savetype)
         
     plt.show()
@@ -1242,11 +1242,10 @@ def main():
 #    batchperf()
 #    batchvec()
     
-    savepath = 'C:/Users/Pete/Google Drive/Research/Papers/JOT VAT near-wake/Figures/'
-    savetype = '.pdf'
+    sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT VAT near-wake/Figures/'
     
 #    perfplots(True, savepath, savetype)
-    velplots(False, savepath, savetype, ["fpeak", "meankadv", "fstrength"])
+    velplots(["fpeak", "meankadv", "fstrength"], save=True, savepath=sp)
 
 #    export_data()
 #    plot_torque_ripple()
