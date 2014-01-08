@@ -1024,20 +1024,20 @@ def velplots(savechoice, savepath, savetype, plotlist):
             plt.savefig(savepath+'vv_2tsrs'+savetype)
             
     if "fpeak" in plotlist:
-        plt.figure()
+        plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, fpeak_a, cmap=plt.cm.coolwarm,
                            levels=np.linspace(0,10,11))
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
-        styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                           orientation='horizontal', pad=0.2)
+                           orientation='horizontal', pad=0.3)
         cb2.set_label(r"$f_{\mathrm{peak}}/f_{\mathrm{turbine}}$")
         cb2.set_ticks(np.linspace(0,10,11), update_ticks=True)
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
+        styleplot()
         if savechoice == True:
             plt.savefig(savepath+'fpeak'+savetype)
             
@@ -1097,7 +1097,7 @@ def velplots(savechoice, savepath, savetype, plotlist):
         for n in xrange(len(y)):
             dKdz[:,n] = fdiff.second_order_diff(meank_a[:,n], z)
         # Make quiver plot of K advection
-        fig = plt.figure()
+        plt.figure()
         Q = plt.quiver(y_R, z_H, meanv_a*dKdy, meanw_a*dKdz, scale=4,
                        angles='xy')
         plt.xlabel(r'$y/R$')
@@ -1105,10 +1105,10 @@ def velplots(savechoice, savepath, savetype, plotlist):
         plt.ylim(-0.2, 0.78)
         plt.xlim(-3.2, 3.2)
         # m^2/s^3
-        qk = quiverkey(Q, 0.75, 0.29, 0.2, r'$0.2 \mathrm{\, m^2/s^3}$',
-                       labelpos='E',
-                       coordinates='figure',
-                       fontproperties={'size': 'small'})
+        plt.quiverkey(Q, 0.75, 0.29, 0.2, r'$0.2 \mathrm{\, m^2/s^3}$',
+                      labelpos='E',
+                      coordinates='figure',
+                      fontproperties={'size': 'small'})
         plt.tight_layout()
         plt.hlines(0.5, -1, 1, linestyles='solid', colors='r',
                    linewidth=2)
@@ -1231,7 +1231,7 @@ def export_data():
                              ("%.3f" %cp[run]).center(s), 
                              ("%.3f" %cd[run]).center(s)])
     
-def main():
+def main(): 
     plt.close("all")    
     ts = time.time()
     
@@ -1246,7 +1246,7 @@ def main():
     savetype = '.pdf'
     
 #    perfplots(True, savepath, savetype)
-    velplots(False, savepath, savetype, ["v-wquiver", "meankadv", "meankcont"])
+    velplots(False, savepath, savetype, ["fpeak", "meankadv", "fstrength"])
 
 #    export_data()
 #    plot_torque_ripple()
