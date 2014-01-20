@@ -1115,15 +1115,12 @@ def plot_torque_ripple():
     plt.show()
     print "Torque ripple at TSR =", str(tsr[12])+":", torque_ripple[12]
     
-
 def export_data():
     """Export processed data to text file."""
     import datetime
-    
     datestring = datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")
     rev = 0
     sep = "----------------------------------------------------"
-    
     runs = range(31)
     tsr = np.load("Processed/tsr.npy")[runs]
     tsr = np.round(tsr, decimals=2)
@@ -1135,7 +1132,6 @@ def export_data():
     vectemp = np.mean(np.load("Processed/vectemp.npy")[runs])
     vectemp = np.round(vectemp, decimals=2)
     runnumber = range(1, 32)
-    
     metadata = ["Processed performance data from UNH RVAT experiment",
                 "Performed on March 9-10, 2013",
                 "Rev" + str(rev) + " - Generated " + datestring,
@@ -1160,14 +1156,12 @@ def export_data():
     s = 6
     clabels = ["Run".center(s), "U".center(s), "TSR".center(s),
                "C_p".center(s), "C_d".center(s)]
-    
     with open('Processed/csv/unh-rvat-perf-2013-03-rev'+str(rev)+".txt",'wb') \
     as csvfile:
         fwriter = csv.writer(csvfile, delimiter='\t')
         for i in range(len(metadata)):
             fwriter.writerow([metadata[i]])
         fwriter.writerow(clabels)
-
         for run in runs:
             fwriter.writerow([str(runnumber[run]).center(s), 
                              str(u[run]).center(s), 
@@ -1177,25 +1171,16 @@ def export_data():
     
 def main(): 
     plt.close("all")    
-    ts = time.time()
-    
 #    plotsinglerun(13, perf=True, wake=False)
-    #ens_ave()
 #    plot_vel_spec(y_R=-0.1, z_H=0, tsr=1.9)
-    
 #    batchperf()
-#    batchvec()
-    
+#    batchwake()
     sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT VAT near-wake/Figures/'
-    
-#    perfplots(True, savepath, savetype)
-    velplots(["fpeak", "meankadv", "fstrength"], save=True, savepath=sp)
-
-#    export_data()
-#    plot_torque_ripple()
-    
-    te = time.time()
-    print "Elapsed time:", te-ts, "s"
+#    plotperf(True, savepath, savetype)
+    plotwake(["fpeak", "meankadv", "fstrength"], save=True, savepath=sp)
     
 if __name__ == "__main__":
+    ts = time.time()
     main()
+    te = time.time()
+    print "Elapsed time:", te-ts, "s"
