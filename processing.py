@@ -272,32 +272,6 @@ def getruns(z_H, tsr):
         runs = range(77,122)
     return runs
 
-def velprofiles(z_H, tsr, plotChoice):
-    t1 = 13 
-    t2 = 30
-    y_R = np.hstack([-3.,-2.75,-2.5,-2.25,-2.,-1.8,np.arange(-1.6,0.1,0.1)])
-    y_R = np.hstack([y_R, -np.flipud(y_R[0:-1])])
-    meanu = np.zeros(len(runs))
-    meanv = np.zeros(len(runs))
-    meanw = np.zeros(len(runs))
-    for i in range(len(runs)):
-        tv,u,v,w = loadvec(runs[i])
-        meanu[i] = np.mean(u[t1*200:t2*200])
-        meanv[i] = np.mean(v[t1*200:t2*200])
-        meanw[i] = np.mean(w[t1*200:t2*200])
-    if plotChoice == True:
-        plt.close('all')
-        plt.plot(y_R, meanu, '-ok', label=r'$\bar u$', markerfacecolor='none')
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$\bar{u_i} / U_\infty$')
-        plt.hold(True)
-        plt.plot(y_R, meanv, '-sk', label=r'$\bar v$', markerfacecolor='none')
-        plt.plot(y_R, meanw, '-^k', label=r'$\bar w$', markerfacecolor='none')
-        plt.legend(loc=7)
-        styleplot()
-        plt.savefig('Figures/test.pdf')
-    return y_R
-
 def vel_spec(y_R=0, z_H=0, tsr=1.9, show=False):
     """Plots the velocity spectrum for a single run."""
     # Find index for the desired parameters
@@ -348,7 +322,7 @@ def plot_vertical_lines(x):
 def plot_vel_histogram():
     pass
 
-def batchvec():
+def batchwake():
     runs = range(1, 378)
     y_R = np.hstack([-3.,-2.75,-2.5,-2.25,-2.,-1.8,np.arange(-1.6,0.1,0.1)])
     y_R = np.hstack([y_R, -np.flipud(y_R[0:-1])])
@@ -422,7 +396,7 @@ def batchvec():
     np.save('Processed/fpeak', fpeak)
     np.save('Processed/fstrength', fstrength)
 
-def perfplots(savechoice=False, savepath="", savetype=".pdf"):
+def plotperf(save=False, savepath="", savetype=".pdf"):
     i = range(31)
     cp = np.load('Processed/cp.npy')
     cd = np.load('Processed/cd.npy')
@@ -434,7 +408,7 @@ def perfplots(savechoice=False, savepath="", savetype=".pdf"):
     plt.xlabel(r'$\lambda$', labelpad=20)
     plt.ylabel(r'$\eta_{II}$')
     styleplot()
-    if savechoice == True:
+    if save:
         plt.savefig(savepath+'eta2'+savetype)
         
     plt.figure()
@@ -442,7 +416,7 @@ def perfplots(savechoice=False, savepath="", savetype=".pdf"):
     plt.xlabel(r'$\lambda$', labelpad=20)
     plt.ylabel(r'$C_P$')
     styleplot()
-    if savechoice == True:
+    if save:
         plt.savefig(savepath+'cpvstsr'+savetype)
         
     plt.figure()
@@ -451,7 +425,7 @@ def perfplots(savechoice=False, savepath="", savetype=".pdf"):
     plt.ylabel(r'$C_D$')
     plt.ylim(0, 1.2001)
     styleplot()
-    if savechoice == True:
+    if save:
         plt.savefig(savepath+'cdvstsr'+savetype)
     # Create torque coefficient plot
     ct = cp/tsr
@@ -460,10 +434,10 @@ def perfplots(savechoice=False, savepath="", savetype=".pdf"):
     plt.xlabel(r'$\lambda$', labelpad=20)
     plt.ylabel(r'$C_T$')
     styleplot()
-    if savechoice == True:
+    if save:
         plt.savefig(savepath+'ctvstsr'+savetype)
     
-def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
+def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
     z_H = np.arange(0, 0.75, 0.125)
     y_R = np.hstack([-3.,-2.75,-2.5,-2.25,-2.,-1.8,np.arange(-1.6,0.1,0.1)])
     y_R = np.hstack([y_R, -np.flipud(y_R[0:-1])])
@@ -541,7 +515,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
                     'stdw_2tsrs', 'uw_2tsrs', 'uv_2tsrs','vw_2tsrs', 'uvcont',
                     'vwcont', 'uwcont', 'vvcont', 'wwcont', 'uucont', 
                     'vv_2tsrs', 'fpeak', 'fstrength']
-        
     if 'meanucont' in plotlist:
         # Plot contours of mean streamwise velocity
         plt.figure()
@@ -558,7 +531,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+'meanucont'+savetype)
-            
     if 'v-wquiver' in plotlist:
         # Make quiver plot of v and w velocities
         fig = plt.figure()
@@ -583,7 +555,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+'v-wquiver'+savetype)
-            
     if 'meanu_2tsrs' in plotlist:
         # Plot mean velocities at two different TSRs
         plt.figure()
@@ -602,7 +573,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         if save:
             plt.savefig(savepath+'meanu_2tsrs'+savetype)
-            
     if 'stdu_2tsrs' in plotlist:
         # Plot stdu velocities at two different TSRs
         plt.figure()
@@ -639,7 +609,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         if save:
             plt.savefig(savepath+'uw_2tsrs'+savetype)
-            
     if 'meanuvstsr' in plotlist:
         # Plot mean velocity components vs TSR
         tsr = np.load('Processed/tsr.npy')
@@ -664,7 +633,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         if save:
             plt.savefig(savepath+'meanuvstsr'+savetype)
-            
     if 'stducont' in plotlist:
         # Plot contours of streamwise turbulence intensity
         plt.figure()
@@ -681,7 +649,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+'stducont'+savetype)
-            
     if 'uvcont' in plotlist:
         # Plot contours of uv Reynolds stress
         plt.figure()
@@ -699,7 +666,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+'uvcont'+savetype)
-            
     if 'meanw_2tsrs' in plotlist:
         # Plot mean vertical velocity profiles at two TSRs
         plt.figure()
@@ -718,7 +684,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         if save:
             plt.savefig(savepath+'meanw_2tsrs'+savetype)
-            
     if 'meanv_2tsrs' in plotlist:
         # Plot mean cross stream velocity profiles at two TSRs
         plt.figure()
@@ -738,7 +703,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         if save:
             plt.savefig(savepath+'meanv_2tsrs'+savetype)
-            
     if 'stdv_2tsrs' in plotlist:
         # Plot stdv velocities at two different TSRs
         plt.figure()
@@ -757,7 +721,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         if save:
             plt.savefig(savepath+'stdv_2tsrs'+savetype)
-            
     if 'stdw_2tsrs' in plotlist:
         # Plot stdw velocities at two different TSRs
         plt.figure()
@@ -776,7 +739,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         if save:
             plt.savefig(savepath+'stdw_2tsrs'+savetype)
-            
     if 'uv_2tsrs' in plotlist:
         # Plot uv Re stress at two different TSRs
         plt.figure()
@@ -795,7 +757,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         if save:
             plt.savefig(savepath+'uv_2tsrs'+savetype)
-            
     if 'kcont' in plotlist:
         # Plot contours of k
         plt.figure()
@@ -812,7 +773,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+'kcont'+savetype)
-            
     if 'meankcont' in plotlist:
         # Plot contours of k
         plt.figure()
@@ -829,7 +789,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+'meankcont'+savetype)
-            
     if 'meanvcont' in plotlist:
         # Plot contours of meanv
         plt.figure()
@@ -846,7 +805,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+'meanvcont'+savetype)
-            
     if 'stdvcont' in plotlist:
         # Plot contours of stdv
         plt.figure()
@@ -863,7 +821,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+'stdvcont'+savetype)
-            
     if 'meanwcont' in plotlist:
         # Plot contours of meanw
         plt.figure()
@@ -877,7 +834,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         turb_lines()
         if save:
             plt.savefig(savepath+'meanwcont'+savetype)
-            
     if 'stdwcont' in plotlist:
         # Plot contours of stdw
         plt.figure()
@@ -894,7 +850,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+'stdwcont'+savetype)
-            
     if 'vw_2tsrs' in plotlist:
         # Plot vw Re stress at two different TSRs
         plt.figure()
@@ -913,7 +868,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         if save:
             plt.savefig(savepath+'vw_2tsrs'+savetype)
-            
     if 'vwcont' in plotlist:
         # Plot contours of vw Reynolds stress
         plt.figure()
@@ -931,7 +885,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+'vwcont'+savetype)
-            
     if 'uwcont' in plotlist:
         # Plot contours of vw Reynolds stress
         plt.figure()
@@ -949,7 +902,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+'uwcont'+savetype)
-            
     if 'vvcont' in plotlist:
         # Plot contours of vv Reynolds stress
         plt.figure()
@@ -967,7 +919,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+'vvcont'+savetype)
-            
     if 'wwcont' in plotlist:
         # Plot contours of vv Reynolds stress
         plt.figure()
@@ -985,7 +936,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+'wwcont'+savetype)
-            
     if 'uucont' in plotlist:
         # Plot contours of uu Reynolds stress
         plt.figure()
@@ -1003,7 +953,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+'uucont'+savetype)
-            
     if 'vv_2tsrs' in plotlist:
         # Plot vw Re stress at two different TSRs
         plt.figure()
@@ -1022,7 +971,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         if save:
             plt.savefig(savepath+'vv_2tsrs'+savetype)
-            
     if "fpeak" in plotlist:
         plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, fpeak_a, cmap=plt.cm.coolwarm,
@@ -1040,7 +988,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         if save:
             plt.savefig(savepath+'fpeak'+savetype)
-            
     if "fstrength" in plotlist:
         plt.figure()
         cs2 = plt.contourf(y_R, z_H, fstrength_a, 20, cmap=plt.cm.coolwarm)
@@ -1056,7 +1003,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+'fstrength'+savetype)
-
     # Plot estimate for production of turbulence kinetic energy
     if "kprod" in plotlist:
         z = 1.0*z_H
@@ -1086,7 +1032,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+'kprodcont'+savetype)
-            
     if 'meankadv' in plotlist:
         z = 1.0*z_H
         y = R*y_R
@@ -1121,7 +1066,6 @@ def velplots(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+'meankadv'+savetype)
-        
     plt.show()
         
     # Look at exergy efficiency
