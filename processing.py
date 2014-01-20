@@ -121,7 +121,6 @@ def batchperf(runs="all"):
     Nrevs = np.zeros(len(runs))
     a = np.zeros(len(runs))
     torque_ripple = np.zeros(len(runs))
-    
     for n in range(len(runs)):
         print "Processing performance data from run", runs[n], "of", \
         str(np.max(runs))+"..."
@@ -133,8 +132,8 @@ def batchperf(runs="all"):
         cd[n], std_cd[n] = calcstats(drag/500, t1, t2[n], 2000)
         a[n], eta2[n] = calc_eta2(cp[n], cd[n])
         torque_seg = Ttrans[2000*t1:2000*t2[n]]
-        torque_ripple[n] = (np.max(torque_seg) - np.min(torque_seg))/np.mean(torque_seg)
-        
+        torque_ripple[n] = (np.max(torque_seg) \
+                           - np.min(torque_seg))/np.mean(torque_seg)
     np.save('Processed/cp', cp)
     np.save('Processed/cd', cd)
     np.save('Processed/tsr', tsr)
@@ -145,7 +144,6 @@ def batchperf(runs="all"):
     np.save('Processed/Nrevs', Nrevs)
     np.save('Processed/a', a)
     np.save('Processed/torque_ripple', torque_ripple)
-
 
 def ens_ave():
     run = 359
@@ -181,7 +179,6 @@ def ens_ave():
     plt.xlabel(r'$\theta$ (deg)')
     plt.ylabel(r'Torque (Nm)')
     styleplot()
-
 
 def plotsinglerun(run, perf=True, wake=False):
     t1 = 13
@@ -248,18 +245,23 @@ def getruns(z_H, tsr):
     if z_H == 0.5:
         runs = range(77,122)
     return runs
-
-def vel_spec(y_R=0, z_H=0, tsr=1.9, show=False):
-    """Plots the velocity spectrum for a single run."""
-    # Find index for the desired parameters
+    
+def find_run_ind(y_R, z_H, tsr):
+    """Finds the run index corresponding to the inputs."""
     tp = import_testplan()
     i = np.where(np.logical_and(tp["y/R"]==y_R, 
                                 tp["z/H"]==z_H,
                                 tp["tsr"]==tsr))[0][0]
-    print "Plotting spectra from run", tp["runs"][i]
+    return i
+
+def plotvelspec(y_R=0, z_H=0, tsr=1.9, show=False):
+    """Plots the velocity spectrum for a single run."""
+    # Find index for the desired parameters
+    i = find_run_ind(y_R, z_H, tsr)
+    print "Plotting spectra from run", i+1
     t1 = 13
     t2 = np.load('Processed/t2.npy')[i]
-    t, u, v, w = loadvec(tp["runs"][i])
+    t, u, v, w = loadvec(i+1) # Run name is index + 1
     v_seg = v[200*t1:200*t2] - np.mean(v[200*t1:200*t2])
     f, spec = psd(t, v_seg, window="Hanning")
     f_turbine = tsr*U/R/(2*np.pi)
@@ -296,8 +298,20 @@ def plot_vertical_lines(x):
                color='gray', linestyles='dashed')
     plt.ylim((ymin, ymax))
     
-def plot_vel_histogram():
-    pass
+def plotvelhist(run):
+    """Plots the velocity histogram for a given run."""
+    i = run - 1 # Run indexing starts from 1!
+    t1 = 13
+    t2 = np.load("Processed/t2.npy")[i]
+    t, u, v, w = loadvec(run)
+    u = u[t1*200:t2*200]
+    plt.figure()
+    plt.hist(u, bins=50, histtype="step", color="k", normed=True)
+    plt.xlabel(r"$u/U_\infty$")
+    plt.ylabel("Samples (normalized)")
+    styleplot()
+    plt.grid(False)
+    plt.show()
 
 def batchwake():
     runs = range(1, 378)
@@ -1156,6 +1170,7 @@ def main():
     sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT VAT near-wake/Figures/'
 #    plotperf(True, savepath, savetype)
 #    plotwake(["fpeak", "meankadv", "fstrength", "kprod"], save=False, savepath=sp)
+    plotvelspec(show=True)
     
 if __name__ == "__main__":
     ts = time.time()
