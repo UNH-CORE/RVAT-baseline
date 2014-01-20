@@ -17,6 +17,7 @@ import fdiff
 
 # Some constants
 R = 0.5
+H = 1.0
 U = 1.0
 d_shaft = 0.095
 A_t = 1.0
@@ -637,7 +638,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.ylabel(r'$z/H$')
         styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                          orientation='horizontal', pad=0.2)
+                          orientation='horizontal', pad=0.3)
         cb2.set_label(r'$\sigma_u/U_{\infty}$')
         turb_lines()
         ax = plt.axes()
@@ -761,7 +762,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.ylabel(r'$z/H$')
         styleplot()
         cbphi = plt.colorbar(csphi, shrink=1, extend='both', 
-                             orientation='horizontal', pad=0.2)
+                             orientation='horizontal', pad=0.3)
         cbphi.set_label(r'$k$')
         turb_lines()
         ax = plt.axes()
@@ -777,7 +778,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.ylabel(r'$z/H$')
         styleplot()
         cbphi = plt.colorbar(csphi, shrink=1, extend='both', 
-                             orientation='horizontal', pad=0.2)
+                             orientation='horizontal', pad=0.3)
         cbphi.set_label(r'$K$')
         turb_lines()
         ax = plt.axes()
@@ -1006,15 +1007,20 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         y = R*y_R
         dUdy = np.zeros(np.shape(meanu_a))
         dUdz = np.zeros(np.shape(meanu_a))
+        dVdy = np.zeros(np.shape(meanu_a))
         dVdz = np.zeros(np.shape(meanu_a))
         dWdy = np.zeros(np.shape(meanu_a))
+        dWdz = np.zeros(np.shape(meanu_a))
         for n in xrange(len(z)):
             dUdy[n,:] = fdiff.second_order_diff(meanu_a[n,:], y)
+            dVdy[n,:] = fdiff.second_order_diff(meanv_a[n,:], y)
             dWdy[n,:] = fdiff.second_order_diff(meanw_a[n,:], y)
         for n in xrange(len(y)):
             dUdz[:,n] = fdiff.second_order_diff(meanu_a[:,n], z)
             dVdz[:,n] = fdiff.second_order_diff(meanv_a[:,n], z)
-        prod = -meanuv_a*dUdy - meanuw_a*dUdz - meanvw_a*dVdz - meanvw_a*dWdy
+            dWdz[:,n] = fdiff.second_order_diff(meanw_a[:,n], z)
+        prod = - meanuv_a*dUdy - meanuw_a*dUdz - meanvw_a*dVdz - meanvw_a*dWdy\
+               - meanvv_a*dVdy - meanww_a*dWdz
         plt.figure(figsize=(10,5))
         cs = plt.contourf(y_R, z_H, prod, 20, cmap=plt.cm.coolwarm)
         plt.xlabel(r'$y/R$')
@@ -1063,8 +1069,40 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+'meankadv'+savetype)
+    if "Kturbtrans" in plotlist:
+        z = H*z_H
+        y = R*y_R
+        ddy_uvU = np.zeros(np.shape(meanu_a))
+        ddz_uwU = np.zeros(np.shape(meanu_a))
+        ddy_vvV = np.zeros(np.shape(meanu_a))
+        ddz_vwV = np.zeros(np.shape(meanu_a))
+        ddy_vwW = np.zeros(np.shape(meanu_a))
+        ddz_wwW = np.zeros(np.shape(meanu_a))
+        for n in range(len(z)):
+            ddy_uvU[n,:] = fdiff.second_order_diff((meanuv_a*meanu_a)[n,:], y)
+            ddy_vvV[n,:] = fdiff.second_order_diff((meanvv_a*meanv_a)[n,:], y)
+            ddy_vwW[n,:] = fdiff.second_order_diff((meanvw_a*meanw_a)[n,:], y)
+        for n in range(len(y)):
+            ddz_uwU[:,n] = fdiff.second_order_diff((meanuw_a*meanu_a)[:,n], z)
+            ddz_vwV[:,n] = fdiff.second_order_diff((meanvw_a*meanv_a)[:,n], z)
+            ddz_wwW[:,n] = fdiff.second_order_diff((meanww_a*meanw_a)[:,n], z)
+#        tt = -0.5*(ddy_uvU + ddz_uwU + ddy_vvV + ddz_vwV + ddy_vwW + ddz_wwW)
+        tt = -0.5*(ddy_uvU + ddy_vvV + ddy_vwW) # Only ddy terms
+        plt.figure(figsize=(10,5))
+        cs = plt.contourf(y_R, z_H, tt, 20, cmap=plt.cm.coolwarm)
+        plt.xlabel(r'$y/R$')
+        plt.ylabel(r'$z/H$')
+        styleplot()
+        cb = plt.colorbar(cs, shrink=1, extend='both', 
+                          orientation='horizontal', pad=0.3)
+        cb.set_label(r"$-\frac{1}{2}\frac{\partial}{\partial y}\overline{u_i' v'} U_i$")
+        turb_lines()
+        ax = plt.axes()
+        ax.set_aspect(2)
+        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
+        if save:
+            plt.savefig(savepath+'Kturbtrans'+savetype)
     plt.show()
-        
     # Look at exergy efficiency -- probably wrong
     # Calculate spatial average <> of velocities and velocities squared
     Ubr_1 = 1.0 
@@ -1187,7 +1225,7 @@ def main():
 #    batchwake()
     sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT VAT near-wake/Figures/'
 #    plotperf(True, savepath, savetype)
-    plotwake([""], save=False, savepath=sp)
+    plotwake(["meankcont", "kcont", "kprod", "Kturbtrans"], save=False, savepath=sp)
     
 if __name__ == "__main__":
     ts = time.time()
