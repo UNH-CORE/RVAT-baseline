@@ -517,7 +517,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
                     'vv_2tsrs', 'fpeak', 'fstrength']
     if 'meanucont' in plotlist:
         # Plot contours of mean streamwise velocity
-        plt.figure()
+        plt.figure(figsize=(10,5))
         cs = plt.contourf(y_R, z_H, meanu_a, 20)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -533,13 +533,13 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
             plt.savefig(savepath+'meanucont'+savetype)
     if 'v-wquiver' in plotlist:
         # Make quiver plot of v and w velocities
-        fig = plt.figure()
+        plt.figure(figsize=(10,5))
         Q = plt.quiver(y_R, z_H,meanv_a, meanw_a, angles='xy')
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
         plt.ylim(-0.2, 0.78)
         plt.xlim(-3.2, 3.2)
-        qk = quiverkey(Q, 0.75, 0.29, 0.1, r'$0.1$ m/s',
+        plt.quiverkey(Q, 0.75, 0.29, 0.1, r'$0.1$ m/s',
                    labelpos='E',
                    coordinates='figure',
                    fontproperties={'size': 'small'})
@@ -635,7 +635,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
             plt.savefig(savepath+'meanuvstsr'+savetype)
     if 'stducont' in plotlist:
         # Plot contours of streamwise turbulence intensity
-        plt.figure()
+        plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, stdu_a, 20)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -651,7 +651,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
             plt.savefig(savepath+'stducont'+savetype)
     if 'uvcont' in plotlist:
         # Plot contours of uv Reynolds stress
-        plt.figure()
+        plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, meanuv_a, 15, cmap=plt.cm.coolwarm)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -759,7 +759,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
             plt.savefig(savepath+'uv_2tsrs'+savetype)
     if 'kcont' in plotlist:
         # Plot contours of k
-        plt.figure()
+        plt.figure(figsize=(10,5))
         csphi = plt.contourf(y_R, z_H, k_a, 20, cmap=plt.cm.coolwarm)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -775,7 +775,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
             plt.savefig(savepath+'kcont'+savetype)
     if 'meankcont' in plotlist:
         # Plot contours of k
-        plt.figure()
+        plt.figure(figsize=(10,5))
         csphi = plt.contourf(y_R, z_H, meank_a, 20, cmap=plt.cm.coolwarm)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -791,7 +791,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
             plt.savefig(savepath+'meankcont'+savetype)
     if 'meanvcont' in plotlist:
         # Plot contours of meanv
-        plt.figure()
+        plt.figure(figsize=(10,5))
         cmv = plt.contourf(y_R, z_H, meanv_a, 20)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -807,7 +807,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
             plt.savefig(savepath+'meanvcont'+savetype)
     if 'stdvcont' in plotlist:
         # Plot contours of stdv
-        plt.figure()
+        plt.figure(figsize=(10,5))
         cstdv = plt.contourf(y_R, z_H, stdv_a, 20)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -823,7 +823,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
             plt.savefig(savepath+'stdvcont'+savetype)
     if 'meanwcont' in plotlist:
         # Plot contours of meanw
-        plt.figure()
+        plt.figure(figsize=(10,5))
         cmv = plt.contourf(y_R, z_H, meanw_a, 20)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -836,7 +836,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
             plt.savefig(savepath+'meanwcont'+savetype)
     if 'stdwcont' in plotlist:
         # Plot contours of stdw
-        plt.figure()
+        plt.figure(figsize=(10,5))
         cmv = plt.contourf(y_R, z_H, stdw_a, 20)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -887,7 +887,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
             plt.savefig(savepath+'vwcont'+savetype)
     if 'uwcont' in plotlist:
         # Plot contours of vw Reynolds stress
-        plt.figure()
+        plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, meanuw_a, 20)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -904,7 +904,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
             plt.savefig(savepath+'uwcont'+savetype)
     if 'vvcont' in plotlist:
         # Plot contours of vv Reynolds stress
-        plt.figure()
+        plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, meanvv_a, 20)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -921,7 +921,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
             plt.savefig(savepath+'vvcont'+savetype)
     if 'wwcont' in plotlist:
         # Plot contours of vv Reynolds stress
-        plt.figure()
+        plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, meanww_a, 20)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -938,7 +938,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
             plt.savefig(savepath+'wwcont'+savetype)
     if 'uucont' in plotlist:
         # Plot contours of uu Reynolds stress
-        plt.figure()
+        plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, meanuu_a, 20)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -989,7 +989,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         if save:
             plt.savefig(savepath+'fpeak'+savetype)
     if "fstrength" in plotlist:
-        plt.figure()
+        plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, fstrength_a, 20, cmap=plt.cm.coolwarm)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -1018,7 +1018,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
             dUdz[:,n] = fdiff.second_order_diff(meanu_a[:,n], z)
             dVdz[:,n] = fdiff.second_order_diff(meanv_a[:,n], z)
         prod = -meanuv_a*dUdy - meanuw_a*dUdz - meanvw_a*dVdz - meanvw_a*dWdy
-        plt.figure()
+        plt.figure(figsize=(10,5))
         cs = plt.contourf(y_R, z_H, prod, 20, cmap=plt.cm.coolwarm)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -1042,7 +1042,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         for n in xrange(len(y)):
             dKdz[:,n] = fdiff.second_order_diff(meank_a[:,n], z)
         # Make quiver plot of K advection
-        plt.figure()
+        plt.figure(figsize=(10,5))
         Q = plt.quiver(y_R, z_H, meanv_a*dKdy, meanw_a*dKdz, scale=4,
                        angles='xy')
         plt.xlabel(r'$y/R$')
@@ -1050,7 +1050,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.ylim(-0.2, 0.78)
         plt.xlim(-3.2, 3.2)
         # m^2/s^3
-        plt.quiverkey(Q, 0.75, 0.29, 0.2, r'$0.2 \mathrm{\, m^2/s^3}$',
+        plt.quiverkey(Q, 0.75, 0.2, 0.2, r'$0.2 \mathrm{\, m^2/s^3}$',
                       labelpos='E',
                       coordinates='figure',
                       fontproperties={'size': 'small'})
@@ -1068,7 +1068,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
             plt.savefig(savepath+'meankadv'+savetype)
     plt.show()
         
-    # Look at exergy efficiency
+    # Look at exergy efficiency -- probably wrong
     A2 = 3*0.625*2
     A1 = A2*np.mean(meanu_a) # Solve for A1 using continuity
     cdt = 0.964 # .964
@@ -1177,7 +1177,7 @@ def main():
 #    batchwake()
     sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT VAT near-wake/Figures/'
 #    plotperf(True, savepath, savetype)
-    plotwake(["fpeak", "meankadv", "fstrength"], save=True, savepath=sp)
+    plotwake(["fpeak", "meankadv", "fstrength"], save=False, savepath=sp)
     
 if __name__ == "__main__":
     ts = time.time()
