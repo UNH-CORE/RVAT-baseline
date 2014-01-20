@@ -19,6 +19,8 @@ import fdiff
 R = 0.5
 U = 1.0
 d_shaft = 0.095
+A_t = 1.0
+rho = 1000.0
 
 def styleplot():
     font = {'family':'serif','serif':'cmr10','size':23}
@@ -451,6 +453,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
     fstrength = np.load('Processed/fstrength.npy')
     k = 0.5*(stdu**2 + stdv**2 + stdw**2)
     meank = 0.5*(meanu**2 + meanv**2 + meanw**2)
+    kbar = meank + k
     
     meanu_a = np.zeros((len(z_H), len(y_R)))
     meanv_a = np.zeros((len(z_H), len(y_R)))
@@ -470,6 +473,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
     meanu2_a = np.zeros((len(z_H), len(y_R)))
     fpeak_a = np.zeros((len(z_H), len(y_R)))
     fstrength_a = np.zeros((len(z_H), len(y_R)))
+    kbar_a = np.zeros((len(z_H), len(y_R)))
     
     # Construct 2D arrays for velocity fields
     for n in range(len(z_H)):
@@ -491,6 +495,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         k_a[n,:] = k[ind]
         meank_a[n,:] = meank[ind]
         meanu2_a[n,:] = meanu2[ind]
+        kbar_a[n,:] = kbar[ind]
         fpeak_a[n,:] = fpeak[ind]
         fstrength_a[n,:] = fstrength[ind]
     
@@ -1061,23 +1066,36 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
     plt.show()
         
     # Look at exergy efficiency -- probably wrong
-    A2 = 3*0.625*2
-    A1 = A2*np.mean(meanu_a) # Solve for A1 using continuity
-    cdt = 0.964 # .964
-    mdot = 1000*A2*(1 - np.mean(meanu_a)) # Mass flow out sides of CV
-    fd = 1000*A2*(1**2 - np.mean(meanu2_a)) - 1*A2*mdot
-    p1 = 101300 # Pressure 1 in Pascals
-    p2 = (1000*A1 - 1000*A2*np.mean(meanu2_a) + p1*A1 - 500*cdt)/A2
-    pd = 500*A1 - 1000*A2*np.mean(phi_a) + A1*p1 - np.mean(meanu_a)*p2*A2
-    cd = (1000*A1 - 1000*A2*np.mean(meanu2_a) + p1*A1 - p2*A2)/500
-    cd = fd/500
-    eta2 = 500*0.255/pd
-    print "Eta2 =", eta2, "Cd =", cd, "A1/A2 =", A1/A2
-    print "p2 =", p2
+    # Calculate spatial average <> of velocities and velocities squared
+    Ubr_1 = 1.0 
+    Ubr_2 = np.trapz(np.trapz(meanu_a, y_R*R, axis=1), dx=0.125)/(3.0*0.625)
+    U2br_1 = 1.0**2
+    U2br_2 = np.trapz(np.trapz(meanu2_a, y_R*R, axis=1), dx=0.125)/(3.0*0.625)
+    kbarbr_1 = 0.5*1.0**2
+    kbarbr_2 = np.trapz(np.trapz(kbar_a, y_R*R, axis=1), dx=0.125)/(3.0*0.625)
+    phibr_1 = 0.5**1.0*1.0**2
+    phibr_2 = np.trapz(np.trapz(phi_a, y_R*R, axis=1), dx=0.125)/(3.0*0.625)
+    A_2 = 3*0.625*2
+    A_1 = A_2*Ubr_2/Ubr_1 # Solve for A1 using continuity
+    cd_meas = 0.964 # .964
+    fd_meas = 0.5*rho*cd_meas*A_t*1.0**2
+    p_1 = 0.0 # Gage pressure 1 in Pascals
+    p_2 = -(fd_meas - p_1*A_1 - rho*(A_1*U2br_1 - A_2*U2br_2))/A_2
+    power_d = rho*(Ubr_1*A_1*(kbarbr_1 + p_1/rho) - Ubr_2*A_2*(kbarbr_2 + p_2/rho))
+    power_d = rho*phibr_1*A_1 + Ubr_1*p_1*A_1 - rho*phibr_2*A_2 - Ubr_2*p_2*A_2
+    power_d_k = rho*phibr_1*A_1 - rho*phibr_2*A_2 
+    power_d_p = Ubr_1*p_1*A_1 - Ubr_2*p_2*A_2
+    eta2 = 0.5*rho*0.255/power_d
+    print "eta_II =", eta2 
+    print "A1/A2 =", A_1/A_2
+    print "p_2 =", p_2/rho
+    print "Shaft power output:", 0.5*rho*1.0*0.255*1.0**3
+    print "Kinetic power dissipation:", power_d_k
+    print "Static power dissipation:", power_d_p
    
 def calc_re():
     a = np.load('Processed/a.npy')    
-    U = 1
+    U = 1.0
     tsr = np.arange(0.1, 3.2, 0.1)
     a = a[0:len(tsr)]
     U = (1-a)*U
@@ -1142,12 +1160,12 @@ def export_data():
                 "Run - Run number corresponding to experimental program",
                 "U - Tow carriage velocity in m/s",
                 "TSR - Mean turbine tip speed ratio",
-                "C_p - Mean turbine power coefficient",
-                "C_d - Mean turbine drag (or thrust) coefficient",
+                "C_P - Mean turbine power coefficient",
+                "C_D - Mean turbine drag (or thrust) coefficient",
                 sep]
     s = 6
     clabels = ["Run".center(s), "U".center(s), "TSR".center(s),
-               "C_p".center(s), "C_d".center(s)]
+               "C_P".center(s), "C_D".center(s)]
     with open('Processed/csv/unh-rvat-perf-2013-03-rev'+str(rev)+".txt",'wb') \
     as csvfile:
         fwriter = csv.writer(csvfile, delimiter='\t')
@@ -1169,8 +1187,7 @@ def main():
 #    batchwake()
     sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT VAT near-wake/Figures/'
 #    plotperf(True, savepath, savetype)
-#    plotwake(["fpeak", "meankadv", "fstrength", "kprod"], save=False, savepath=sp)
-    plotvelspec(show=True)
+    plotwake([""], save=False, savepath=sp)
     
 if __name__ == "__main__":
     ts = time.time()
