@@ -54,20 +54,10 @@ def loadvec(run):
     return t, u, v, w
 
 def loadvectemp(run):
-    """Reads temperature from line 117."""
-    f = open("Vectrino/vec" + str(run) + ".hdr", "r") 
-    csv_read = csv.reader(f, delimiter = " ", 
-                          skipinitialspace = "True")
-    i = 0    
-    for line in csv_read:
-        vectemp = line
-        i += 1
-        if i == 118:
-            break
-    vectemp = np.float64(vectemp[1])
-    return vectemp
+    with open("Vectrino/vec" + str(run) + ".hdr") as f:
+        temp = f.readlines()[117].split()[1]
+    return float(temp)
                           
-    
 def loadtdms(run):
     filename = "TDMS/run" + str(run) + ".tdms"
     (objects,rawdata) = pyTDMS.read(filename)
