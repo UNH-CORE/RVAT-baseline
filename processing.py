@@ -536,7 +536,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.ylabel(r'$z/H$')
         plt.ylim(-0.2, 0.78)
         plt.xlim(-3.2, 3.2)
-        plt.quiverkey(Q, 0.75, 0.29, 0.1, r'$0.1$ m/s',
+        plt.quiverkey(Q, 0.75, 0.2, 0.1, r'$0.1$ m/s',
                    labelpos='E',
                    coordinates='figure',
                    fontproperties={'size': 'small'})
@@ -773,13 +773,13 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
     if 'meankcont' in plotlist:
         # Plot contours of k
         plt.figure(figsize=(10,5))
-        csphi = plt.contourf(y_R, z_H, meank_a, 20, cmap=plt.cm.coolwarm)
+        csphi = plt.contourf(y_R, z_H, meank_a/(0.5*1**2), 20, cmap=plt.cm.coolwarm)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
         styleplot()
         cbphi = plt.colorbar(csphi, shrink=1, extend='both', 
                              orientation='horizontal', pad=0.3)
-        cbphi.set_label(r'$K$')
+        cbphi.set_label(r'$K/(1/2U_\infty^2)$')
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
@@ -1086,16 +1086,17 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
             ddz_uwU[:,n] = fdiff.second_order_diff((meanuw_a*meanu_a)[:,n], z)
             ddz_vwV[:,n] = fdiff.second_order_diff((meanvw_a*meanv_a)[:,n], z)
             ddz_wwW[:,n] = fdiff.second_order_diff((meanww_a*meanw_a)[:,n], z)
-#        tt = -0.5*(ddy_uvU + ddz_uwU + ddy_vvV + ddz_vwV + ddy_vwW + ddz_wwW)
-        tt = -0.5*(ddy_uvU + ddy_vvV + ddy_vwW) # Only ddy terms
+        tt = -0.5*(ddy_uvU + ddz_uwU + ddy_vvV + ddz_vwV + ddy_vwW + ddz_wwW)
+#        tt = -0.5*(ddy_uvU + ddy_vvV + ddy_vwW) # Only ddy terms
         plt.figure(figsize=(10,5))
-        cs = plt.contourf(y_R, z_H, tt, 20, cmap=plt.cm.coolwarm)
+        cs = plt.contourf(y_R, z_H, tt, 20, cmap=plt.cm.coolwarm,
+                          levels=np.linspace(-0.08, 0.08, 21))
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
         styleplot()
         cb = plt.colorbar(cs, shrink=1, extend='both', 
                           orientation='horizontal', pad=0.3)
-        cb.set_label(r"$-\frac{1}{2}\frac{\partial}{\partial y}\overline{u_i' v'} U_i$")
+        cb.set_label(r"$-\frac{1}{2}\frac{\partial}{\partial x_j}\overline{u_i' u_j'} U_i$")
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
@@ -1225,7 +1226,7 @@ def main():
 #    batchwake()
     sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT VAT near-wake/Figures/'
 #    plotperf(True, savepath, savetype)
-    plotwake(["meankcont", "kcont", "kprod", "Kturbtrans"], save=False, savepath=sp)
+    plotwake(["meankcont", "v-wquiver", "Kturbtrans"], save=False, savepath=sp)
     
 if __name__ == "__main__":
     ts = time.time()
