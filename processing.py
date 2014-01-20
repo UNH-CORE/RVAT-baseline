@@ -46,25 +46,12 @@ def import_testplan():
             "y/R" : np.asarray(y_R), "z/H" : np.asarray(z_H)}
     
 def loadvec(run):
-    """Load Vectrino files. Could use numpy read text function probably."""
-    with open("Vectrino/vec" + str(run) + ".dat", "r") as myfileobj:
-        csv_read = csv.reader(myfileobj, delimiter = " ", 
-                              skipinitialspace = "True") 
-        u = []
-        tv = []
-        v = []
-        w = []
-        for line in csv_read: 
-            u.append(float(line[3]))
-            v.append(float(line[4]))
-            w.append(float(line[6]))
-            tv.append(float(line[0]))
-    u = np.asarray(u)
-    v = np.asarray(v)
-    w = np.asarray(w)
-    tv = np.asarray(tv)
-    return tv, u, v, w
-    
+    data = np.loadtxt("Vectrino/vec" + str(run) + ".dat")
+    t = data[:,0]
+    u = data[:,3]
+    v = data[:,4]
+    w = data[:,6]
+    return t, u, v, w
 
 def loadvectemp(run):
     """Reads temperature from line 117."""
@@ -995,12 +982,13 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.ylabel(r'$z/H$')
         styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                           orientation='horizontal', pad=0.2)
+                           orientation='horizontal', pad=0.3)
         cb2.set_label(r"$\Phi_{\max}/\sigma^2_v$")
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
+        styleplot()
         if save:
             plt.savefig(savepath+'fstrength'+savetype)
     # Plot estimate for production of turbulence kinetic energy
@@ -1024,7 +1012,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.ylabel(r'$z/H$')
         styleplot()
         cb = plt.colorbar(cs, shrink=1, extend='both', 
-                          orientation='horizontal', pad=0.2)
+                          orientation='horizontal', pad=0.3)
         cb.set_label(r"$-\overline{u_i' u_j'}\frac{\partial U_i}{\partial x_j}$")
         turb_lines()
         ax = plt.axes()
@@ -1177,7 +1165,7 @@ def main():
 #    batchwake()
     sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT VAT near-wake/Figures/'
 #    plotperf(True, savepath, savetype)
-    plotwake(["fpeak", "meankadv", "fstrength"], save=False, savepath=sp)
+#    plotwake(["fpeak", "meankadv", "fstrength", "kprod"], save=False, savepath=sp)
     
 if __name__ == "__main__":
     ts = time.time()
