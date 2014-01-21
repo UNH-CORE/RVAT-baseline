@@ -504,15 +504,8 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.hlines(0.5, -1, 1, linestyles='solid', linewidth=1.5)
         plt.vlines(-1, 0, 0.5, linestyles='solid', linewidth=1.5)
         plt.vlines(1, 0, 0.5, linestyles='solid', linewidth=1.5)
-        
-    if 'all' in plotlist:
-        plotlist = ['meanucont', 'meanvcont', 'meanwcont', 'v-wquiver',
-                    'stducont', 'stdvcont', 'stdwcont', 'meanu_2tsrs'
-                    'meanv_2tsrs', 'meanw_2tsrs', 'stdu_2tsrs', 'stdv_2tsrs',
-                    'stdw_2tsrs', 'uw_2tsrs', 'uv_2tsrs','vw_2tsrs', 'uvcont',
-                    'vwcont', 'uwcont', 'vvcont', 'wwcont', 'uucont', 
-                    'vv_2tsrs', 'fpeak', 'fstrength']
-    if 'meanucont' in plotlist:
+
+    if "meanucont" in plotlist or "all" in plotlist:
         # Plot contours of mean streamwise velocity
         plt.figure(figsize=(10,5))
         cs = plt.contourf(y_R, z_H, meanu_a, 20)
@@ -520,7 +513,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.ylabel(r'$z/H$')
         styleplot()
         cb = plt.colorbar(cs, shrink=1, extend='both', 
-                          orientation='horizontal', pad=0.2)
+                          orientation='horizontal', pad=0.3)
         cb.set_label(r'$\overline{u}/U_{\infty}$')
         turb_lines()
         ax = plt.axes()
@@ -528,7 +521,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+'meanucont'+savetype)
-    if 'v-wquiver' in plotlist:
+    if "v-wquiver" in plotlist or "all" in plotlist:
         # Make quiver plot of v and w velocities
         plt.figure(figsize=(10,5))
         Q = plt.quiver(y_R, z_H,meanv_a, meanw_a, angles='xy')
@@ -754,7 +747,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         if save:
             plt.savefig(savepath+'uv_2tsrs'+savetype)
-    if 'kcont' in plotlist:
+    if "kcont" in plotlist or "all" in plotlist:
         # Plot contours of k
         plt.figure(figsize=(10,5))
         csphi = plt.contourf(y_R, z_H, k_a, 20, cmap=plt.cm.coolwarm)
@@ -1103,6 +1096,35 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+'Kturbtrans'+savetype)
+    if "meancomboquiv" in plotlist or "all" in plotlist:
+        plt.figure(figsize=(10,5))
+        # Add contours of mean velocity
+        cs = plt.contourf(y_R, z_H, meanu_a, 20, cmap=plt.cm.coolwarm)
+        cb = plt.colorbar(cs, shrink=1, extend='both', 
+                          orientation='horizontal', pad=0.3)
+        cb.set_label(r'$U/U_{\infty}$')
+        plt.hold(True)
+        # Make quiver plot of v and w velocities
+        Q = plt.quiver(y_R, z_H, meanv_a, meanw_a, angles='xy')
+        plt.xlabel(r'$y/R$')
+        plt.ylabel(r'$z/H$')
+        plt.ylim(-0.2, 0.78)
+        plt.xlim(-3.2, 3.2)
+        plt.quiverkey(Q, 0.75, 0.38, 0.1, r'$0.1 U_\infty$',
+                   labelpos='E',
+                   coordinates='figure',
+                   fontproperties={'size': 'small'})
+        styleplot()
+        plt.hlines(0.5, -1, 1, linestyles='solid', colors='g',
+                   linewidth=4)
+        plt.vlines(-1, -0.2, 0.5, linestyles='solid', colors='g',
+                   linewidth=4)
+        plt.vlines(1, -0.2, 0.5, linestyles='solid', colors='g',
+                   linewidth=4)
+        ax = plt.axes()
+        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
+        if save:
+            plt.savefig(savepath+"meancomboquiv"+savetype)
     plt.show()
     # Look at exergy efficiency -- probably wrong
     # Calculate spatial average <> of velocities and velocities squared
@@ -1226,7 +1248,7 @@ def main():
 #    batchwake()
     sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT VAT near-wake/Figures/'
 #    plotperf(True, savepath, savetype)
-    plotwake(["meankcont", "v-wquiver", "Kturbtrans"], save=False, savepath=sp)
+    plotwake(["meancomboquiv", "kcont"], save=False, savepath=sp)
     
 if __name__ == "__main__":
     ts = time.time()
