@@ -501,9 +501,9 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         fstrength_a[n,:] = fstrength[ind]
     
     def turb_lines():
-        plt.hlines(0.5, -1, 1, linestyles='solid', linewidth=1.5)
-        plt.vlines(-1, 0, 0.5, linestyles='solid', linewidth=1.5)
-        plt.vlines(1, 0, 0.5, linestyles='solid', linewidth=1.5)
+        plt.hlines(0.5, -1, 1, linestyles='solid', linewidth=2)
+        plt.vlines(-1, 0, 0.5, linestyles='solid', linewidth=2)
+        plt.vlines(1, 0, 0.5, linestyles='solid', linewidth=2)
 
     if "meanucont" in plotlist or "all" in plotlist:
         # Plot contours of mean streamwise velocity
@@ -645,14 +645,14 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         cs2 = plt.contourf(y_R, z_H, meanuv_a, 15, cmap=plt.cm.coolwarm)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
-        styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                           orientation='horizontal', pad=0.2)
-        cb2.set_label(r"$\overline{u'v'}$")
+                           orientation='horizontal', pad=0.3)
+        cb2.set_label(r"$\overline{u'v'}/U_\infty^2$")
         cb2.set_ticks(np.arange(-0.02, 0.025, 0.005), update_ticks=True)
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
+        styleplot()
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+'uvcont'+savetype)
@@ -750,13 +750,13 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
     if "kcont" in plotlist or "all" in plotlist:
         # Plot contours of k
         plt.figure(figsize=(10,5))
-        csphi = plt.contourf(y_R, z_H, k_a, 20, cmap=plt.cm.coolwarm)
+        csphi = plt.contourf(y_R, z_H, k_a/(0.5*1.0**2), 20, cmap=plt.cm.coolwarm)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
         styleplot()
         cbphi = plt.colorbar(csphi, shrink=1, extend='both', 
                              orientation='horizontal', pad=0.3)
-        cbphi.set_label(r'$k$')
+        cbphi.set_label(r'$k/\frac{1}{2}U_\infty^2$')
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
@@ -772,7 +772,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         cbphi = plt.colorbar(csphi, shrink=1, extend='both', 
                              orientation='horizontal', pad=0.3)
-        cbphi.set_label(r'$K/(1/2U_\infty^2)$')
+        cbphi.set_label(r'$K/\frac{1}{2}U_\infty^2$')
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
@@ -860,35 +860,35 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
             plt.savefig(savepath+'vw_2tsrs'+savetype)
     if 'vwcont' in plotlist:
         # Plot contours of vw Reynolds stress
-        plt.figure()
-        cs2 = plt.contourf(y_R, z_H, meanvw_a, 20)
+        plt.figure(figsize=(10,5))
+        cs2 = plt.contourf(y_R, z_H, meanvw_a, 20, cmap=plt.cm.coolwarm)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
-        styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                           orientation='horizontal', pad=0.2)
-        cb2.set_label(r"$\overline{v'w'}$")
+                           orientation='horizontal', pad=0.3)
+        cb2.set_label(r"$\overline{v'w'}/U_\infty^2$")
         cb2.set_ticks(np.linspace(-.008,.006,6), update_ticks=True)
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
+        styleplot()
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+'vwcont'+savetype)
     if 'uwcont' in plotlist:
         # Plot contours of vw Reynolds stress
         plt.figure(figsize=(10,5))
-        cs2 = plt.contourf(y_R, z_H, meanuw_a, 20)
+        cs2 = plt.contourf(y_R, z_H, meanuw_a, 20, cmap=plt.cm.coolwarm)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
-        styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                           orientation='horizontal', pad=0.2)
-        cb2.set_label(r"$\overline{u'w'}$")
+                           orientation='horizontal', pad=0.3)
+        cb2.set_label(r"$\overline{u'w'}/U_\infty^2$")
         cb2.set_ticks(np.linspace(-.015,.013,6), update_ticks=True)
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
+        styleplot()
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+'uwcont'+savetype)
@@ -964,7 +964,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
     if "fpeak" in plotlist:
         plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, fpeak_a, cmap=plt.cm.coolwarm,
-                           levels=np.linspace(0,10,11))
+                           levels=np.linspace(0,10,21))
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
         cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
@@ -1027,7 +1027,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+'kprodcont'+savetype)
+            plt.savefig(savepath+'kprod'+savetype)
     if 'meankadv' in plotlist:
         z = 1.0*z_H
         y = R*y_R
@@ -1097,11 +1097,11 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         if save:
             plt.savefig(savepath+'Kturbtrans'+savetype)
     if "meancomboquiv" in plotlist or "all" in plotlist:
-        plt.figure(figsize=(10,5))
+        plt.figure(figsize=(10,6))
         # Add contours of mean velocity
         cs = plt.contourf(y_R, z_H, meanu_a, 20, cmap=plt.cm.coolwarm)
         cb = plt.colorbar(cs, shrink=1, extend='both', 
-                          orientation='horizontal', pad=0.3)
+                          orientation='horizontal', pad=0.2)
         cb.set_label(r'$U/U_{\infty}$')
         plt.hold(True)
         # Make quiver plot of v and w velocities
@@ -1110,7 +1110,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.ylabel(r'$z/H$')
         plt.ylim(-0.2, 0.78)
         plt.xlim(-3.2, 3.2)
-        plt.quiverkey(Q, 0.75, 0.38, 0.1, r'$0.1 U_\infty$',
+        plt.quiverkey(Q, 0.75, 0.3, 0.1, r'$0.1 U_\infty$',
                    labelpos='E',
                    coordinates='figure',
                    fontproperties={'size': 'small'})
@@ -1122,6 +1122,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.vlines(1, -0.2, 0.5, linestyles='solid', colors='g',
                    linewidth=4)
         ax = plt.axes()
+        ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+"meancomboquiv"+savetype)
@@ -1248,7 +1249,7 @@ def main():
 #    batchwake()
     sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT VAT near-wake/Figures/'
 #    plotperf(True, savepath, savetype)
-    plotwake(["meancomboquiv", "kcont"], save=False, savepath=sp)
+    plotwake(["uvcont", "vwcont", "uwcont"], save=True, savepath=sp)
     
 if __name__ == "__main__":
     ts = time.time()
