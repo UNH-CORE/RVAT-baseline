@@ -884,7 +884,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
                            orientation='horizontal', pad=0.3)
         cb2.set_label(r"$\overline{u'w'}/U_\infty^2$")
-        cb2.set_ticks(np.linspace(-.015,.013,6), update_ticks=True)
+#        cb2.set_ticks(np.linspace(-.015,.013,6), update_ticks=True)
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
@@ -1126,6 +1126,30 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+"meancomboquiv"+savetype)
+    if 'omegax' in plotlist:
+        z = 1.0*z_H
+        y = R*y_R
+        dWdy = np.zeros(np.shape(meanu_a))
+        dVdz = np.zeros(np.shape(meanu_a))
+        for n in xrange(len(z)):
+            dWdy[n,:] = fdiff.second_order_diff(meanw_a[n,:], y)
+        for n in xrange(len(y)):
+            dVdz[:,n] = fdiff.second_order_diff(meanv_a[:,n], z)
+        # Make quiver plot of K advection
+        plt.figure(figsize=(10,5))
+        cs = plt.contourf(y_R, z_H, dWdy-dVdz, 20, cmap=plt.cm.coolwarm)
+        plt.xlabel(r'$y/R$')
+        plt.ylabel(r'$z/H$')
+        styleplot()
+        cb = plt.colorbar(cs, shrink=1, extend='both', 
+                          orientation='horizontal', pad=0.26)
+        cb.set_label(r"$\Omega_x$")
+        turb_lines()
+        ax = plt.axes()
+        ax.set_aspect(2)
+        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
+        if save:
+            plt.savefig(savepath+'omegax'+savetype)
     plt.show()
     # Look at exergy efficiency -- probably wrong
     # Calculate spatial average <> of velocities and velocities squared
@@ -1249,7 +1273,7 @@ def main():
 #    batchwake()
     sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT VAT near-wake/Figures/'
 #    plotperf(True, savepath, savetype)
-    plotwake(["uvcont", "vwcont", "uwcont"], save=True, savepath=sp)
+    plotwake(["omegax"], save=False, savepath=sp)
     
 if __name__ == "__main__":
     ts = time.time()
