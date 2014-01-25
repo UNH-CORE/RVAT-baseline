@@ -646,7 +646,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
         cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                           orientation='horizontal', pad=0.3)
+                           orientation='horizontal', pad=0.26)
         cb2.set_label(r"$\overline{u'v'}/U_\infty^2$")
         cb2.set_ticks(np.arange(-0.02, 0.025, 0.005), update_ticks=True)
         turb_lines()
@@ -753,14 +753,14 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         csphi = plt.contourf(y_R, z_H, k_a/(0.5*1.0**2), 20, cmap=plt.cm.coolwarm)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
-        styleplot()
         cbphi = plt.colorbar(csphi, shrink=1, extend='both', 
-                             orientation='horizontal', pad=0.3)
+                             orientation='horizontal', pad=0.26)
         cbphi.set_label(r'$k/\frac{1}{2}U_\infty^2$')
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
+        styleplot()
         if save:
             plt.savefig(savepath+'kcont'+savetype)
     if 'meankcont' in plotlist:
@@ -769,14 +769,14 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         csphi = plt.contourf(y_R, z_H, meank_a/(0.5*1**2), 20, cmap=plt.cm.coolwarm)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
-        styleplot()
         cbphi = plt.colorbar(csphi, shrink=1, extend='both', 
-                             orientation='horizontal', pad=0.3)
+                             orientation='horizontal', pad=0.26)
         cbphi.set_label(r'$K/\frac{1}{2}U_\infty^2$')
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
+        styleplot()
         if save:
             plt.savefig(savepath+'meankcont'+savetype)
     if 'meanvcont' in plotlist:
@@ -882,7 +882,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
         cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                           orientation='horizontal', pad=0.3)
+                           orientation='horizontal', pad=0.26)
         cb2.set_label(r"$\overline{u'w'}/U_\infty^2$")
 #        cb2.set_ticks(np.linspace(-.015,.013,6), update_ticks=True)
         turb_lines()
@@ -968,7 +968,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
         cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                           orientation='horizontal', pad=0.3)
+                           orientation='horizontal', pad=0.26)
         cb2.set_label(r"$f_{\mathrm{peak}}/f_{\mathrm{turbine}}$")
         cb2.set_ticks(np.linspace(0,10,11), update_ticks=True)
         turb_lines()
@@ -985,7 +985,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.ylabel(r'$z/H$')
         styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                           orientation='horizontal', pad=0.3)
+                           orientation='horizontal', pad=0.26)
         cb2.set_label(r"$\Phi_{\max}/\sigma^2_v$")
         turb_lines()
         ax = plt.axes()
@@ -1018,13 +1018,13 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         cs = plt.contourf(y_R, z_H, prod, 20, cmap=plt.cm.coolwarm)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
-        styleplot()
         cb = plt.colorbar(cs, shrink=1, extend='both', 
-                          orientation='horizontal', pad=0.3)
+                          orientation='horizontal', pad=0.26)
         cb.set_label(r"$-\overline{u_i' u_j'}\frac{\partial U_i}{\partial x_j}$")
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
+        styleplot()
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+'kprod'+savetype)
@@ -1088,7 +1088,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.ylabel(r'$z/H$')
         styleplot()
         cb = plt.colorbar(cs, shrink=1, extend='both', 
-                          orientation='horizontal', pad=0.3)
+                          orientation='horizontal', pad=0.26)
         cb.set_label(r"$-\frac{1}{2}\frac{\partial}{\partial x_j}\overline{u_i' u_j'} U_i$")
         turb_lines()
         ax = plt.axes()
@@ -1114,7 +1114,6 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
                    labelpos='E',
                    coordinates='figure',
                    fontproperties={'size': 'small'})
-        styleplot()
         plt.hlines(0.5, -1, 1, linestyles='solid', colors='g',
                    linewidth=4)
         plt.vlines(-1, -0.2, 0.5, linestyles='solid', colors='g',
@@ -1124,9 +1123,10 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
+        styleplot()
         if save:
             plt.savefig(savepath+"meancomboquiv"+savetype)
-    if 'omegax' in plotlist:
+    if 'xvorticity' in plotlist:
         z = 1.0*z_H
         y = R*y_R
         dWdy = np.zeros(np.shape(meanu_a))
@@ -1140,7 +1140,6 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         cs = plt.contourf(y_R, z_H, dWdy-dVdz, 20, cmap=plt.cm.coolwarm)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
-        styleplot()
         cb = plt.colorbar(cs, shrink=1, extend='both', 
                           orientation='horizontal', pad=0.26)
         cb.set_label(r"$\Omega_x$")
@@ -1148,8 +1147,9 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
+        styleplot()
         if save:
-            plt.savefig(savepath+'omegax'+savetype)
+            plt.savefig(savepath+'xvorticity'+savetype)
     plt.show()
     # Look at exergy efficiency -- probably wrong
     # Calculate spatial average <> of velocities and velocities squared
@@ -1273,7 +1273,7 @@ def main():
 #    batchwake()
     sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT VAT near-wake/Figures/'
 #    plotperf(True, savepath, savetype)
-    plotwake(["omegax"], save=False, savepath=sp)
+    plotwake(["meancomboquiv"], save=True, savepath=sp)
     
 if __name__ == "__main__":
     ts = time.time()
