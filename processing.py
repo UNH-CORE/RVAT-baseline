@@ -396,7 +396,7 @@ def plotperf(save=False, savepath="", savetype=".pdf"):
     cd = np.load('Processed/cd.npy')
     tsr = np.load('Processed/tsr.npy')
     eta2 = np.load('Processed/eta2.npy')
-    
+    # Exergy efficiency plot
     plt.figure()
     plt.plot(tsr[i], eta2[i], '-ok', markerfacecolor = 'none')
     plt.xlabel(r'$\lambda$', labelpad=20)
@@ -404,7 +404,7 @@ def plotperf(save=False, savepath="", savetype=".pdf"):
     styleplot()
     if save:
         plt.savefig(savepath+'eta2'+savetype)
-        
+    # Power coefficient plot
     plt.figure()
     plt.plot(tsr[i], cp[i], '-ok', markerfacecolor = 'none')
     plt.xlabel(r'$\lambda$', labelpad=20)
@@ -412,7 +412,7 @@ def plotperf(save=False, savepath="", savetype=".pdf"):
     styleplot()
     if save:
         plt.savefig(savepath+'cpvstsr'+savetype)
-        
+    # Drag coefficient plot
     plt.figure()
     plt.plot(tsr[i], cd[i], '-ok', markerfacecolor = 'none')
     plt.xlabel(r'$\lambda$', labelpad=20)
@@ -421,9 +421,9 @@ def plotperf(save=False, savepath="", savetype=".pdf"):
     styleplot()
     if save:
         plt.savefig(savepath+'cdvstsr'+savetype)
-    # Create torque coefficient plot
+    # Torque coefficient plot
     ct = cp/tsr
-    plt.figure(4)
+    plt.figure()
     plt.plot(tsr[i], ct[i], '-ok', markerfacecolor = 'none')
     plt.xlabel(r'$\lambda$', labelpad=20)
     plt.ylabel(r'$C_T$')
@@ -1272,8 +1272,8 @@ def main():
 #    batchperf()
 #    batchwake()
     sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT VAT near-wake/Figures/'
-#    plotperf(True, savepath, savetype)
-    plotwake(["meancomboquiv"], save=True, savepath=sp)
+    plotperf(save=True, savepath=sp)
+#    plotwake(["meancomboquiv"], save=True, savepath=sp)
     
 if __name__ == "__main__":
     ts = time.time()
