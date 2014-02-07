@@ -3,6 +3,7 @@ This script imports and processes turbine performance and wake data from
 March 2013 experiments with the VAT
 
 """
+from __future__ import division, print_function
 import pyTDMS
 import xlrd
 from timeseries import *
@@ -125,8 +126,8 @@ def batchperf(runs="all"):
     a = np.zeros(len(runs))
     torque_ripple = np.zeros(len(runs))
     for n in range(len(runs)):
-        print "Processing performance data from run", runs[n], "of", \
-        str(np.max(runs))+"..."
+        print("Processing performance data from run", runs[n], "of", \
+        str(np.max(runs))+"...")
         t, angle, Ttrans, Tarm, drag, rpm, tsr_s = loadtdms(runs[n])
         t2[n], Nrevs[n] = find_t2(t, angle, t1, t2t)
         tsr[n], std_tsr[n] = calcstats(tsr_s, t1, t2[n], 2000)
@@ -169,7 +170,7 @@ def ens_ave():
     i2 = findIndex(angle, angle1+360)
     npoints = i2-i1
     Tens = Ttrans[i1:i2]
-    print Nrevs
+    print(Nrevs)
     for n in range(1,int(Nrevs)):
             ta1 = angle1+n*360
             i1 = findIndex(angle, ta1)
@@ -212,10 +213,10 @@ def plotsinglerun(run, perf=True, wake=False):
 #                   color='k',linestyles='dashed')
         styleplot()
         plt.show()
-        print 'TSR =', meantsr, '; C_P =', cp
-        print "Number of revolutions:", Nrevs
-        print "(1/2)(max_cd-min_cd)/cd:", np.abs(max_cd-min_cd)*0.5/cd
-        print "(1/2)(Tmax-Tmin)/Tmean:", np.abs(max_torque-min_torque)*0.5/meanT
+        print('TSR =', meantsr, '; C_P =', cp)
+        print("Number of revolutions:", Nrevs)
+        print("(1/2)(max_cd-min_cd)/cd:", np.abs(max_cd-min_cd)*0.5/cd)
+        print("(1/2)(Tmax-Tmin)/Tmean:", np.abs(max_torque-min_torque)*0.5/meanT)
     if wake == True:
         tv, u, v, w = loadvec(run)
         t, angle, Ttrans, Tarm, drag, rpm, tsr = loadtdms(run)
@@ -261,7 +262,7 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, show=False):
     """Plots the velocity spectrum for a single run."""
     # Find index for the desired parameters
     i = find_run_ind(y_R, z_H, tsr)
-    print "Plotting spectra from run", i+1
+    print("Plotting spectra from run", i+1)
     t1 = 13
     t2 = np.load('Processed/t2.npy')[i]
     t, u, v, w = loadvec(i+1) # Run name is index + 1
@@ -273,8 +274,8 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, show=False):
     f_max = f[np.where(spec==np.max(spec))[0][0]]
     strength = np.max(spec)/np.var(v_seg)
     if show:
-        print "Strongest frequency f/f_turbine:", f_max/f_turbine,
-        print "Relative strength:", strength
+        print("Strongest frequency f/f_turbine:", f_max/f_turbine)
+        print("Relative strength:", strength)
         # Calculate shaft shedding frequency
         St = 0.19 # Approximate for Re_d = 1e5
         f_cyl = St*U/d_shaft
@@ -342,7 +343,7 @@ def batchwake():
     fstrength = np.zeros(len(runs))
     
     for n in range(len(runs)):
-        print 'Processing Vectrino data from run', runs[n]
+        print('Processing Vectrino data from run', runs[n])
         tv,u,v,w = loadvec(runs[n])
         phi_s = 0.5*u*(u**2 + v**2 + w**2)
         u2 = u**2
@@ -1039,26 +1040,26 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
             dKdz[:,n] = fdiff.second_order_diff(meank_a[:,n], z)
         # Make quiver plot of K advection
         plt.figure(figsize=(10,5))
-        Q = plt.quiver(y_R, z_H, meanv_a*dKdy, meanw_a*dKdz, scale=4,
-                       angles='xy')
+        plt.hlines(0.5, -1, 1, linestyles='solid', colors='r',
+                   linewidth=3)
+        plt.vlines(-1, -0.2, 0.5, linestyles='solid', colors='r',
+                   linewidth=3)
+        plt.vlines(1, -0.2, 0.5, linestyles='solid', colors='r',
+                   linewidth=3)
+        Q = plt.quiver(y_R, z_H, meanv_a/meanu_a*dKdy, meanw_a/meanu_a*dKdz, 
+                       scale=4, angles='xy')
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
         plt.ylim(-0.2, 0.78)
         plt.xlim(-3.2, 3.2)
-        # m^2/s^3
-        plt.quiverkey(Q, 0.75, 0.2, 0.2, r'$0.2 \mathrm{\, m^2/s^3}$',
+        plt.quiverkey(Q, 0.75, 0.1, 0.2, r'$0.2 \mathrm{\, m/s^2}$',
                       labelpos='E',
                       coordinates='figure',
                       fontproperties={'size': 'small'})
-        plt.tight_layout()
-        plt.hlines(0.5, -1, 1, linestyles='solid', colors='r',
-                   linewidth=2)
-        plt.vlines(-1, -0.2, 0.5, linestyles='solid', colors='r',
-                   linewidth=2)
-        plt.vlines(1, -0.2, 0.5, linestyles='solid', colors='r',
-                   linewidth=2)
         ax = plt.axes()
         ax.set_aspect(2)
+        styleplot()
+        plt.grid(False)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+'meankadv'+savetype)
@@ -1080,9 +1081,10 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
             ddz_vwV[:,n] = fdiff.second_order_diff((meanvw_a*meanv_a)[:,n], z)
             ddz_wwW[:,n] = fdiff.second_order_diff((meanww_a*meanw_a)[:,n], z)
         tt = -0.5*(ddy_uvU + ddz_uwU + ddy_vvV + ddz_vwV + ddy_vwW + ddz_wwW)
-#        tt = -0.5*(ddy_uvU + ddy_vvV + ddy_vwW) # Only ddy terms
+        tty = -0.5*(ddy_uvU + ddy_vvV + ddy_vwW) # Only ddy terms
+        ttz = -0.5*(ddz_uwU + ddz_vwV + ddz_wwW) # Only ddz terms
         plt.figure(figsize=(10,5))
-        cs = plt.contourf(y_R, z_H, tt, 20, cmap=plt.cm.coolwarm,
+        cs = plt.contourf(y_R, z_H, tty, 20, cmap=plt.cm.coolwarm,
                           levels=np.linspace(-0.08, 0.08, 21))
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
@@ -1150,6 +1152,12 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         if save:
             plt.savefig(savepath+'xvorticity'+savetype)
+    def internal():
+        print(yo)
+    if "Kbargraph" in plotlist:
+#        plt.figure(figsize=(10,5))
+        yo = "hey"
+        internal()
     plt.show()
     # Look at exergy efficiency -- probably wrong
     # Calculate spatial average <> of velocities and velocities squared
@@ -1172,12 +1180,12 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
     power_d_k = rho*phibr_1*A_1 - rho*phibr_2*A_2 
     power_d_p = Ubr_1*p_1*A_1 - Ubr_2*p_2*A_2
     eta2 = 0.5*rho*0.255/power_d
-    print "eta_II =", eta2 
-    print "A1/A2 =", A_1/A_2
-    print "p_2 =", p_2/rho
-    print "Shaft power output:", 0.5*rho*1.0*0.255*1.0**3
-    print "Kinetic power dissipation:", power_d_k
-    print "Static power dissipation:", power_d_p
+    print("eta_II =", eta2)
+    print("A1/A2 =", A_1/A_2)
+    print("p_2 =", p_2/rho)
+    print("Shaft power output:", 0.5*rho*1.0*0.255*1.0**3)
+    print("Kinetic power dissipation:", power_d_k)
+    print("Static power dissipation:", power_d_p)
    
 def calc_re():
     a = np.load('Processed/a.npy')    
@@ -1209,7 +1217,7 @@ def plot_torque_ripple():
     plt.ylabel(r'Torque ripple')
     styleplot()  
     plt.show()
-    print "Torque ripple at TSR =", str(tsr[12])+":", torque_ripple[12]
+    print("Torque ripple at TSR =", str(tsr[12])+":", torque_ripple[12])
     
 def export_data():
     """Export processed data to text file."""
@@ -1272,11 +1280,11 @@ def main():
 #    batchperf()
 #    batchwake()
     sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT VAT near-wake/Figures/'
-    plotperf(save=True, savepath=sp)
-#    plotwake(["meancomboquiv"], save=True, savepath=sp)
+#    plotperf(save=True, savepath=sp)
+    plotwake(["Kbargraph"], save=False, savepath=sp)
     
 if __name__ == "__main__":
     ts = time.time()
     main()
     te = time.time()
-    print "Elapsed time:", te-ts, "s"
+    print("Elapsed time:", te-ts, "s")
