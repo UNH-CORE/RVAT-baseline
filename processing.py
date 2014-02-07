@@ -436,7 +436,8 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
     z_H = np.arange(0, 0.75, 0.125)
     y_R = np.hstack([-3.,-2.75,-2.5,-2.25,-2.,-1.8,np.arange(-1.6,0.1,0.1)])
     y_R = np.hstack([y_R, -np.flipud(y_R[0:-1])])
-    
+    y_R = np.round(y_R, decimals=4)
+    # Load processed data
     meanu = np.load('Processed/meanu.npy')
     meanv = np.load('Processed/meanv.npy')
     meanw = np.load('Processed/meanw.npy')
@@ -456,7 +457,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
     k = 0.5*(stdu**2 + stdv**2 + stdw**2)
     meank = 0.5*(meanu**2 + meanv**2 + meanw**2)
     kbar = meank + k
-    
+    # Create empty 2D arrays for contour plots, etc.
     meanu_a = np.zeros((len(z_H), len(y_R)))
     meanv_a = np.zeros((len(z_H), len(y_R)))
     meanw_a = np.zeros((len(z_H), len(y_R)))
@@ -476,8 +477,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
     fpeak_a = np.zeros((len(z_H), len(y_R)))
     fstrength_a = np.zeros((len(z_H), len(y_R)))
     kbar_a = np.zeros((len(z_H), len(y_R)))
-    
-    # Construct 2D arrays for velocity fields
+    # Populate 2D arrays for velocity fields
     for n in range(len(z_H)):
         runs = getruns(z_H[n], tsr=1.9)
         ind = [run - 1 for run in runs]
@@ -500,12 +500,61 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         kbar_a[n,:] = kbar[ind]
         fpeak_a[n,:] = fpeak[ind]
         fstrength_a[n,:] = fstrength[ind]
-    
     def turb_lines():
         plt.hlines(0.5, -1, 1, linestyles='solid', linewidth=2)
         plt.vlines(-1, 0, 0.5, linestyles='solid', linewidth=2)
         plt.vlines(1, 0, 0.5, linestyles='solid', linewidth=2)
-
+    def calc_meankturbtrans():
+        z = H*z_H
+        y = R*y_R
+        ddy_uvU = np.zeros(np.shape(meanu_a))
+        ddz_uwU = np.zeros(np.shape(meanu_a))
+        ddy_vvV = np.zeros(np.shape(meanu_a))
+        ddz_vwV = np.zeros(np.shape(meanu_a))
+        ddy_vwW = np.zeros(np.shape(meanu_a))
+        ddz_wwW = np.zeros(np.shape(meanu_a))
+        for n in range(len(z)):
+            ddy_uvU[n,:] = fdiff.second_order_diff((meanuv_a*meanu_a)[n,:], y)
+            ddy_vvV[n,:] = fdiff.second_order_diff((meanvv_a*meanv_a)[n,:], y)
+            ddy_vwW[n,:] = fdiff.second_order_diff((meanvw_a*meanw_a)[n,:], y)
+        for n in range(len(y)):
+            ddz_uwU[:,n] = fdiff.second_order_diff((meanuw_a*meanu_a)[:,n], z)
+            ddz_vwV[:,n] = fdiff.second_order_diff((meanvw_a*meanv_a)[:,n], z)
+            ddz_wwW[:,n] = fdiff.second_order_diff((meanww_a*meanw_a)[:,n], z)
+        tt = -0.5*(ddy_uvU + ddz_uwU + ddy_vvV + ddz_vwV + ddy_vwW + ddz_wwW)
+        tty = -0.5*(ddy_uvU + ddy_vvV + ddy_vwW) # Only ddy terms
+        ttz = -0.5*(ddz_uwU + ddz_vwV + ddz_wwW) # Only ddz terms
+        return tt, tty, ttz
+    def calc_kprod():
+        z = H*z_H
+        y = R*y_R
+        dUdy = np.zeros(np.shape(meanu_a))
+        dUdz = np.zeros(np.shape(meanu_a))
+        dVdy = np.zeros(np.shape(meanu_a))
+        dVdz = np.zeros(np.shape(meanu_a))
+        dWdy = np.zeros(np.shape(meanu_a))
+        dWdz = np.zeros(np.shape(meanu_a))
+        for n in xrange(len(z)):
+            dUdy[n,:] = fdiff.second_order_diff(meanu_a[n,:], y)
+            dVdy[n,:] = fdiff.second_order_diff(meanv_a[n,:], y)
+            dWdy[n,:] = fdiff.second_order_diff(meanw_a[n,:], y)
+        for n in xrange(len(y)):
+            dUdz[:,n] = fdiff.second_order_diff(meanu_a[:,n], z)
+            dVdz[:,n] = fdiff.second_order_diff(meanv_a[:,n], z)
+            dWdz[:,n] = fdiff.second_order_diff(meanw_a[:,n], z)
+        kprod = - meanuv_a*dUdy - meanuw_a*dUdz - meanvw_a*dVdz - meanvw_a*dWdy\
+                - meanvv_a*dVdy - meanww_a*dWdz
+        return kprod
+    def calc_meankgrad():
+        z = H*z_H
+        y = R*y_R
+        dKdy = np.zeros(np.shape(meanu_a))
+        dKdz = np.zeros(np.shape(meanu_a))
+        for n in xrange(len(z)):
+            dKdy[n,:] = fdiff.second_order_diff(meank_a[n,:], y)
+        for n in xrange(len(y)):
+            dKdz[:,n] = fdiff.second_order_diff(meank_a[:,n], z)
+        return dKdy, dKdz
     if "meanucont" in plotlist or "all" in plotlist:
         # Plot contours of mean streamwise velocity
         plt.figure(figsize=(10,5))
@@ -997,26 +1046,9 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
             plt.savefig(savepath+'fstrength'+savetype)
     # Plot estimate for production of turbulence kinetic energy
     if "kprod" in plotlist:
-        z = 1.0*z_H
-        y = R*y_R
-        dUdy = np.zeros(np.shape(meanu_a))
-        dUdz = np.zeros(np.shape(meanu_a))
-        dVdy = np.zeros(np.shape(meanu_a))
-        dVdz = np.zeros(np.shape(meanu_a))
-        dWdy = np.zeros(np.shape(meanu_a))
-        dWdz = np.zeros(np.shape(meanu_a))
-        for n in xrange(len(z)):
-            dUdy[n,:] = fdiff.second_order_diff(meanu_a[n,:], y)
-            dVdy[n,:] = fdiff.second_order_diff(meanv_a[n,:], y)
-            dWdy[n,:] = fdiff.second_order_diff(meanw_a[n,:], y)
-        for n in xrange(len(y)):
-            dUdz[:,n] = fdiff.second_order_diff(meanu_a[:,n], z)
-            dVdz[:,n] = fdiff.second_order_diff(meanv_a[:,n], z)
-            dWdz[:,n] = fdiff.second_order_diff(meanw_a[:,n], z)
-        prod = - meanuv_a*dUdy - meanuw_a*dUdz - meanvw_a*dVdz - meanvw_a*dWdy\
-               - meanvv_a*dVdy - meanww_a*dWdz
+        calc_meanvelgrad()
         plt.figure(figsize=(10,5))
-        cs = plt.contourf(y_R, z_H, prod, 20, cmap=plt.cm.coolwarm)
+        cs = plt.contourf(y_R, z_H, kprod, 20, cmap=plt.cm.coolwarm)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
         cb = plt.colorbar(cs, shrink=1, extend='both', 
@@ -1030,14 +1062,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         if save:
             plt.savefig(savepath+'kprod'+savetype)
     if 'meankadv' in plotlist:
-        z = 1.0*z_H
-        y = R*y_R
-        dKdy = np.zeros(np.shape(meanu_a))
-        dKdz = np.zeros(np.shape(meanu_a))
-        for n in xrange(len(z)):
-            dKdy[n,:] = fdiff.second_order_diff(meank_a[n,:], y)
-        for n in xrange(len(y)):
-            dKdz[:,n] = fdiff.second_order_diff(meank_a[:,n], z)
+        calc_meankgrad()
         # Make quiver plot of K advection
         plt.figure(figsize=(10,5))
         plt.hlines(0.5, -1, 1, linestyles='solid', colors='r',
@@ -1064,25 +1089,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         if save:
             plt.savefig(savepath+'meankadv'+savetype)
     if "Kturbtrans" in plotlist:
-        z = H*z_H
-        y = R*y_R
-        ddy_uvU = np.zeros(np.shape(meanu_a))
-        ddz_uwU = np.zeros(np.shape(meanu_a))
-        ddy_vvV = np.zeros(np.shape(meanu_a))
-        ddz_vwV = np.zeros(np.shape(meanu_a))
-        ddy_vwW = np.zeros(np.shape(meanu_a))
-        ddz_wwW = np.zeros(np.shape(meanu_a))
-        for n in range(len(z)):
-            ddy_uvU[n,:] = fdiff.second_order_diff((meanuv_a*meanu_a)[n,:], y)
-            ddy_vvV[n,:] = fdiff.second_order_diff((meanvv_a*meanv_a)[n,:], y)
-            ddy_vwW[n,:] = fdiff.second_order_diff((meanvw_a*meanw_a)[n,:], y)
-        for n in range(len(y)):
-            ddz_uwU[:,n] = fdiff.second_order_diff((meanuw_a*meanu_a)[:,n], z)
-            ddz_vwV[:,n] = fdiff.second_order_diff((meanvw_a*meanv_a)[:,n], z)
-            ddz_wwW[:,n] = fdiff.second_order_diff((meanww_a*meanw_a)[:,n], z)
-        tt = -0.5*(ddy_uvU + ddz_uwU + ddy_vvV + ddz_vwV + ddy_vwW + ddz_wwW)
-        tty = -0.5*(ddy_uvU + ddy_vvV + ddy_vwW) # Only ddy terms
-        ttz = -0.5*(ddz_uwU + ddz_vwV + ddz_wwW) # Only ddz terms
+        calc_meankturbtrans()
         plt.figure(figsize=(10,5))
         cs = plt.contourf(y_R, z_H, tty, 20, cmap=plt.cm.coolwarm,
                           levels=np.linspace(-0.08, 0.08, 21))
@@ -1152,12 +1159,36 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         if save:
             plt.savefig(savepath+'xvorticity'+savetype)
-    def internal():
-        print(yo)
     if "Kbargraph" in plotlist:
-#        plt.figure(figsize=(10,5))
-        yo = "hey"
-        internal()
+        """Make a bar graph of terms contributing to dK/dx:
+          * Cross-stream advection
+          * Vertical advection
+          * Transport by turbulent fluctuations
+          * Production of TKE
+          * Mean dissipation
+        """
+        print(y_R, z_H)
+        tt, tty, ttz = calc_meankturbtrans()
+        kprod = calc_kprod()
+        dKdy, dKdz = calc_meankgrad()
+        meandiss = 0.001
+        plt.figure(figsize=(10,5))
+        names = [r"$y$-advection", r"$z$-advection", "Turb. trans.", 
+                 r"$k$ prod.", "Mean diss."]
+        i1 = np.where(z_H==0.25)[0]
+        i2 = np.where(y_R==1.5)[0]
+        quantities = [np.abs(meanv_a[i1,i2]/meanu_a[i1,i2]*dKdy[i1,i2]), 
+                      np.abs(meanw_a[i1,i2]/meanu_a[i1,i2]*dKdz[i1,i2]),
+                      np.abs(tt[i1,i2]/meanu_a[i1,i2]),
+                      np.abs(kprod[i1,i2]/meanu_a[i1,i2]),
+                      meandiss]
+        plt.bar(range(len(names)), quantities, width=0.5)
+        ax = plt.gca()
+        ax.set_xticks(np.arange(len(names))+0.25)
+        ax.set_xticklabels(names)
+        plt.ylabel(r"$\frac{K\mathrm{-transport}}{U}$")
+        styleplot()
+        plt.grid(False)
     plt.show()
     # Look at exergy efficiency -- probably wrong
     # Calculate spatial average <> of velocities and velocities squared
