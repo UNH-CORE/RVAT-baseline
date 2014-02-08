@@ -526,7 +526,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         tty = -0.5*(ddy_uvU + ddy_vvV + ddy_vwW) # Only ddy terms
         ttz = -0.5*(ddz_uwU + ddz_vwV + ddz_wwW) # Only ddz terms
         return tt, tty, ttz
-    def calc_kprod():
+    def calc_kprod_meandiss():
         z = H*z_H
         y = R*y_R
         dUdy = np.zeros(np.shape(meanu_a))
@@ -545,7 +545,8 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
             dWdz[:,n] = fdiff.second_order_diff(meanw_a[:,n], z)
         kprod = meanuv_a*dUdy + meanuw_a*dUdz + meanvw_a*dVdz + meanvw_a*dWdy\
                 + meanvv_a*dVdy + meanww_a*dWdz
-        return kprod
+        meandiss = -2.0*nu*(dUdy**2 + dUdz**2 + dVdy**2 + dVdz**2 + dWdy**2 + dWdz**2)
+        return kprod, meandiss
     def calc_meankgrad():
         z = H*z_H
         y = R*y_R
@@ -1168,17 +1169,15 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
           * Production of TKE
           * Mean dissipation
         """
-        print(y_R, z_H)
         tt, tty, ttz = calc_meankturbtrans()
-        kprod = calc_kprod()
+        kprod, meandiss = calc_kprod_meandiss()
         dKdy, dKdz = calc_meankgrad()
-        meandiss = 0.0001
         plt.figure(figsize=(9,7))
         names = [r"$y$-adv.", r"$z$-adv.", 
                  r"$y$-turb.", 
                  r"$z$-turb.",
                  r"$k$-prod.", "Mean diss."]
-        yloc = 0.7
+        yloc = -0.5
         zloc = 0.5
         i1 = np.where(z_H==zloc)[0]
         i2 = np.where(y_R==yloc)[0]
@@ -1187,7 +1186,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
                       tty[i1,i2]/meanu_a[i1,i2],
                       ttz[i1,i2]/meanu_a[i1,i2],
                       kprod[i1,i2]/meanu_a[i1,i2],
-                      meandiss]
+                      meandiss[i1,i2]/meanu_a[i1,i2]]
 #        quantities = [average_over_area(meanv_a/meanu_a*dKdy, y_R, z_H), 
 #                      average_over_area(meanw_a/meanu_a*dKdz, y_R, z_H),
 #                      average_over_area(tty/meanu_a, y_R, z_H),
@@ -1206,7 +1205,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.title(r"$y/R =" + str(yloc) + "$; $z/H =" + str(zloc) + "$",
                   fontsize=20)
         ax.annotate(r"$\mathrm{Total} = " \
-                    + str(np.round(np.sum(quantities)[0], decimals=4)) + "$", 
+                    + str(np.round(np.sum(quantities), decimals=4)) + "$", 
                     xy=(0, 0), xytext=(0.75, 0.82), 
                     xycoords="figure fraction", fontsize=18)
         styleplot()
