@@ -23,6 +23,7 @@ U = 1.0
 d_shaft = 0.095
 A_t = 1.0
 rho = 1000.0
+nu = 1e-6
 
 def styleplot():
     font = {'family':'serif','serif':'cmr10','size':23}
@@ -542,8 +543,8 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
             dUdz[:,n] = fdiff.second_order_diff(meanu_a[:,n], z)
             dVdz[:,n] = fdiff.second_order_diff(meanv_a[:,n], z)
             dWdz[:,n] = fdiff.second_order_diff(meanw_a[:,n], z)
-        kprod = - meanuv_a*dUdy - meanuw_a*dUdz - meanvw_a*dVdz - meanvw_a*dWdy\
-                - meanvv_a*dVdy - meanww_a*dWdz
+        kprod = meanuv_a*dUdy + meanuw_a*dUdz + meanvw_a*dVdz + meanvw_a*dWdy\
+                + meanvv_a*dVdy + meanww_a*dWdz
         return kprod
     def calc_meankgrad():
         z = H*z_H
@@ -1171,22 +1172,43 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         tt, tty, ttz = calc_meankturbtrans()
         kprod = calc_kprod()
         dKdy, dKdz = calc_meankgrad()
-        meandiss = 0.001
-        plt.figure(figsize=(10,5))
-        names = [r"$y$-advection", r"$z$-advection", "Turb. trans.", 
-                 r"$k$ prod.", "Mean diss."]
-        i1 = np.where(z_H==0.25)[0]
-        i2 = np.where(y_R==1.5)[0]
-        quantities = [np.abs(meanv_a[i1,i2]/meanu_a[i1,i2]*dKdy[i1,i2]), 
-                      np.abs(meanw_a[i1,i2]/meanu_a[i1,i2]*dKdz[i1,i2]),
-                      np.abs(tt[i1,i2]/meanu_a[i1,i2]),
-                      np.abs(kprod[i1,i2]/meanu_a[i1,i2]),
+        meandiss = 0.0001
+        plt.figure(figsize=(9,7))
+        names = [r"$y$-adv.", r"$z$-adv.", 
+                 r"$y$-turb.", 
+                 r"$z$-turb.",
+                 r"$k$-prod.", "Mean diss."]
+        yloc = 0.7
+        zloc = 0.5
+        i1 = np.where(z_H==zloc)[0]
+        i2 = np.where(y_R==yloc)[0]
+        quantities = [-meanv_a[i1,i2]/meanu_a[i1,i2]*dKdy[i1,i2], 
+                      -meanw_a[i1,i2]/meanu_a[i1,i2]*dKdz[i1,i2],
+                      tty[i1,i2]/meanu_a[i1,i2],
+                      ttz[i1,i2]/meanu_a[i1,i2],
+                      kprod[i1,i2]/meanu_a[i1,i2],
                       meandiss]
+#        quantities = [average_over_area(meanv_a/meanu_a*dKdy, y_R, z_H), 
+#                      average_over_area(meanw_a/meanu_a*dKdz, y_R, z_H),
+#                      average_over_area(tty/meanu_a, y_R, z_H),
+#                      average_over_area(ttz/meanu_a, y_R, z_H),
+#                      average_over_area(kprod/meanu_a, y_R, z_H),
+#                      meandiss]
         plt.bar(range(len(names)), quantities, width=0.5)
         ax = plt.gca()
         ax.set_xticks(np.arange(len(names))+0.25)
         ax.set_xticklabels(names)
-        plt.ylabel(r"$\frac{K\mathrm{-transport}}{U}$")
+#        ax.annotate(r"$y/R =" + str(yloc) + "$; $z/H =" + str(zloc) + "$", 
+#                    xy=(0, 0), xytext=(0.68, 0.82), 
+#                    xycoords="figure fraction", fontsize=18)
+        plt.ylabel(r"$\frac{K\mathrm{-transport}}{U}$ $(\mathrm{m}/\mathrm{s}^2)$")
+        plt.hlines(0, 0, len(names), color="gray")
+        plt.title(r"$y/R =" + str(yloc) + "$; $z/H =" + str(zloc) + "$",
+                  fontsize=20)
+        ax.annotate(r"$\mathrm{Total} = " \
+                    + str(np.round(np.sum(quantities)[0], decimals=4)) + "$", 
+                    xy=(0, 0), xytext=(0.75, 0.82), 
+                    xycoords="figure fraction", fontsize=18)
         styleplot()
         plt.grid(False)
     plt.show()
