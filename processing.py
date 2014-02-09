@@ -1161,6 +1161,50 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         if save:
             plt.savefig(savepath+'xvorticity'+savetype)
+    if "Kbargraphs" in plotlist:
+        """Make a bar graph of terms contributing to dK/dx:
+          * Cross-stream advection
+          * Vertical advection
+          * Transport by turbulent fluctuations
+          * Production of TKE
+          * Mean dissipation
+        """
+        tt, tty, ttz = calc_meankturbtrans()
+        kprod, meandiss = calc_kprod_meandiss()
+        dKdy, dKdz = calc_meankgrad()
+        plt.figure(figsize=(13,12))
+        names = [r"$y$-adv.", r"$z$-adv.", 
+                 r"$y$-turb.", 
+                 r"$z$-turb.",
+                 r"$k$-prod.", "$U$-diss."]
+        locs = [(-1, 0.5, 0, 0, "(a)"),
+                (-1, 0.25, 1, 0, "(b)"),
+                (-1, 0.0, 2, 0, "(c)"),
+                (0.0, 0.0, 2, 1, "(d)"),
+                (0.0, 0.25, 1, 1, "(e)"),
+                (0.0, 0.5, 0, 1, "(f)"),
+                (1, 0.0, 2, 2, "(g)"),
+                (1, 0.25, 1, 2, "(h)"),
+                (1, 0.5, 0, 2, "(i)")]
+        for yloc, zloc, ig0, ig1, letter in locs:
+            i1 = np.where(z_H==zloc)[0]
+            i2 = np.where(y_R==yloc)[0]
+            quantities = [-meanv_a[i1,i2]/meanu_a[i1,i2]*dKdy[i1,i2], 
+                          -meanw_a[i1,i2]/meanu_a[i1,i2]*dKdz[i1,i2],
+                          tty[i1,i2]/meanu_a[i1,i2],
+                          ttz[i1,i2]/meanu_a[i1,i2],
+                          kprod[i1,i2]/meanu_a[i1,i2],
+                          meandiss[i1,i2]/meanu_a[i1,i2]]
+            ax = plt.subplot2grid((3,3), (ig0, ig1))
+            ax.bar(range(len(names)), quantities, width=0.5)
+            ax.set_xticks(np.arange(len(names))+0.25)
+            ax.set_xticklabels(names, fontsize=10)
+            plt.hlines(0, 0, len(names), color="gray")
+            plt.title(r"$y/R =" + str(yloc) + "$; $z/H =" + str(zloc) + "$",
+                      fontsize=16)
+            plt.ylim((-0.2, 0.2))
+        styleplot()
+        plt.grid(False)
     if "Kbargraph" in plotlist:
         """Make a bar graph of terms contributing to dK/dx:
           * Cross-stream advection
@@ -1177,33 +1221,19 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
                  r"$y$-turb.", 
                  r"$z$-turb.",
                  r"$k$-prod.", "Mean diss."]
-        yloc = -0.5
-        zloc = 0.5
-        i1 = np.where(z_H==zloc)[0]
-        i2 = np.where(y_R==yloc)[0]
-        quantities = [-meanv_a[i1,i2]/meanu_a[i1,i2]*dKdy[i1,i2], 
-                      -meanw_a[i1,i2]/meanu_a[i1,i2]*dKdz[i1,i2],
-                      tty[i1,i2]/meanu_a[i1,i2],
-                      ttz[i1,i2]/meanu_a[i1,i2],
-                      kprod[i1,i2]/meanu_a[i1,i2],
-                      meandiss[i1,i2]/meanu_a[i1,i2]]
-#        quantities = [average_over_area(meanv_a/meanu_a*dKdy, y_R, z_H), 
-#                      average_over_area(meanw_a/meanu_a*dKdz, y_R, z_H),
-#                      average_over_area(tty/meanu_a, y_R, z_H),
-#                      average_over_area(ttz/meanu_a, y_R, z_H),
-#                      average_over_area(kprod/meanu_a, y_R, z_H),
-#                      meandiss]
-        plt.bar(range(len(names)), quantities, width=0.5)
+        quantities = [average_over_area(-meanv_a/meanu_a*dKdy, y_R, z_H), 
+                      average_over_area(-meanw_a/meanu_a*dKdz, y_R, z_H),
+                      average_over_area(tty/meanu_a, y_R, z_H),
+                      average_over_area(ttz/meanu_a, y_R, z_H),
+                      average_over_area(kprod/meanu_a, y_R, z_H),
+                      average_over_area(meandiss/meanu_a, y_R, z_H)]
         ax = plt.gca()
+        ax.bar(range(len(names)), quantities, width=0.5)
         ax.set_xticks(np.arange(len(names))+0.25)
         ax.set_xticklabels(names)
-#        ax.annotate(r"$y/R =" + str(yloc) + "$; $z/H =" + str(zloc) + "$", 
-#                    xy=(0, 0), xytext=(0.68, 0.82), 
-#                    xycoords="figure fraction", fontsize=18)
-        plt.ylabel(r"$\frac{K\mathrm{-transport}}{U}$ $(\mathrm{m}/\mathrm{s}^2)$")
         plt.hlines(0, 0, len(names), color="gray")
-        plt.title(r"$y/R =" + str(yloc) + "$; $z/H =" + str(zloc) + "$",
-                  fontsize=20)
+#        plt.ylim((-0.2, 0.2))
+        plt.ylabel(r"$\frac{K\mathrm{-transport}}{U}$ $(\mathrm{m}/\mathrm{s}^2)$")
         ax.annotate(r"$\mathrm{Total} = " \
                     + str(np.round(np.sum(quantities), decimals=4)) + "$", 
                     xy=(0, 0), xytext=(0.75, 0.82), 
