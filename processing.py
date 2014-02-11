@@ -1116,7 +1116,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         cb.set_label(r'$U/U_{\infty}$')
         plt.hold(True)
         # Make quiver plot of v and w velocities
-        Q = plt.quiver(y_R, z_H, meanv_a, meanw_a, angles='xy')
+        Q = plt.quiver(y_R, z_H, meanv_a, meanw_a, angles='xy', width=0.003)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
         plt.ylim(-0.2, 0.78)
@@ -1125,12 +1125,12 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
                    labelpos='E',
                    coordinates='figure',
                    fontproperties={'size': 'small'})
-        plt.hlines(0.5, -1, 1, linestyles='solid', colors='g',
-                   linewidth=4)
-        plt.vlines(-1, -0.2, 0.5, linestyles='solid', colors='g',
-                   linewidth=4)
-        plt.vlines(1, -0.2, 0.5, linestyles='solid', colors='g',
-                   linewidth=4)
+        plt.hlines(0.5, -1, 1, linestyles='solid', colors='k',
+                   linewidth=3)
+        plt.vlines(-1, -0.2, 0.5, linestyles='solid', colors='k',
+                   linewidth=3)
+        plt.vlines(1, -0.2, 0.5, linestyles='solid', colors='k',
+                   linewidth=3)
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
@@ -1216,7 +1216,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         tt, tty, ttz = calc_meankturbtrans()
         kprod, meandiss = calc_kprod_meandiss()
         dKdy, dKdz = calc_meankgrad()
-        plt.figure(figsize=(9,7))
+        plt.figure(figsize=(10,5))
         names = [r"$y$-adv.", r"$z$-adv.", 
                  r"$y$-turb.", 
                  r"$z$-turb.",
@@ -1228,16 +1228,15 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
                       average_over_area(kprod/meanu_a, y_R, z_H),
                       average_over_area(meandiss/meanu_a, y_R, z_H)]
         ax = plt.gca()
-        ax.bar(range(len(names)), quantities, width=0.5)
+        ax.bar(range(len(names)), quantities, color="k", width=0.5)
         ax.set_xticks(np.arange(len(names))+0.25)
         ax.set_xticklabels(names)
         plt.hlines(0, 0, len(names), color="gray")
-#        plt.ylim((-0.2, 0.2))
         plt.ylabel(r"$\frac{K\mathrm{-transport}}{U}$ $(\mathrm{m}/\mathrm{s}^2)$")
-        ax.annotate(r"$\mathrm{Total} = " \
-                    + str(np.round(np.sum(quantities), decimals=4)) + "$", 
-                    xy=(0, 0), xytext=(0.75, 0.82), 
-                    xycoords="figure fraction", fontsize=18)
+#        ax.annotate(r"$\mathrm{Total} = " \
+#                    + str(np.round(np.sum(quantities), decimals=4)) + "$", 
+#                    xy=(0, 0), xytext=(0.75, 0.82), 
+#                    xycoords="figure fraction", fontsize=18)
         styleplot()
         plt.grid(False)
     plt.show()
@@ -1261,13 +1260,21 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
     power_d = rho*phibr_1*A_1 + Ubr_1*p_1*A_1 - rho*phibr_2*A_2 - Ubr_2*p_2*A_2
     power_d_k = rho*phibr_1*A_1 - rho*phibr_2*A_2 
     power_d_p = Ubr_1*p_1*A_1 - Ubr_2*p_2*A_2
+    ptot1 = 0.5*U**2 + 0.0
+    ptot2 = ptot1 - fd_meas/rho/A_2
+    U_2 = average_over_area(meanu_a, y_R, z_H)
+#    U_2 = 1.0
+    power_d = (U*ptot1 - U_2*ptot2)*(rho*A_2)
     eta2 = 0.5*rho*0.255/power_d
     print("eta_II =", eta2)
     print("A1/A2 =", A_1/A_2)
     print("p_2 =", p_2/rho)
+    print("U_2 =", U_2)
+    print("ptot_2 =", ptot2)
     print("Shaft power output:", 0.5*rho*1.0*0.255*1.0**3)
     print("Kinetic power dissipation:", power_d_k)
     print("Static power dissipation:", power_d_p)
+    print("C_P/C_D =", 0.255/cd_meas)
    
 def calc_re():
     a = np.load('Processed/a.npy')    
@@ -1363,7 +1370,7 @@ def main():
 #    batchwake()
     sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT VAT near-wake/Figures/'
 #    plotperf(save=True, savepath=sp)
-    plotwake(["Kbargraph"], save=False, savepath=sp)
+    plotwake(["Kbargraph", "meancomboquiv"], save=True, savepath=sp)
     
 if __name__ == "__main__":
     ts = time.time()
