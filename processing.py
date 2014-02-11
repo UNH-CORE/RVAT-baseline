@@ -1116,7 +1116,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         cb.set_label(r'$U/U_{\infty}$')
         plt.hold(True)
         # Make quiver plot of v and w velocities
-        Q = plt.quiver(y_R, z_H, meanv_a, meanw_a, angles='xy', width=0.003)
+        Q = plt.quiver(y_R, z_H, meanv_a, meanw_a, angles='xy', width=0.0022)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
         plt.ylim(-0.2, 0.78)
@@ -1125,11 +1125,11 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
                    labelpos='E',
                    coordinates='figure',
                    fontproperties={'size': 'small'})
-        plt.hlines(0.5, -1, 1, linestyles='solid', colors='k',
+        plt.hlines(0.5, -1, 1, linestyles='solid', colors='gray',
                    linewidth=3)
-        plt.vlines(-1, -0.2, 0.5, linestyles='solid', colors='k',
+        plt.vlines(-1, -0.2, 0.5, linestyles='solid', colors='gray',
                    linewidth=3)
-        plt.vlines(1, -0.2, 0.5, linestyles='solid', colors='k',
+        plt.vlines(1, -0.2, 0.5, linestyles='solid', colors='gray',
                    linewidth=3)
         ax = plt.axes()
         ax.set_aspect(2)
@@ -1239,6 +1239,8 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
 #                    xycoords="figure fraction", fontsize=18)
         styleplot()
         plt.grid(False)
+        if save:
+            plt.savefig(savepath+'Kbargraph'+savetype)
     plt.show()
     # Look at exergy efficiency -- probably wrong
     # Calculate spatial average <> of velocities and velocities squared
