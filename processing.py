@@ -344,7 +344,7 @@ def batchwake():
     fstrength = np.zeros(len(runs))
     
     for n in range(len(runs)):
-        print('Processing Vectrino data from run', runs[n])
+        print("Processing velocity data from run", runs[n])
         tv,u,v,w = loadvec(runs[n])
         phi_s = 0.5*u*(u**2 + v**2 + w**2)
         u2 = u**2
@@ -372,7 +372,7 @@ def batchwake():
         f_turbine = tsr[n]*U/R/(2*np.pi)
         # Find maximum frequency and its relative strength
         f_max = f[np.where(spec==np.max(spec))[0][0]]
-        fstrength[n] = np.max(spec)/np.var(v_seg)
+        fstrength[n] = np.max(spec)/np.var(v_seg)*(f[1] - f[0])
         fpeak[n] = f_max/f_turbine
     np.save('Processed/meanu', meanu)
     np.save('Processed/meanv', meanv)
@@ -1372,7 +1372,7 @@ def main():
 #    batchwake()
     sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT VAT near-wake/Figures/'
 #    plotperf(save=True, savepath=sp)
-    plotwake(["Kbargraph", "meancomboquiv"], save=True, savepath=sp)
+    plotwake(["fstrength"], save=True, savepath=sp)
     
 if __name__ == "__main__":
     ts = time.time()
