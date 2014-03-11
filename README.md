@@ -7,6 +7,13 @@ Citation
 If you use this data, please use the citation below:
 
 ```bibtex
+@INPROCEEDINGS{Bachant2013,
+  author = {Bachant, P. and Wosnik, M.},
+  title = {Performance and near-wake measurements for a vertical axis turbine
+	at moderate Reynolds number},
+  booktitle = {Proceedings of the ASME 2013 Fluids Engineering Division Summer Meeting},
+  year = {2013},
+}
 
 ```
 
