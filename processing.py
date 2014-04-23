@@ -6,6 +6,7 @@ March 2013 experiments with the VAT
 from __future__ import division, print_function
 import pyTDMS
 import xlrd
+import timeseries
 from timeseries import *
 import numpy as np
 import csv
@@ -185,12 +186,13 @@ def ens_ave():
     plt.ylabel(r'Torque (Nm)')
     styleplot()
 
-def plotsinglerun(run, perf=True, wake=False):
+def plotsinglerun(run, perf=True, wake=False, autocorr=False):
     t1 = 13
     t2 = 30
     t2t = 30
-    if perf == True:
-        t, angle, Ttrans, Tarm, drag, rpm, tsr = loadtdms(run)
+    t, angle, Ttrans, Tarm, drag, rpm, tsr = loadtdms(run)
+    vecloaded=False
+    if perf:
         t2, Nrevs = find_t2(t, angle, t1, t2t)
         cp = (Ttrans+0.5)*tsr/0.5/500.0
         cd_ts = drag/500.0
@@ -213,14 +215,13 @@ def plotsinglerun(run, perf=True, wake=False):
 #        plt.vlines([t2t],np.min(Ttrans),np.max(Ttrans),
 #                   color='k',linestyles='dashed')
         styleplot()
-        plt.show()
         print('TSR =', meantsr, '; C_P =', cp)
         print("Number of revolutions:", Nrevs)
         print("(1/2)(max_cd-min_cd)/cd:", np.abs(max_cd-min_cd)*0.5/cd)
         print("(1/2)(Tmax-Tmin)/Tmean:", np.abs(max_torque-min_torque)*0.5/meanT)
-    if wake == True:
+    if wake:
         tv, u, v, w = loadvec(run)
-        t, angle, Ttrans, Tarm, drag, rpm, tsr = loadtdms(run)
+        vecloaded = True
         angle = decimate(angle, 10)
         meanu, stdu = calcstats(u, t1, t2, 200)
         plt.figure()
@@ -232,7 +233,17 @@ def plotsinglerun(run, perf=True, wake=False):
         styleplot()
         plt.figure()
         plt.plot(angle, u[:len(angle)])
-        plt.show()
+    if autocorr:
+        if not vecloaded:
+            tv, u, v, w = loadvec(run)
+        u = u[t1*200:t2*200]
+        t = tv[t1*200:t2*200]
+        # Compute autocorrelation
+        tau, rho = timeseries.autocorr(u, t, 0, 5.0)
+        plt.figure()
+        plt.plot(tau, rho)
+        styleplot()
+    plt.show()
 
 def getruns(z_H, tsr):
     if z_H == 0:
@@ -1366,13 +1377,13 @@ def export_data():
     
 def main(): 
     plt.close("all")    
-#    plotsinglerun(13, perf=True, wake=False)
+    plotsinglerun(13, perf=False, wake=False, autocorr=True)
 #    plot_vel_spec(y_R=-0.1, z_H=0, tsr=1.9)
 #    batchperf()
 #    batchwake()
     sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT VAT near-wake/Figures/'
 #    plotperf(save=True, savepath=sp)
-    plotwake(["fstrength"], save=True, savepath=sp)
+#    plotwake(["fstrength"], save=False, savepath=sp)
     
 if __name__ == "__main__":
     ts = time.time()
