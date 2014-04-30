@@ -241,12 +241,20 @@ def plotsinglerun(run, perf=True, wake=False, autocorr=False, save=False):
         u = u[t1*200:t2*200]
         t = tv[t1*200:t2*200]
         # Compute autocorrelation
-        tau, rho = timeseries.autocorr(w, t, 0, 10.0)
-        print("Blade passage period =", blade_period)
+        tau, rho = timeseries.autocorr(u, t, 0, 6.0)
+        print("Blade passage period =", blade_period, "s")
+        # Compute integral timescale for velocity
+        i = np.where(np.round(rho, decimals=2)==0)[0][0]
+        int_time = tau[i]
+        print("Integral timescale =", int_time)
         plt.figure()
         plt.plot(tau, rho)
         plt.vlines([blade_period], rho.min(), 1,
                    color='k',linestyles='dashed')
+        plt.vlines([blade_period*3], rho.min(), 1,
+                   color='k',linestyles='dashed')
+        plt.xlabel("Lag (s)")
+        plt.ylabel("Autocorrelation coefficient")
         styleplot()
     plt.show()
 
@@ -1382,7 +1390,7 @@ def export_data():
     
 def main(): 
     plt.close("all")    
-    plotsinglerun(13, perf=False, wake=False, autocorr=True)
+    plotsinglerun(100, perf=False, wake=False, autocorr=True)
 #    plot_vel_spec(y_R=-0.1, z_H=0, tsr=1.9)
 #    batchperf()
 #    batchwake()
