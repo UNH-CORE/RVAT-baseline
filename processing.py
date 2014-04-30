@@ -363,11 +363,15 @@ def batchwake():
     phi = np.zeros(len(runs))
     meanu2 = np.zeros(len(runs))
     vectemp = np.zeros(len(runs))
-    fpeak = np.zeros(len(runs))
-    fstrength = np.zeros(len(runs))
+    fpeak_u = np.zeros(len(runs))
+    fstrength_u = np.zeros(len(runs))
+    fpeak_v = np.zeros(len(runs))
+    fstrength_v = np.zeros(len(runs))
+    fpeak_w = np.zeros(len(runs))
+    fstrength_w = np.zeros(len(runs))
     
     for n in range(len(runs)):
-        print("Processing velocity data from run", runs[n])
+        print("Processing velocity data from run", str(runs[n]) + "...")
         tv,u,v,w = loadvec(runs[n])
         phi_s = 0.5*u*(u**2 + v**2 + w**2)
         u2 = u**2
@@ -422,8 +426,12 @@ def batchwake():
     np.save('Processed/meanww', meanww)
     np.save('Processed/meanuu', meanuu)
     np.save('Processed/vectemp', vectemp)
-    np.save('Processed/fpeak', fpeak)
-    np.save('Processed/fstrength', fstrength)
+    np.save('Processed/fpeak_u', fpeak_u)
+    np.save('Processed/fstrength_u', fstrength_u)
+    np.save('Processed/fpeak_v', fpeak_v)
+    np.save('Processed/fstrength_v', fstrength_v)
+    np.save('Processed/fpeak_w', fpeak_w)
+    np.save('Processed/fstrength_w', fstrength_w)
 
 def plotperf(save=False, savepath="", savetype=".pdf"):
     i = range(31)
@@ -1399,10 +1407,10 @@ def export_data():
     
 def main(): 
     plt.close("all")    
-    plotsinglerun(110, perf=False, wake=False, autocorr=True)
+#    plotsinglerun(110, perf=False, wake=False, autocorr=True)
 #    plot_vel_spec(y_R=-0.1, z_H=0, tsr=1.9)
 #    batchperf()
-#    batchwake()
+    batchwake()
     sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT VAT near-wake/Figures/'
 #    plotperf(save=True, savepath=sp)
 #    plotwake(["fstrength"], save=False, savepath=sp)
