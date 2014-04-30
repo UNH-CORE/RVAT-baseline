@@ -186,14 +186,17 @@ def ens_ave():
     plt.ylabel(r'Torque (Nm)')
     styleplot()
 
-def plotsinglerun(run, perf=True, wake=False, autocorr=False):
+def plotsinglerun(run, perf=True, wake=False, autocorr=False, save=False):
     t1 = 13
     t2 = 30
     t2t = 30
     t, angle, Ttrans, Tarm, drag, rpm, tsr = loadtdms(run)
-    vecloaded=False
+    t2, Nrevs = find_t2(t, angle, t1, t2t)
+    meantsr, std_tsr = calcstats(tsr, t1, t2, 2000)
+    omega = meantsr*U/R
+    blade_period = 2*np.pi/omega/3
+    vecloaded = False
     if perf:
-        t2, Nrevs = find_t2(t, angle, t1, t2t)
         cp = (Ttrans+0.5)*tsr/0.5/500.0
         cd_ts = drag/500.0
         max_cd = np.max(cd_ts[t1*2000:t2*2000])
@@ -202,7 +205,6 @@ def plotsinglerun(run, perf=True, wake=False, autocorr=False):
         min_torque = np.min(Ttrans[t1*2000:t2*2000])
         cd, std_cd = calcstats(cd_ts, t1, t2, 2000)
         cp, std_cp = calcstats(cp, t1, t2, 2000)
-        meantsr, std_tsr = calcstats(tsr, t1, t2, 2000)
         meanT, stdT = calcstats(Ttrans, t1, t2, 2000)
         meanrpm, std_rpm = calcstats(rpm, t1, t2, 2000)
 #        plt.plot(t, Ttrans, 'k')
@@ -239,9 +241,12 @@ def plotsinglerun(run, perf=True, wake=False, autocorr=False):
         u = u[t1*200:t2*200]
         t = tv[t1*200:t2*200]
         # Compute autocorrelation
-        tau, rho = timeseries.autocorr(u, t, 0, 5.0)
+        tau, rho = timeseries.autocorr(w, t, 0, 10.0)
+        print("Blade passage period =", blade_period)
         plt.figure()
         plt.plot(tau, rho)
+        plt.vlines([blade_period], rho.min(), 1,
+                   color='k',linestyles='dashed')
         styleplot()
     plt.show()
 
