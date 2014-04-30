@@ -244,9 +244,10 @@ def plotsinglerun(run, perf=True, wake=False, autocorr=False, save=False):
         tau, rho = timeseries.autocorr(u, t, 0, 6.0)
         print("Blade passage period =", blade_period, "s")
         # Compute integral timescale for velocity
-        i = np.where(np.round(rho, decimals=2)==0)[0][0]
+        # Find first zero crossing
+        i = np.where(np.diff(np.sign(rho)))[0][0]
         int_time = tau[i]
-        print("Integral timescale =", int_time)
+        print("Integral timescale =", int_time, "s")
         plt.figure()
         plt.plot(tau, rho)
         plt.vlines([blade_period], rho.min(), 1,
