@@ -494,8 +494,12 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
     meanuu = np.load('Processed/meanuu.npy')
     phi = np.load('Processed/phi.npy')
     meanu2 = np.load('Processed/meanu2.npy')
-    fpeak = np.load('Processed/fpeak.npy')
-    fstrength = np.load('Processed/fstrength.npy')
+    fpeak_u = np.load('Processed/fpeak_u.npy')
+    fstrength_u = np.load('Processed/fstrength_u.npy')
+    fpeak_v = np.load('Processed/fpeak_v.npy')
+    fstrength_v = np.load('Processed/fstrength_v.npy')
+    fpeak_w = np.load('Processed/fpeak_w.npy')
+    fstrength_w = np.load('Processed/fstrength_w.npy')
     k = 0.5*(stdu**2 + stdv**2 + stdw**2)
     meank = 0.5*(meanu**2 + meanv**2 + meanw**2)
     kbar = meank + k
@@ -516,8 +520,12 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
     k_a = np.zeros((len(z_H), len(y_R)))
     meank_a = np.zeros((len(z_H), len(y_R)))
     meanu2_a = np.zeros((len(z_H), len(y_R)))
-    fpeak_a = np.zeros((len(z_H), len(y_R)))
-    fstrength_a = np.zeros((len(z_H), len(y_R)))
+    fpeak_u_a = np.zeros((len(z_H), len(y_R)))
+    fstrength_u_a = np.zeros((len(z_H), len(y_R)))
+    fpeak_v_a = np.zeros((len(z_H), len(y_R)))
+    fstrength_v_a = np.zeros((len(z_H), len(y_R)))
+    fpeak_w_a = np.zeros((len(z_H), len(y_R)))
+    fstrength_w_a = np.zeros((len(z_H), len(y_R)))
     kbar_a = np.zeros((len(z_H), len(y_R)))
     # Populate 2D arrays for velocity fields
     for n in range(len(z_H)):
@@ -540,8 +548,12 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         meank_a[n,:] = meank[ind]
         meanu2_a[n,:] = meanu2[ind]
         kbar_a[n,:] = kbar[ind]
-        fpeak_a[n,:] = fpeak[ind]
-        fstrength_a[n,:] = fstrength[ind]
+        fpeak_u_a[n,:] = fpeak_u[ind]
+        fstrength_u_a[n,:] = fstrength_u[ind]
+        fpeak_v_a[n,:] = fpeak_v[ind]
+        fstrength_v_a[n,:] = fstrength_v[ind]
+        fpeak_w_a[n,:] = fpeak_w[ind]
+        fstrength_w_a[n,:] = fstrength_w[ind]
     def turb_lines():
         plt.hlines(0.5, -1, 1, linestyles='solid', linewidth=2)
         plt.vlines(-1, 0, 0.5, linestyles='solid', linewidth=2)
@@ -1054,15 +1066,15 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         if save:
             plt.savefig(savepath+'vv_2tsrs'+savetype)
-    if "fpeak" in plotlist:
+    if "fpeak_u" in plotlist or "all" in plotlist:
         plt.figure(figsize=(10,5))
-        cs2 = plt.contourf(y_R, z_H, fpeak_a, cmap=plt.cm.coolwarm,
+        cs2 = plt.contourf(y_R, z_H, fpeak_u_a, cmap=plt.cm.coolwarm,
                            levels=np.linspace(0,10,21))
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
         cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
                            orientation='horizontal', pad=0.26)
-        cb2.set_label(r"$f_{\mathrm{peak}}/f_{\mathrm{turbine}}$")
+        cb2.set_label(r"$f_{\mathrm{peak}, u}/f_{\mathrm{turbine}}$")
         cb2.set_ticks(np.linspace(0,10,11), update_ticks=True)
         turb_lines()
         ax = plt.axes()
@@ -1070,10 +1082,43 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         styleplot()
         if save:
-            plt.savefig(savepath+'fpeak'+savetype)
-    if "fstrength" in plotlist:
+            plt.savefig(savepath+'fpeak_u'+savetype)
+    if "fstrength_u" in plotlist or "all" in plotlist:
         plt.figure(figsize=(10,5))
-        cs2 = plt.contourf(y_R, z_H, fstrength_a, 20, cmap=plt.cm.coolwarm)
+        cs2 = plt.contourf(y_R, z_H, fstrength_u_a, 20, cmap=plt.cm.coolwarm)
+        plt.xlabel(r'$y/R$')
+        plt.ylabel(r'$z/H$')
+        styleplot()
+        cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
+                           orientation='horizontal', pad=0.26)
+        cb2.set_label(r"$\Phi_{\max}/\sigma^2_u$")
+        turb_lines()
+        ax = plt.axes()
+        ax.set_aspect(2)
+        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
+        styleplot()
+        if save:
+            plt.savefig(savepath+'fstrength_u'+savetype)
+    if "fpeak_v" in plotlist or "all" in plotlist:
+        plt.figure(figsize=(10,5))
+        cs2 = plt.contourf(y_R, z_H, fpeak_v_a, cmap=plt.cm.coolwarm,
+                           levels=np.linspace(0,10,21))
+        plt.xlabel(r'$y/R$')
+        plt.ylabel(r'$z/H$')
+        cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
+                           orientation='horizontal', pad=0.26)
+        cb2.set_label(r"$f_{\mathrm{peak}, v}/f_{\mathrm{turbine}}$")
+        cb2.set_ticks(np.linspace(0,10,11), update_ticks=True)
+        turb_lines()
+        ax = plt.axes()
+        ax.set_aspect(2)
+        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
+        styleplot()
+        if save:
+            plt.savefig(savepath+'fpeak_v'+savetype)
+    if "fstrength_v" in plotlist or "all" in plotlist:
+        plt.figure(figsize=(10,5))
+        cs2 = plt.contourf(y_R, z_H, fstrength_v_a, 20, cmap=plt.cm.coolwarm)
         plt.xlabel(r'$y/R$')
         plt.ylabel(r'$z/H$')
         styleplot()
@@ -1086,7 +1131,40 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         styleplot()
         if save:
-            plt.savefig(savepath+'fstrength'+savetype)
+            plt.savefig(savepath+'fstrength_v'+savetype)
+    if "fpeak_w" in plotlist or "all" in plotlist:
+        plt.figure(figsize=(10,5))
+        cs2 = plt.contourf(y_R, z_H, fpeak_w_a, cmap=plt.cm.coolwarm,
+                           levels=np.linspace(0,10,21))
+        plt.xlabel(r'$y/R$')
+        plt.ylabel(r'$z/H$')
+        cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
+                           orientation='horizontal', pad=0.26)
+        cb2.set_label(r"$f_{\mathrm{peak}, w}/f_{\mathrm{turbine}}$")
+        cb2.set_ticks(np.linspace(0,10,11), update_ticks=True)
+        turb_lines()
+        ax = plt.axes()
+        ax.set_aspect(2)
+        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
+        styleplot()
+        if save:
+            plt.savefig(savepath+'fpeak_w'+savetype)
+    if "fstrength_w" in plotlist or "all" in plotlist:
+        plt.figure(figsize=(10,5))
+        cs2 = plt.contourf(y_R, z_H, fstrength_w_a, 20, cmap=plt.cm.coolwarm)
+        plt.xlabel(r'$y/R$')
+        plt.ylabel(r'$z/H$')
+        styleplot()
+        cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
+                           orientation='horizontal', pad=0.26)
+        cb2.set_label(r"$\Phi_{\max}/\sigma^2_w$")
+        turb_lines()
+        ax = plt.axes()
+        ax.set_aspect(2)
+        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
+        styleplot()
+        if save:
+            plt.savefig(savepath+'fstrength_w'+savetype)
     # Plot estimate for production of turbulence kinetic energy
     if "kprod" in plotlist:
         calc_meanvelgrad()
@@ -1410,10 +1488,11 @@ def main():
 #    plotsinglerun(110, perf=False, wake=False, autocorr=True)
 #    plot_vel_spec(y_R=-0.1, z_H=0, tsr=1.9)
 #    batchperf()
-    batchwake()
+#    batchwake()
     sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT VAT near-wake/Figures/'
 #    plotperf(save=True, savepath=sp)
-#    plotwake(["fstrength"], save=False, savepath=sp)
+    plotwake(["fstrength_w", "fpeak_w", "fstrength_u", 
+              "fstrength_v"], save=False, savepath=sp)
     
 if __name__ == "__main__":
     ts = time.time()
