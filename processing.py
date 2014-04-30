@@ -245,8 +245,9 @@ def plotsinglerun(run, perf=True, wake=False, autocorr=False, save=False):
         print("Blade passage period =", blade_period, "s")
         # Compute integral timescale for velocity
         # Find first zero crossing
-        i = np.where(np.diff(np.sign(rho)))[0][0]
-        int_time = tau[i]
+#        i = np.where(np.diff(np.sign(rho)))[0][0]
+#        int_time = np.trapz(rho[:i], x=tau[:i])
+        int_time = np.trapz(rho, tau)
         print("Integral timescale =", int_time, "s")
         plt.figure()
         plt.plot(tau, rho)
@@ -389,13 +390,23 @@ def batchwake():
         meanu2[n] = np.mean(u2[t1*200:t2[n]*200])
         vectemp[n] = loadvectemp(runs[n])
         # Spectral calculations
+        u_seg = u[200*t1:200*t2[n]] - np.mean(u[200*t1:200*t2[n]])
         v_seg = v[200*t1:200*t2[n]] - np.mean(v[200*t1:200*t2[n]])
-        f, spec = psd(tv, v_seg, window="Hanning")
+        w_seg = w[200*t1:200*t2[n]] - np.mean(w[200*t1:200*t2[n]])
         f_turbine = tsr[n]*U/R/(2*np.pi)
         # Find maximum frequency and its relative strength
+        f, spec = psd(tv, u_seg, window=None)
         f_max = f[np.where(spec==np.max(spec))[0][0]]
-        fstrength[n] = np.max(spec)/np.var(v_seg)*(f[1] - f[0])
-        fpeak[n] = f_max/f_turbine
+        fstrength_u[n] = np.max(spec)/np.var(u_seg)*(f[1] - f[0])
+        fpeak_u[n] = f_max/f_turbine
+        f, spec = psd(tv, v_seg, window=None)
+        f_max = f[np.where(spec==np.max(spec))[0][0]]
+        fstrength_v[n] = np.max(spec)/np.var(v_seg)*(f[1] - f[0])
+        fpeak_v[n] = f_max/f_turbine
+        f, spec = psd(tv, w_seg, window=None)
+        f_max = f[np.where(spec==np.max(spec))[0][0]]
+        fstrength_w[n] = np.max(spec)/np.var(w_seg)*(f[1] - f[0])
+        fpeak_w[n] = f_max/f_turbine
     np.save('Processed/meanu', meanu)
     np.save('Processed/meanv', meanv)
     np.save('Processed/meanw', meanw)
