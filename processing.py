@@ -250,10 +250,7 @@ def plotsinglerun(run, perf=True, wake=False, autocorr=False, save=False):
         print("Integral timescale =", int_time, "s")
         plt.figure()
         plt.plot(tau, rho)
-        plt.vlines([blade_period], rho.min(), 1,
-                   color='k',linestyles='dashed')
-        plt.vlines([blade_period*3], rho.min(), 1,
-                   color='k',linestyles='dashed')
+        plot_vertical_lines([blade_period, blade_period/3], ymaxscale=1)
         plt.xlabel("Lag (s)")
         plt.ylabel("Autocorrelation coefficient")
         styleplot()
@@ -321,9 +318,9 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, show=False):
         plt.grid()
         plt.show()
     
-def plot_vertical_lines(x):
+def plot_vertical_lines(x, ymaxscale=100):
     ymin = plt.axis()[2]
-    ymax = plt.axis()[3]*100
+    ymax = plt.axis()[3]*ymaxscale
     plt.vlines(x, ymin, ymax,
                color='gray', linestyles='dashed')
     plt.ylim((ymin, ymax))
@@ -1391,7 +1388,7 @@ def export_data():
     
 def main(): 
     plt.close("all")    
-    plotsinglerun(100, perf=False, wake=False, autocorr=True)
+    plotsinglerun(150, perf=False, wake=False, autocorr=True)
 #    plot_vel_spec(y_R=-0.1, z_H=0, tsr=1.9)
 #    batchperf()
 #    batchwake()
