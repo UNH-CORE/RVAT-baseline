@@ -19,6 +19,7 @@ import fdiff
 
 # Some constants
 R = 0.5
+D = 2*R
 H = 1.0
 U = 1.0
 d_shaft = 0.095
@@ -1091,7 +1092,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
                            orientation='horizontal', pad=0.26)
-        cb2.set_label(r"$\Phi_{\max}/\sigma^2_u$")
+        cb2.set_label(r"$S_{\max}/\sigma^2_u$")
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
@@ -1124,7 +1125,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
                            orientation='horizontal', pad=0.26)
-        cb2.set_label(r"$\Phi_{\max}/\sigma^2_v$")
+        cb2.set_label(r"$S_{\max}/\sigma^2_v$")
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
@@ -1157,7 +1158,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
                            orientation='horizontal', pad=0.26)
-        cb2.set_label(r"$\Phi_{\max}/\sigma^2_w$")
+        cb2.set_label(r"$S_{\max}/\sigma^2_w$")
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
@@ -1358,6 +1359,8 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
 #                    xycoords="figure fraction", fontsize=18)
         styleplot()
         plt.grid(False)
+        print("K recovery rate (%/D) =", 
+              2*np.sum(quantities)/(0.5*U**2)/D*100)
         if save:
             plt.savefig(savepath+'Kbargraph'+savetype)
     plt.show()
@@ -1491,8 +1494,7 @@ def main():
 #    batchwake()
     sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT VAT near-wake/Figures/'
 #    plotperf(save=True, savepath=sp)
-    plotwake(["fstrength_w", "fpeak_w", "fstrength_u", 
-              "fstrength_v"], save=False, savepath=sp)
+    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=False, savepath=sp)
     
 if __name__ == "__main__":
     ts = time.time()
