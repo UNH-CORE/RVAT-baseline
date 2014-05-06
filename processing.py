@@ -1075,7 +1075,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.ylabel(r'$z/H$')
         cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
                            orientation='horizontal', pad=0.26)
-        cb2.set_label(r"$f_{\mathrm{peak}, u}/f_{\mathrm{turbine}}$")
+        cb2.set_label(r"$f_{\mathrm{peak}}/f_{\mathrm{turbine}}$")
         cb2.set_ticks(np.linspace(0,10,11), update_ticks=True)
         turb_lines()
         ax = plt.axes()
@@ -1108,7 +1108,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.ylabel(r'$z/H$')
         cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
                            orientation='horizontal', pad=0.26)
-        cb2.set_label(r"$f_{\mathrm{peak}, v}/f_{\mathrm{turbine}}$")
+        cb2.set_label(r"$f_{\mathrm{peak}}/f_{\mathrm{turbine}}$")
         cb2.set_ticks(np.linspace(0,10,11), update_ticks=True)
         turb_lines()
         ax = plt.axes()
@@ -1141,7 +1141,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.ylabel(r'$z/H$')
         cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
                            orientation='horizontal', pad=0.26)
-        cb2.set_label(r"$f_{\mathrm{peak}, w}/f_{\mathrm{turbine}}$")
+        cb2.set_label(r"$f_{\mathrm{peak}}/f_{\mathrm{turbine}}$")
         cb2.set_ticks(np.linspace(0,10,11), update_ticks=True)
         turb_lines()
         ax = plt.axes()
@@ -1341,18 +1341,18 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
                  r"$y$-turb.", 
                  r"$z$-turb.",
                  r"$k$-prod.", "Mean diss."]
-        quantities = [average_over_area(-meanv_a/meanu_a*dKdy, y_R, z_H), 
-                      average_over_area(-meanw_a/meanu_a*dKdz, y_R, z_H),
-                      average_over_area(tty/meanu_a, y_R, z_H),
-                      average_over_area(ttz/meanu_a, y_R, z_H),
-                      average_over_area(kprod/meanu_a, y_R, z_H),
-                      average_over_area(meandiss/meanu_a, y_R, z_H)]
+        quantities = [average_over_area(-2*meanv_a/meanu_a*dKdy/(0.5*U**2)/D, y_R, z_H), 
+                      average_over_area(-2*meanw_a/meanu_a*dKdz/(0.5*U**2)/D, y_R, z_H),
+                      average_over_area(2*tty/meanu_a/(0.5*U**2)/D, y_R, z_H),
+                      average_over_area(2*ttz/meanu_a/(0.5*U**2)/D, y_R, z_H),
+                      average_over_area(2*kprod/meanu_a/(0.5*U**2)/D, y_R, z_H),
+                      average_over_area(2*meandiss/meanu_a/(0.5*U**2)/D, y_R, z_H)]
         ax = plt.gca()
         ax.bar(range(len(names)), quantities, color="k", width=0.5)
         ax.set_xticks(np.arange(len(names))+0.25)
         ax.set_xticklabels(names)
         plt.hlines(0, 0, len(names), color="gray")
-        plt.ylabel(r"$\frac{K\mathrm{-transport}}{U}$ $(\mathrm{m}/\mathrm{s}^2)$")
+        plt.ylabel(r"$\frac{K \, \mathrm{ transport}}{UDK_\infty}$")
 #        ax.annotate(r"$\mathrm{Total} = " \
 #                    + str(np.round(np.sum(quantities), decimals=4)) + "$", 
 #                    xy=(0, 0), xytext=(0.75, 0.82), 
@@ -1492,9 +1492,9 @@ def main():
 #    plot_vel_spec(y_R=-0.1, z_H=0, tsr=1.9)
 #    batchperf()
 #    batchwake()
-    sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT VAT near-wake/Figures/'
+    sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT CFT near-wake/Figures/'
 #    plotperf(save=True, savepath=sp)
-    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=False, savepath=sp)
+    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=True, savepath=sp)
     
 if __name__ == "__main__":
     ts = time.time()
