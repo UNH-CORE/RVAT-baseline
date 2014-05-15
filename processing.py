@@ -319,6 +319,41 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, show=False):
         styleplot()
         plt.grid()
         plt.show()
+        
+def plotperfspec(y_R=0, z_H=0, tsr=1.9, show=False):
+    """Plots the performance spectra for a single run."""
+    # Find index for the desired parameters
+    i = find_run_ind(y_R, z_H, tsr)
+    print("Plotting spectra from run", i+1)
+    t1 = 13
+    t2 = np.load('Processed/t2.npy')[i]
+    t, angle, Ttrans, Tarm, drag, rpm, tsr_ts = loadtdms(i+1) # Run name is index + 1
+    torque = drag    
+    torque_seg = torque[2000*t1:2000*t2] - np.mean(torque[2000*t1:2000*t2])
+    f, spec = psd(t, torque_seg, window="Hanning")
+    f_turbine = tsr*U/R/(2*np.pi)
+    f_blade = f_turbine*3
+    # Find maximum frequency and its relative strength
+    f_max = f[np.where(spec==np.max(spec))[0][0]]
+    strength = np.max(spec)/np.var(torque_seg)
+    if show:
+        print("Strongest frequency f/f_turbine:", f_max/f_turbine)
+        print("Relative strength:", strength)
+        plt.figure()
+        plt.loglog(f/f_turbine, spec, 'k')
+        plt.xlim((0, 50))
+        plt.xlabel(r"$f/f_{\mathrm{turbine}}$")
+        plt.ylabel(r"Power spectral density")
+        # Should the spectrum be normalized?
+        plot_vertical_lines([1, 3])
+#        plt.ylim((1e-6, 1e-1))
+        f_line = np.linspace(10,40)
+        spec_line = f_line**(-5./3)*0.05
+        plt.hold(True)
+        plt.loglog(f_line, spec_line)
+        styleplot()
+        plt.grid()
+        plt.show()
     
 def plot_vertical_lines(x, ymaxscale=100):
     ymin = plt.axis()[2]
@@ -1125,7 +1160,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
                            orientation='horizontal', pad=0.26)
-        cb2.set_label(r"$S_{\max}/\sigma^2_v$")
+        cb2.set_label(r"$\Psi$")
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
@@ -1489,12 +1524,13 @@ def export_data():
 def main(): 
     plt.close("all")    
 #    plotsinglerun(110, perf=False, wake=False, autocorr=True)
-#    plot_vel_spec(y_R=-0.1, z_H=0, tsr=1.9)
+    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
+    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    batchperf()
 #    batchwake()
     sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT CFT near-wake/Figures/'
 #    plotperf(save=True, savepath=sp)
-    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=True, savepath=sp)
+#    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=True, savepath=sp)
     
 if __name__ == "__main__":
     ts = time.time()
