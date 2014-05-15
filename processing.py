@@ -297,7 +297,7 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, show=False):
     f_blade = f_turbine*3
     # Find maximum frequency and its relative strength
     f_max = f[np.where(spec==np.max(spec))[0][0]]
-    strength = np.max(spec)/np.var(v_seg)
+    strength = np.max(spec)/np.var(v_seg)*(f[1] - f[0])
     if show:
         print("Strongest frequency f/f_turbine:", f_max/f_turbine)
         print("Relative strength:", strength)
@@ -335,7 +335,7 @@ def plotperfspec(y_R=0, z_H=0, tsr=1.9, show=False):
     f_blade = f_turbine*3
     # Find maximum frequency and its relative strength
     f_max = f[np.where(spec==np.max(spec))[0][0]]
-    strength = np.max(spec)/np.var(torque_seg)
+    strength = np.max(spec)/np.var(torque_seg)*(f[1] - f[0])
     if show:
         print("Strongest frequency f/f_turbine:", f_max/f_turbine)
         print("Relative strength:", strength)
