@@ -352,7 +352,7 @@ def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
     if show:
         plt.show()
         
-def plotmultispec():
+def plotmultispec(save=False, savepath="", savetype=".pdf"):
     """Creates a 1x3 plot for spectra of torque coefficient and cross-stream
     velocity spectra at two locations."""
     plt.figure(figsize=(12, 5))
@@ -369,6 +369,8 @@ def plotmultispec():
     plt.ylabel("")
     plt.annotate(r"$f^{-5/3}$", xy=(12, 0.5e-2), fontsize=16)
     plt.tight_layout()
+    if save:
+        plt.savefig(savepath + "/multispec" + savetype)
     
 def plot_vertical_lines(x, ymaxscale=100):
     ymin = plt.axis()[2]
@@ -1541,12 +1543,12 @@ def main():
 #    plotsinglerun(110, perf=False, wake=False, autocorr=True)
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
-    plotmultispec()
 #    batchperf()
 #    batchwake()
     sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT CFT near-wake/Figures/'
 #    plotperf(save=True, savepath=sp)
 #    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=True, savepath=sp)
+    plotmultispec(save=True, savepath=sp)
     
 if __name__ == "__main__":
     ts = time.time()
