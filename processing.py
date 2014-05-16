@@ -312,9 +312,10 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
     # Should the spectrum be normalized?
     plot_vertical_lines([1, 3, 6, 9])
     f_line = np.linspace(10,40)
-    spec_line = f_line**(-5./3)*0.05
+    spec_line = f_line**(-5./3)*0.1
     plt.hold(True)
     plt.loglog(f_line, spec_line)
+    plt.ylim((10**-9, 1))
     styleplot()
     plt.grid()
     if show:
@@ -354,6 +355,17 @@ def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
 def plotmultispec():
     """Creates a 1x3 plot for spectra of torque coefficient and cross-stream
     velocity spectra at two locations."""
+    plt.figure(figsize=(12, 5))
+    plt.subplot(1, 3, 1)
+    plotperfspec(y_R=-1, z_H=0.25, tsr=1.9, newfig=False)
+    plt.title("(a)")
+    plt.subplot(1, 3, 2)
+    plotvelspec(y_R=-1, z_H=0.25, tsr=1.9, newfig=False)
+    plt.title("(b)")
+    plt.subplot(1, 3, 3)
+    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, newfig=False)
+    plt.title("(c)")
+    plt.tight_layout()
     
 def plot_vertical_lines(x, ymaxscale=100):
     ymin = plt.axis()[2]
@@ -1524,8 +1536,9 @@ def export_data():
 def main(): 
     plt.close("all")    
 #    plotsinglerun(110, perf=False, wake=False, autocorr=True)
-    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
-    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
+#    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
+#    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
+    plotmultispec()
 #    batchperf()
 #    batchwake()
     sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT CFT near-wake/Figures/'
