@@ -72,12 +72,11 @@ def loadtdms(run):
     Tarm = np.asarray(rawdata["/'Untitled'/'TorqueArm'"])
     dragL = np.asarray(rawdata["/'Untitled'/'DragL'"])
     dragR = np.asarray(rawdata["/'Untitled'/'DragR'"])
-    Ttrans = Ttrans - np.mean(Ttrans[0:2000])
     Tarm = Tarm - np.mean(Tarm[0:2000])
-    dragL = dragL - np.mean(dragL[0:2000])
-    dragR = dragR - np.mean(dragR[0:2000])
     tareDrag = 49.2407
-    drag = dragL + dragR - tareDrag
+    drag = dragL + dragR
+    drag = drag - np.mean(drag[0:2000])
+    drag = drag - tareDrag
     angle = np.asarray(rawdata["/'Untitled'/'Untitled'"])
     angle = angle[0:len(Tarm)]
     rpm = np.zeros(len(Tarm))
@@ -1546,9 +1545,9 @@ def main():
 #    batchperf()
 #    batchwake()
     sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT CFT near-wake/Figures/'
-#    plotperf(save=True, savepath=sp)
+#    plotperf(save=False, savepath=sp)
 #    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=True, savepath=sp)
-    plotmultispec(save=False, savepath=sp)
+#    plotmultispec(save=False, savepath=sp)
     
 if __name__ == "__main__":
     ts = time.time()
