@@ -358,14 +358,14 @@ def plotmultispec(save=False, savepath="", savetype=".pdf"):
     plt.figure(figsize=(12, 5))
     plt.subplot(1, 3, 1)
     plotperfspec(y_R=-1, z_H=0.25, tsr=1.9, newfig=False)
-    plt.title("(a)", fontsize=18)
+    plt.title("(a)", fontsize=20)
     plt.subplot(1, 3, 2)
     plotvelspec(y_R=-1, z_H=0.25, tsr=1.9, newfig=False)
-    plt.title("(b)", fontsize=18)
+    plt.title("(b)", fontsize=20)
     plt.ylabel("")
     plt.subplot(1, 3, 3)
     plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, newfig=False)
-    plt.title("(c)", fontsize=18)
+    plt.title("(c)", fontsize=20)
     plt.ylabel("")
     plt.annotate(r"$f^{-5/3}$", xy=(12, 0.5e-2), fontsize=16)
     plt.tight_layout()
@@ -1548,7 +1548,7 @@ def main():
     sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT CFT near-wake/Figures/'
 #    plotperf(save=True, savepath=sp)
 #    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=True, savepath=sp)
-    plotmultispec(save=True, savepath=sp)
+    plotmultispec(save=False, savepath=sp)
     
 if __name__ == "__main__":
     ts = time.time()
