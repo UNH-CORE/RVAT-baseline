@@ -283,7 +283,7 @@ def find_run_ind(y_R, z_H, tsr):
                                 tp["tsr"]==tsr))[0][0]
     return i
 
-def plotvelspec(y_R=0, z_H=0, tsr=1.9, show=False):
+def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
     """Plots the velocity spectrum for a single run."""
     # Find index for the desired parameters
     i = find_run_ind(y_R, z_H, tsr)
@@ -298,29 +298,29 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, show=False):
     # Find maximum frequency and its relative strength
     f_max = f[np.where(spec==np.max(spec))[0][0]]
     strength = np.max(spec)/np.var(v_seg)*(f[1] - f[0])
-    if show:
-        print("Strongest frequency f/f_turbine:", f_max/f_turbine)
-        print("Relative strength:", strength)
-        # Calculate shaft shedding frequency
-        St = 0.19 # Approximate for Re_d = 1e5
-        f_cyl = St*U/d_shaft
+    print("Strongest frequency f/f_turbine:", f_max/f_turbine)
+    print("Relative strength:", strength)
+    # Calculate shaft shedding frequency
+    St = 0.19 # Approximate for Re_d = 1e5
+    f_cyl = St*U/d_shaft
+    if newfig:
         plt.figure()
-        plt.loglog(f/f_turbine, spec, 'k')
-        plt.xlim((0, 50))
-        plt.xlabel(r"$f/f_{\mathrm{turbine}}$")
-        plt.ylabel(r"Power spectral density")
-        # Should the spectrum be normalized?
-        plot_vertical_lines([1, 3])
-        plt.ylim((1e-6, 1e-1))
-        f_line = np.linspace(10,40)
-        spec_line = f_line**(-5./3)*0.05
-        plt.hold(True)
-        plt.loglog(f_line, spec_line)
-        styleplot()
-        plt.grid()
+    plt.loglog(f/f_turbine, spec, 'k')
+    plt.xlim((0, 50))
+    plt.xlabel(r"$f/f_{\mathrm{turbine}}$")
+    plt.ylabel(r"Power spectral density")
+    # Should the spectrum be normalized?
+    plot_vertical_lines([1, 3, 6, 9])
+    f_line = np.linspace(10,40)
+    spec_line = f_line**(-5./3)*0.05
+    plt.hold(True)
+    plt.loglog(f_line, spec_line)
+    styleplot()
+    plt.grid()
+    if show:
         plt.show()
         
-def plotperfspec(y_R=0, z_H=0, tsr=1.9, show=False):
+def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
     """Plots the performance spectra for a single run."""
     # Find index for the desired parameters
     i = find_run_ind(y_R, z_H, tsr)
@@ -328,7 +328,7 @@ def plotperfspec(y_R=0, z_H=0, tsr=1.9, show=False):
     t1 = 13
     t2 = np.load('Processed/t2.npy')[i]
     t, angle, Ttrans, Tarm, drag, rpm, tsr_ts = loadtdms(i+1) # Run name is index + 1
-    torque = drag    
+    torque = Tarm/(0.5*rho*A_t*R*U**2)
     torque_seg = torque[2000*t1:2000*t2] - np.mean(torque[2000*t1:2000*t2])
     f, spec = psd(t, torque_seg, window="Hanning")
     f_turbine = tsr*U/R/(2*np.pi)
@@ -336,24 +336,24 @@ def plotperfspec(y_R=0, z_H=0, tsr=1.9, show=False):
     # Find maximum frequency and its relative strength
     f_max = f[np.where(spec==np.max(spec))[0][0]]
     strength = np.max(spec)/np.var(torque_seg)*(f[1] - f[0])
-    if show:
-        print("Strongest frequency f/f_turbine:", f_max/f_turbine)
-        print("Relative strength:", strength)
+    print("Strongest frequency f/f_turbine:", f_max/f_turbine)
+    print("Relative strength:", strength)
+    if newfig:
         plt.figure()
-        plt.loglog(f/f_turbine, spec, 'k')
-        plt.xlim((0, 50))
-        plt.xlabel(r"$f/f_{\mathrm{turbine}}$")
-        plt.ylabel(r"Power spectral density")
-        # Should the spectrum be normalized?
-        plot_vertical_lines([1, 3])
-#        plt.ylim((1e-6, 1e-1))
-        f_line = np.linspace(10,40)
-        spec_line = f_line**(-5./3)*0.05
-        plt.hold(True)
-        plt.loglog(f_line, spec_line)
-        styleplot()
-        plt.grid()
+    plt.loglog(f/f_turbine, spec, 'k')
+    plt.xlim((0, 50))
+    plt.xlabel(r"$f/f_{\mathrm{turbine}}$")
+    plt.ylabel(r"Power spectral density")
+    # Should the spectrum be normalized?
+    plot_vertical_lines([1, 3, 6, 9])
+    styleplot()
+    plt.grid()
+    if show:
         plt.show()
+        
+def plotmultispec():
+    """Creates a 1x3 plot for spectra of torque coefficient and cross-stream
+    velocity spectra at two locations."""
     
 def plot_vertical_lines(x, ymaxscale=100):
     ymin = plt.axis()[2]
