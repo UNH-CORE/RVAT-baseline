@@ -93,13 +93,13 @@ def find_t2(t, angle, t1, t2):
     angle1 = angle[2000*t1]
     angle2 = angle[2000*t2]
     N3rdRevs = np.floor((angle2-angle1)/120)
-    Nrevs = np.floor((angle2-angle1)/360)
+    nrevs = np.floor((angle2-angle1)/360)
     angle2 = angle1 + N3rdRevs*120
-#    angle2 = angle1 + Nrevs*360
+#    angle2 = angle1 + nrevs*360
     t2i = np.where(np.round(angle)==np.round(angle2))
     t2 = t[t2i]
     t2 = np.round(t2[0], decimals=2)
-    return t2, Nrevs
+    return t2, nrevs
     
 def calc_eta2(cp, cd):
     if cd < 0.8889:
@@ -124,14 +124,14 @@ def batchperf(runs="all"):
     std_cd = np.zeros(len(runs))
     t2 = np.zeros(len(runs))
     eta2 = np.zeros(len(runs))
-    Nrevs = np.zeros(len(runs))
+    nrevs = np.zeros(len(runs))
     a = np.zeros(len(runs))
     torque_ripple = np.zeros(len(runs))
     for n in range(len(runs)):
         print("Processing performance data from run", runs[n], "of", \
         str(np.max(runs))+"...")
         t, angle, Ttrans, Tarm, drag, rpm, tsr_s = loadtdms(runs[n])
-        t2[n], Nrevs[n] = find_t2(t, angle, t1, t2t)
+        t2[n], nrevs[n] = find_t2(t, angle, t1, t2t)
         tsr[n], std_tsr[n] = calcstats(tsr_s, t1, t2[n], 2000)
         cp_s = Ttrans*tsr_s/0.5/500
         cp[n], std_cp[n] = calcstats(cp_s, t1, t2[n], 2000)
@@ -147,7 +147,7 @@ def batchperf(runs="all"):
     np.save('Processed/std_cp', std_cp)
     np.save('Processed/t2', t2)
     np.save('Processed/eta2', eta2)
-    np.save('Processed/Nrevs', Nrevs)
+    np.save('Processed/nrevs', nrevs)
     np.save('Processed/a', a)
     np.save('Processed/torque_ripple', torque_ripple)
 
@@ -162,7 +162,7 @@ def ens_ave():
     angle2 = angle[t2*2000]
     overshoot = np.mod(angle2,360)
     angle2 = angle2 - overshoot
-    Nrevs = (angle2-angle1)/360
+    nrevs = (angle2-angle1)/360
     def findIndex(angle, ta):
         i = np.where(np.round(angle, decimals=0)==ta)
         i = i[0]
@@ -172,13 +172,13 @@ def ens_ave():
     i2 = findIndex(angle, angle1+360)
     npoints = i2-i1
     Tens = Ttrans[i1:i2]
-    print(Nrevs)
-    for n in range(1,int(Nrevs)):
+    print(nrevs)
+    for n in range(1,int(nrevs)):
             ta1 = angle1+n*360
             i1 = findIndex(angle, ta1)
             i2 = i1+npoints
             Tens = Tens + Ttrans[i1:i2]
-    Tens = Tens/Nrevs
+    Tens = Tens/nrevs
     angleb = np.linspace(0, 360, num=npoints)
     plt.close('all')
     plt.plot(angleb, Tens, 'k')
@@ -191,7 +191,7 @@ def plotsinglerun(run, perf=True, wake=False, autocorr=False, save=False):
     t2 = 30
     t2t = 30
     t, angle, Ttrans, Tarm, drag, rpm, tsr = loadtdms(run)
-    t2, Nrevs = find_t2(t, angle, t1, t2t)
+    t2, nrevs = find_t2(t, angle, t1, t2t)
     meantsr, std_tsr = calcstats(tsr, t1, t2, 2000)
     omega = meantsr*U/R
     blade_period = 2*np.pi/omega/3
@@ -218,7 +218,7 @@ def plotsinglerun(run, perf=True, wake=False, autocorr=False, save=False):
 #                   color='k',linestyles='dashed')
         styleplot()
         print('TSR =', meantsr, '; C_P =', cp)
-        print("Number of revolutions:", Nrevs)
+        print("Number of revolutions:", nrevs)
         print("(1/2)(max_cd-min_cd)/cd:", np.abs(max_cd-min_cd)*0.5/cd)
         print("(1/2)(Tmax-Tmin)/Tmean:", np.abs(max_torque-min_torque)*0.5/meanT)
     if wake:
