@@ -81,7 +81,7 @@ def loadtdms(run):
     angle = np.asarray(rawdata["/'Untitled'/'Untitled'"])
     angle = angle[0:len(Tarm)]
     rpm = np.zeros(len(Tarm))
-    t = np.arange(0,float(len(Tarm))/2000,0.0005)
+    t = np.arange(0, float(len(Tarm))/2000, 0.0005)
     rpm[0:len(angle)-1] = np.diff(angle)/0.0005/6
     rpm = smooth(rpm, 50)
     tsr = rpm*2*np.pi/60*0.5
@@ -119,15 +119,25 @@ def batchperf(runs="all"):
     t2t = 30
     cp = np.zeros(len(runs))
     cd = np.zeros(len(runs))
+    ct = np.zeros(len(runs))
     tsr = np.zeros(len(runs))
     std_tsr = np.zeros(len(runs))
     std_cp = np.zeros(len(runs))
     std_cd = np.zeros(len(runs))
+    std_ct = np.zeros(len(runs))
     t2 = np.zeros(len(runs))
     eta2 = np.zeros(len(runs))
     nrevs = np.zeros(len(runs))
     a = np.zeros(len(runs))
     torque_ripple = np.zeros(len(runs))
+    amp_tsr = np.zeros(len(runs))
+    phase_tsr = np.zeros(len(runs))
+    amp_cp = np.zeros(len(runs))
+    phase_cp = np.zeros(len(runs))
+    amp_cd = np.zeros(len(runs))
+    phase_cd = np.zeros(len(runs))
+    amp_ct = np.zeros(len(runs))
+    phase_ct = np.zeros(len(runs))
     for n in range(len(runs)):
         print("Processing performance data from run", runs[n], "of", \
         str(np.max(runs))+"...")
@@ -135,12 +145,21 @@ def batchperf(runs="all"):
         t2[n], nrevs[n] = find_t2(t, angle, t1, t2t)
         tsr[n], std_tsr[n] = calcstats(tsr_s, t1, t2[n], 2000)
         cp_s = Ttrans*tsr_s/0.5/500
+        cd_s = drag/500.0
+        ct_s = cp_s/tsr_s
         cp[n], std_cp[n] = calcstats(cp_s, t1, t2[n], 2000)
-        cd[n], std_cd[n] = calcstats(drag/500, t1, t2[n], 2000)
+        cd[n], std_cd[n] = calcstats(cd_s, t1, t2[n], 2000)
+        ct[n], std_ct[n] = calcstats(ct_s, t1, t2[n], 2000)
         a[n], eta2[n] = calc_eta2(cp[n], cd[n])
         torque_seg = Ttrans[2000*t1:2000*t2[n]]
         torque_ripple[n] = (np.max(torque_seg) \
                            - np.min(torque_seg))/np.mean(torque_seg)
+        cp_seg = cp_s[2000*t1:2000*t2]
+        ct_seg = ct_s[2000*t1:2000*t2]
+        tsr_seg = tsr_s[2000*t1:2000*t2]
+        angle_seg = angle[2000*t1:2000*t2]
+        amp_tsr[n], phase_tsr[n] = find_amp_and_phase(angle_seg, tsr_seg)
+        amp_cp[n], phase_cp[n] = find_amp_and_phase(angle_seg, cp_seg)
     np.save('Processed/cp', cp)
     np.save('Processed/cd', cd)
     np.save('Processed/tsr', tsr)
@@ -151,6 +170,11 @@ def batchperf(runs="all"):
     np.save('Processed/nrevs', nrevs)
     np.save('Processed/a', a)
     np.save('Processed/torque_ripple', torque_ripple)
+    
+def find_amp_and_phase(angle, data, npeaks=3):
+    amp = np.max(data) - np.min(data)
+    phase = angle[np.where(data == data.max())[0][0]] % (360/npeaks)
+    return amp, phase
 
 def ens_ave():
     run = 359
