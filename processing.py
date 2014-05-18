@@ -165,6 +165,7 @@ def batchperf(runs="all"):
         amp_ct[n], phase_ct[n] = find_amp_and_phase(angle_seg, ct_seg)
     np.save('Processed/cp', cp)
     np.save('Processed/cd', cd)
+    np.save('Processed/ct', ct)
     np.save('Processed/tsr', tsr)
     np.save('Processed/std_tsr', std_tsr)
     np.save('Processed/std_cp', std_cp)
