@@ -561,6 +561,26 @@ def plotperf(save=False, savepath="", savetype=".pdf"):
     styleplot()
     if save:
         plt.savefig(savepath+'ctvstsr'+savetype)
+        
+def plotperf_periodic():
+    i = range(31)
+    tsr = np.load('Processed/tsr.npy')[i]
+    cp = np.load('Processed/cp.npy')[i]
+    cd = np.load('Processed/cd.npy')[i]
+    ct = np.load('Processed/ct.npy')[i]
+    amp_tsr = np.load('Processed/amp_tsr.npy')[i]
+    amp_cp = np.load('Processed/amp_cp.npy')[i]
+    amp_cd = np.load('Processed/amp_cd.npy')[i]
+    amp_ct = np.load('Processed/amp_ct.npy')[i]
+    phase_tsr = np.load('Processed/phase_tsr.npy')[i]
+    phase_cp = np.load('Processed/phase_cp.npy')[i]
+    phase_cd = np.load('Processed/phase_cd.npy')[i]
+    phase_ct = np.load('Processed/phase_ct.npy')[i]
+    plt.figure()
+    plt.plot(tsr, amp_tsr)
+    styleplot()
+    plt.figure()
+    plt.plot(tsr, phase_tsr)
     
 def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
     z_H = np.arange(0, 0.75, 0.125)
