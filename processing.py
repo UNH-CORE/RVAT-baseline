@@ -16,6 +16,7 @@ import matplotlib
 from scipy.signal import decimate
 from scipy.interpolate import interp1d
 import fdiff
+import sys
 
 # Some constants
 R = 0.5
