@@ -29,14 +29,14 @@ rho = 1000.0
 nu = 1e-6
 
 def styleplot():
-    font = {'family':'serif','serif':'cmr10','size':23}
-    lines = {'markersize':9, 'markeredgewidth':0.9}
-    legend = {'numpoints':1, 'fontsize': 'small'}
-    matplotlib.rc('text', usetex = True)
-    matplotlib.rc('font', **font)
-    matplotlib.rc('lines', **lines)
-    matplotlib.rc('legend', **legend)
-    matplotlib.rc('xtick', **{'major.pad':12})
+    font = {"family":"serif","serif":"cmr10","size":23}
+    lines = {"markersize":9, "markeredgewidth":0.9}
+    legend = {"numpoints":1, "fontsize": "small"}
+    matplotlib.rc("text", usetex = True)
+    matplotlib.rc("font", **font)
+    matplotlib.rc("lines", **lines)
+    matplotlib.rc("legend", **legend)
+    matplotlib.rc("xtick", **{"major.pad":12})
     plt.grid(True)
     plt.tight_layout()
     
@@ -69,16 +69,16 @@ def loadvectemp(run):
 def loadtdms(run):
     filename = "TDMS/run" + str(run) + ".tdms"
     (objects,rawdata) = pyTDMS.read(filename)
-    Ttrans = np.asarray(rawdata["/'Untitled'/'TorqueTrans'"])
-    Tarm = np.asarray(rawdata["/'Untitled'/'TorqueArm'"])
-    dragL = np.asarray(rawdata["/'Untitled'/'DragL'"])
-    dragR = np.asarray(rawdata["/'Untitled'/'DragR'"])
+    Ttrans = np.asarray(rawdata["/"Untitled"/"TorqueTrans""])
+    Tarm = np.asarray(rawdata["/"Untitled"/"TorqueArm""])
+    dragL = np.asarray(rawdata["/"Untitled"/"DragL""])
+    dragR = np.asarray(rawdata["/"Untitled"/"DragR""])
     Tarm = Tarm - np.mean(Tarm[0:2000])
     tareDrag = 49.2407
     drag = dragL + dragR
     drag = drag - np.mean(drag[0:2000])
     drag = drag - tareDrag
-    angle = np.asarray(rawdata["/'Untitled'/'Untitled'"])
+    angle = np.asarray(rawdata["/"Untitled"/"Untitled""])
     angle = angle[0:len(Tarm)]
     rpm = np.zeros(len(Tarm))
     t = np.arange(0, float(len(Tarm))/2000, 0.0005)
@@ -163,25 +163,25 @@ def batchperf(runs="all"):
         amp_cp[n], phase_cp[n] = find_amp_and_phase(angle_seg, cp_seg)
         amp_cd[n], phase_cd[n] = find_amp_and_phase(angle_seg, cd_seg)
         amp_ct[n], phase_ct[n] = find_amp_and_phase(angle_seg, ct_seg)
-    np.save('Processed/cp', cp)
-    np.save('Processed/cd', cd)
-    np.save('Processed/ct', ct)
-    np.save('Processed/tsr', tsr)
-    np.save('Processed/std_tsr', std_tsr)
-    np.save('Processed/std_cp', std_cp)
-    np.save('Processed/t2', t2)
-    np.save('Processed/eta2', eta2)
-    np.save('Processed/nrevs', nrevs)
-    np.save('Processed/a', a)
-    np.save('Processed/torque_ripple', torque_ripple)
-    np.save('Processed/amp_tsr', amp_tsr)
-    np.save('Processed/phase_tsr', phase_tsr)
-    np.save('Processed/amp_cp', amp_cp)
-    np.save('Processed/phase_cp', phase_cp)
-    np.save('Processed/amp_cd', amp_cd)
-    np.save('Processed/phase_cd', phase_cd)
-    np.save('Processed/amp_ct', amp_ct)
-    np.save('Processed/phase_ct', phase_ct)
+    np.save("Processed/cp", cp)
+    np.save("Processed/cd", cd)
+    np.save("Processed/ct", ct)
+    np.save("Processed/tsr", tsr)
+    np.save("Processed/std_tsr", std_tsr)
+    np.save("Processed/std_cp", std_cp)
+    np.save("Processed/t2", t2)
+    np.save("Processed/eta2", eta2)
+    np.save("Processed/nrevs", nrevs)
+    np.save("Processed/a", a)
+    np.save("Processed/torque_ripple", torque_ripple)
+    np.save("Processed/amp_tsr", amp_tsr)
+    np.save("Processed/phase_tsr", phase_tsr)
+    np.save("Processed/amp_cp", amp_cp)
+    np.save("Processed/phase_cp", phase_cp)
+    np.save("Processed/amp_cd", amp_cd)
+    np.save("Processed/phase_cd", phase_cd)
+    np.save("Processed/amp_ct", amp_ct)
+    np.save("Processed/phase_ct", phase_ct)
     
 def find_amp_and_phase(angle, data, npeaks=3):
     amp = (np.max(data) - np.min(data))/2
@@ -217,10 +217,10 @@ def ens_ave():
             Tens = Tens + Ttrans[i1:i2]
     Tens = Tens/nrevs
     angleb = np.linspace(0, 360, num=npoints)
-    plt.close('all')
-    plt.plot(angleb, Tens, 'k')
-    plt.xlabel(r'$\theta$ (deg)')
-    plt.ylabel(r'Torque (Nm)')
+    plt.close("all")
+    plt.plot(angleb, Tens, "k")
+    plt.xlabel(r"$\theta$ (deg)")
+    plt.ylabel(r"Torque (Nm)")
     styleplot()
 
 def plotsinglerun(run, perf=True, wake=False, autocorr=False, save=False):
@@ -244,17 +244,17 @@ def plotsinglerun(run, perf=True, wake=False, autocorr=False, save=False):
         cp, std_cp = calcstats(cp, t1, t2, 2000)
         meanT, stdT = calcstats(Ttrans, t1, t2, 2000)
         meanrpm, std_rpm = calcstats(rpm, t1, t2, 2000)
-#        plt.plot(t, Ttrans, 'k')
+#        plt.plot(t, Ttrans, "k")
         plt.hold(True)
-        plt.plot(t, Ttrans, 'k')
-        plt.xlabel(r'$t$(s)')
-#        plt.ylabel(r'Torque (Nm)')
+        plt.plot(t, Ttrans, "k")
+        plt.xlabel(r"$t$(s)")
+#        plt.ylabel(r"Torque (Nm)")
 #        plt.vlines([t1, t2],np.min(Ttrans),np.max(Ttrans),
-#                   color='r',linestyles='dashed')
+#                   color="r",linestyles="dashed")
 #        plt.vlines([t2t],np.min(Ttrans),np.max(Ttrans),
-#                   color='k',linestyles='dashed')
+#                   color="k",linestyles="dashed")
         styleplot()
-        print('TSR =', meantsr, '; C_P =', cp)
+        print("TSR =", meantsr, "; C_P =", cp)
         print("Number of revolutions:", nrevs)
         print("(1/2)(max_cd-min_cd)/cd:", np.abs(max_cd-min_cd)*0.5/cd)
         print("(1/2)(Tmax-Tmin)/Tmean:", np.abs(max_torque-min_torque)*0.5/meanT)
@@ -264,11 +264,11 @@ def plotsinglerun(run, perf=True, wake=False, autocorr=False, save=False):
         angle = decimate(angle, 10)
         meanu, stdu = calcstats(u, t1, t2, 200)
         plt.figure()
-        plt.plot(tv, u, 'k')
-        plt.xlabel('$t$ (s)')
-        plt.ylabel('$u$ (m/s)')
+        plt.plot(tv, u, "k")
+        plt.xlabel("$t$ (s)")
+        plt.ylabel("$u$ (m/s)")
         plt.vlines([t1, t2],np.min(u),np.max(u),
-                   color='r',linestyles='dashed')
+                   color="r",linestyles="dashed")
         styleplot()
         plt.figure()
         plt.plot(angle, u[:len(angle)])
@@ -325,7 +325,7 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
     i = find_run_ind(y_R, z_H, tsr)
     print("Plotting spectra from run", i+1)
     t1 = 13
-    t2 = np.load('Processed/t2.npy')[i]
+    t2 = np.load("Processed/t2.npy")[i]
     t, u, v, w = loadvec(i+1) # Run name is index + 1
     v_seg = v[200*t1:200*t2] - np.mean(v[200*t1:200*t2])
     f, spec = psd(t, v_seg, window="Hanning")
@@ -341,7 +341,7 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
     f_cyl = St*U/d_shaft
     if newfig:
         plt.figure()
-    plt.loglog(f/f_turbine, spec, 'k')
+    plt.loglog(f/f_turbine, spec, "k")
     plt.xlim((0, 50))
     plt.xlabel(r"$f/f_{\mathrm{turbine}}$")
     plt.ylabel(r"Power spectral density")
@@ -363,7 +363,7 @@ def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
     i = find_run_ind(y_R, z_H, tsr)
     print("Plotting spectra from run", i+1)
     t1 = 13
-    t2 = np.load('Processed/t2.npy')[i]
+    t2 = np.load("Processed/t2.npy")[i]
     t, angle, Ttrans, Tarm, drag, rpm, tsr_ts = loadtdms(i+1) # Run name is index + 1
     torque = Tarm/(0.5*rho*A_t*R*U**2)
     torque_seg = torque[2000*t1:2000*t2] - np.mean(torque[2000*t1:2000*t2])
@@ -377,7 +377,7 @@ def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
     print("Relative strength:", strength)
     if newfig:
         plt.figure()
-    plt.loglog(f/f_turbine, spec, 'k')
+    plt.loglog(f/f_turbine, spec, "k")
     plt.xlim((0, 50))
     plt.xlabel(r"$f/f_{\mathrm{turbine}}$")
     plt.ylabel(r"Power spectral density")
@@ -412,7 +412,7 @@ def plot_vertical_lines(x, ymaxscale=100):
     ymin = plt.axis()[2]
     ymax = plt.axis()[3]*ymaxscale
     plt.vlines(x, ymin, ymax,
-               color='gray', linestyles='dashed')
+               color="gray", linestyles="dashed")
     plt.ylim((ymin, ymax))
     
 def plotvelhist(run):
@@ -500,88 +500,88 @@ def batchwake():
         f_max = f[np.where(spec==np.max(spec))[0][0]]
         fstrength_w[n] = np.max(spec)/np.var(w_seg)*(f[1] - f[0])
         fpeak_w[n] = f_max/f_turbine
-    np.save('Processed/meanu', meanu)
-    np.save('Processed/meanv', meanv)
-    np.save('Processed/meanw', meanw)
-    np.save('Processed/stdu', stdu)
-    np.save('Processed/stdv', stdv)
-    np.save('Processed/stdw', stdw)
-    np.save('Processed/meanuv', meanuv)
-    np.save('Processed/meanuw', meanuw)
-    np.save('Processed/meanvw', meanvw)
-    np.save('Processed/phi', phi)
-    np.save('Processed/meanu2', meanu2)
-    np.save('Processed/meanvv', meanvv)
-    np.save('Processed/meanww', meanww)
-    np.save('Processed/meanuu', meanuu)
-    np.save('Processed/vectemp', vectemp)
-    np.save('Processed/fpeak_u', fpeak_u)
-    np.save('Processed/fstrength_u', fstrength_u)
-    np.save('Processed/fpeak_v', fpeak_v)
-    np.save('Processed/fstrength_v', fstrength_v)
-    np.save('Processed/fpeak_w', fpeak_w)
-    np.save('Processed/fstrength_w', fstrength_w)
+    np.save("Processed/meanu", meanu)
+    np.save("Processed/meanv", meanv)
+    np.save("Processed/meanw", meanw)
+    np.save("Processed/stdu", stdu)
+    np.save("Processed/stdv", stdv)
+    np.save("Processed/stdw", stdw)
+    np.save("Processed/meanuv", meanuv)
+    np.save("Processed/meanuw", meanuw)
+    np.save("Processed/meanvw", meanvw)
+    np.save("Processed/phi", phi)
+    np.save("Processed/meanu2", meanu2)
+    np.save("Processed/meanvv", meanvv)
+    np.save("Processed/meanww", meanww)
+    np.save("Processed/meanuu", meanuu)
+    np.save("Processed/vectemp", vectemp)
+    np.save("Processed/fpeak_u", fpeak_u)
+    np.save("Processed/fstrength_u", fstrength_u)
+    np.save("Processed/fpeak_v", fpeak_v)
+    np.save("Processed/fstrength_v", fstrength_v)
+    np.save("Processed/fpeak_w", fpeak_w)
+    np.save("Processed/fstrength_w", fstrength_w)
 
 def plotperf(save=False, savepath="", savetype=".pdf"):
     i = range(31)
-    cp = np.load('Processed/cp.npy')
-    cd = np.load('Processed/cd.npy')
-    tsr = np.load('Processed/tsr.npy')
-    eta2 = np.load('Processed/eta2.npy')
+    cp = np.load("Processed/cp.npy")
+    cd = np.load("Processed/cd.npy")
+    tsr = np.load("Processed/tsr.npy")
+    eta2 = np.load("Processed/eta2.npy")
     # Exergy efficiency plot
     plt.figure()
-    plt.plot(tsr[i], eta2[i], '-ok', markerfacecolor = 'none')
-    plt.xlabel(r'$\lambda$', labelpad=20)
-    plt.ylabel(r'$\eta_{II}$')
+    plt.plot(tsr[i], eta2[i], "-ok", markerfacecolor = "none")
+    plt.xlabel(r"$\lambda$", labelpad=20)
+    plt.ylabel(r"$\eta_{II}$")
     styleplot()
     if save:
-        plt.savefig(savepath+'eta2'+savetype)
+        plt.savefig(savepath+"eta2"+savetype)
     # Power coefficient plot
     plt.figure()
-    plt.plot(tsr[i], cp[i], '-ok', markerfacecolor = 'none')
-    plt.xlabel(r'$\lambda$', labelpad=20)
-    plt.ylabel(r'$C_P$')
+    plt.plot(tsr[i], cp[i], "-ok", markerfacecolor = "none")
+    plt.xlabel(r"$\lambda$", labelpad=20)
+    plt.ylabel(r"$C_P$")
     styleplot()
     if save:
-        plt.savefig(savepath+'cpvstsr'+savetype)
+        plt.savefig(savepath+"cpvstsr"+savetype)
     # Drag coefficient plot
     plt.figure()
-    plt.plot(tsr[i], cd[i], '-ok', markerfacecolor = 'none')
-    plt.xlabel(r'$\lambda$', labelpad=20)
-    plt.ylabel(r'$C_D$')
+    plt.plot(tsr[i], cd[i], "-ok", markerfacecolor = "none")
+    plt.xlabel(r"$\lambda$", labelpad=20)
+    plt.ylabel(r"$C_D$")
     plt.ylim(0, 1.2001)
     styleplot()
     if save:
-        plt.savefig(savepath+'cdvstsr'+savetype)
+        plt.savefig(savepath+"cdvstsr"+savetype)
     # Torque coefficient plot
     ct = cp/tsr
     plt.figure()
-    plt.plot(tsr[i], ct[i], '-ok', markerfacecolor = 'none')
-    plt.xlabel(r'$\lambda$', labelpad=20)
-    plt.ylabel(r'$C_T$')
+    plt.plot(tsr[i], ct[i], "-ok", markerfacecolor = "none")
+    plt.xlabel(r"$\lambda$", labelpad=20)
+    plt.ylabel(r"$C_T$")
     styleplot()
     if save:
-        plt.savefig(savepath+'ctvstsr'+savetype)
+        plt.savefig(savepath+"ctvstsr"+savetype)
         
 def plotperf_periodic():
     i = range(31)
-    tsr = np.load('Processed/tsr.npy')[i]
-    cp = np.load('Processed/cp.npy')[i]
-    cd = np.load('Processed/cd.npy')[i]
-#    ct = np.load('Processed/ct.npy')[i]
-    amp_tsr = np.load('Processed/amp_tsr.npy')[i]
-    amp_cp = np.load('Processed/amp_cp.npy')[i]
-    amp_cd = np.load('Processed/amp_cd.npy')[i]
-    amp_ct = np.load('Processed/amp_ct.npy')[i]
-    phase_tsr = np.load('Processed/phase_tsr.npy')[i]
-    phase_cp = np.load('Processed/phase_cp.npy')[i]
-    phase_cd = np.load('Processed/phase_cd.npy')[i]
-    phase_ct = np.load('Processed/phase_ct.npy')[i]
+    tsr = np.load("Processed/tsr.npy")[i]
+    cp = np.load("Processed/cp.npy")[i]
+    cd = np.load("Processed/cd.npy")[i]
+#    ct = np.load("Processed/ct.npy")[i]
+    amp_tsr = np.load("Processed/amp_tsr.npy")[i]
+    amp_cp = np.load("Processed/amp_cp.npy")[i]
+    amp_cd = np.load("Processed/amp_cd.npy")[i]
+    amp_ct = np.load("Processed/amp_ct.npy")[i]
+    phase_tsr = np.load("Processed/phase_tsr.npy")[i]
+    phase_cp = np.load("Processed/phase_cp.npy")[i]
+    phase_cd = np.load("Processed/phase_cd.npy")[i]
+    phase_ct = np.load("Processed/phase_ct.npy")[i]
     plt.figure()
-    plt.plot(tsr, amp_cp)
+    plt.plot(tsr, amp_cd)
     styleplot()
     plt.figure()
-    plt.plot(tsr, phase_cp)
+    plt.plot(tsr, phase_cd)
     
 def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
     z_H = np.arange(0, 0.75, 0.125)
@@ -589,26 +589,26 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
     y_R = np.hstack([y_R, -np.flipud(y_R[0:-1])])
     y_R = np.round(y_R, decimals=4)
     # Load processed data
-    meanu = np.load('Processed/meanu.npy')
-    meanv = np.load('Processed/meanv.npy')
-    meanw = np.load('Processed/meanw.npy')
-    stdu = np.load('Processed/stdu.npy')
-    stdv = np.load('Processed/stdv.npy')
-    stdw = np.load('Processed/stdw.npy')
-    meanuv = np.load('Processed/meanuv.npy')
-    meanuw = np.load('Processed/meanuw.npy')
-    meanvw = np.load('Processed/meanvw.npy')
-    meanvv = np.load('Processed/meanvv.npy')
-    meanww = np.load('Processed/meanww.npy')
-    meanuu = np.load('Processed/meanuu.npy')
-    phi = np.load('Processed/phi.npy')
-    meanu2 = np.load('Processed/meanu2.npy')
-    fpeak_u = np.load('Processed/fpeak_u.npy')
-    fstrength_u = np.load('Processed/fstrength_u.npy')
-    fpeak_v = np.load('Processed/fpeak_v.npy')
-    fstrength_v = np.load('Processed/fstrength_v.npy')
-    fpeak_w = np.load('Processed/fpeak_w.npy')
-    fstrength_w = np.load('Processed/fstrength_w.npy')
+    meanu = np.load("Processed/meanu.npy")
+    meanv = np.load("Processed/meanv.npy")
+    meanw = np.load("Processed/meanw.npy")
+    stdu = np.load("Processed/stdu.npy")
+    stdv = np.load("Processed/stdv.npy")
+    stdw = np.load("Processed/stdw.npy")
+    meanuv = np.load("Processed/meanuv.npy")
+    meanuw = np.load("Processed/meanuw.npy")
+    meanvw = np.load("Processed/meanvw.npy")
+    meanvv = np.load("Processed/meanvv.npy")
+    meanww = np.load("Processed/meanww.npy")
+    meanuu = np.load("Processed/meanuu.npy")
+    phi = np.load("Processed/phi.npy")
+    meanu2 = np.load("Processed/meanu2.npy")
+    fpeak_u = np.load("Processed/fpeak_u.npy")
+    fstrength_u = np.load("Processed/fstrength_u.npy")
+    fpeak_v = np.load("Processed/fpeak_v.npy")
+    fstrength_v = np.load("Processed/fstrength_v.npy")
+    fpeak_w = np.load("Processed/fpeak_w.npy")
+    fstrength_w = np.load("Processed/fstrength_w.npy")
     k = 0.5*(stdu**2 + stdv**2 + stdw**2)
     meank = 0.5*(meanu**2 + meanv**2 + meanw**2)
     kbar = meank + k
@@ -664,9 +664,9 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         fpeak_w_a[n,:] = fpeak_w[ind]
         fstrength_w_a[n,:] = fstrength_w[ind]
     def turb_lines():
-        plt.hlines(0.5, -1, 1, linestyles='solid', linewidth=2)
-        plt.vlines(-1, 0, 0.5, linestyles='solid', linewidth=2)
-        plt.vlines(1, 0, 0.5, linestyles='solid', linewidth=2)
+        plt.hlines(0.5, -1, 1, linestyles="solid", linewidth=2)
+        plt.vlines(-1, 0, 0.5, linestyles="solid", linewidth=2)
+        plt.vlines(1, 0, 0.5, linestyles="solid", linewidth=2)
     def calc_meankturbtrans():
         z = H*z_H
         y = R*y_R
@@ -723,145 +723,145 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         # Plot contours of mean streamwise velocity
         plt.figure(figsize=(10,5))
         cs = plt.contourf(y_R, z_H, meanu_a, 20)
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
         styleplot()
-        cb = plt.colorbar(cs, shrink=1, extend='both', 
-                          orientation='horizontal', pad=0.3)
-        cb.set_label(r'$\overline{u}/U_{\infty}$')
+        cb = plt.colorbar(cs, shrink=1, extend="both", 
+                          orientation="horizontal", pad=0.3)
+        cb.set_label(r"$\overline{u}/U_{\infty}$")
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+'meanucont'+savetype)
+            plt.savefig(savepath+"meanucont"+savetype)
     if "v-wquiver" in plotlist or "all" in plotlist:
         # Make quiver plot of v and w velocities
         plt.figure(figsize=(10,5))
-        Q = plt.quiver(y_R, z_H,meanv_a, meanw_a, angles='xy')
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
+        Q = plt.quiver(y_R, z_H,meanv_a, meanw_a, angles="xy")
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
         plt.ylim(-0.2, 0.78)
         plt.xlim(-3.2, 3.2)
-        plt.quiverkey(Q, 0.75, 0.2, 0.1, r'$0.1$ m/s',
-                   labelpos='E',
-                   coordinates='figure',
-                   fontproperties={'size': 'small'})
+        plt.quiverkey(Q, 0.75, 0.2, 0.1, r"$0.1$ m/s",
+                   labelpos="E",
+                   coordinates="figure",
+                   fontproperties={"size": "small"})
         plt.tight_layout()
-        plt.hlines(0.5, -1, 1, linestyles='solid', colors='r',
+        plt.hlines(0.5, -1, 1, linestyles="solid", colors="r",
                    linewidth=2)
-        plt.vlines(-1, -0.2, 0.5, linestyles='solid', colors='r',
+        plt.vlines(-1, -0.2, 0.5, linestyles="solid", colors="r",
                    linewidth=2)
-        plt.vlines(1, -0.2, 0.5, linestyles='solid', colors='r',
+        plt.vlines(1, -0.2, 0.5, linestyles="solid", colors="r",
                    linewidth=2)
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+'v-wquiver'+savetype)
-    if 'meanu_2tsrs' in plotlist:
+            plt.savefig(savepath+"v-wquiver"+savetype)
+    if "meanu_2tsrs" in plotlist:
         # Plot mean velocities at two different TSRs
         plt.figure()
         runs = getruns(0.25, 1.9)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, meanu[ind], '-ok', markerfacecolor='none', 
-                 label=r'$\lambda = 1.9$')
+        plt.plot(y_R, meanu[ind], "-ok", markerfacecolor="none", 
+                 label=r"$\lambda = 1.9$")
         plt.hold(True)
         runs = getruns(0.25, 1.4)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, meanu[ind], '--^k', markerfacecolor='none',
-                 label=r'$\lambda=1.4$')
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$\overline{u}/U_\infty$')
+        plt.plot(y_R, meanu[ind], "--^k", markerfacecolor="none",
+                 label=r"$\lambda=1.4$")
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$\overline{u}/U_\infty$")
         plt.legend(loc=4)
         styleplot()
         if save:
-            plt.savefig(savepath+'meanu_2tsrs'+savetype)
-    if 'stdu_2tsrs' in plotlist:
+            plt.savefig(savepath+"meanu_2tsrs"+savetype)
+    if "stdu_2tsrs" in plotlist:
         # Plot stdu velocities at two different TSRs
         plt.figure()
         runs = getruns(0.25, 1.9)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, stdu[ind], '-ok', markerfacecolor='none', 
-                 label=r'$\lambda = 1.9$')
+        plt.plot(y_R, stdu[ind], "-ok", markerfacecolor="none", 
+                 label=r"$\lambda = 1.9$")
         plt.hold(True)
         runs = getruns(0.25, 1.4)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, stdu[ind], '--^k', markerfacecolor='none',
-                 label=r'$\lambda=1.4$')
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$\sigma_u/U_\infty$')
+        plt.plot(y_R, stdu[ind], "--^k", markerfacecolor="none",
+                 label=r"$\lambda=1.4$")
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$\sigma_u/U_\infty$")
         plt.legend(loc=1)
         styleplot()
         if save:
-            plt.savefig(savepath+'stdu_2tsrs'+savetype)
-    if 'uw_2tsrs' in plotlist:
+            plt.savefig(savepath+"stdu_2tsrs"+savetype)
+    if "uw_2tsrs" in plotlist:
         # Plot uw Re stress at two different TSRs
         plt.figure()
         runs = getruns(0.25, 1.9)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, meanuw[ind], '-ok', markerfacecolor='none', 
-                 label=r'$\lambda = 1.9$')
+        plt.plot(y_R, meanuw[ind], "-ok", markerfacecolor="none", 
+                 label=r"$\lambda = 1.9$")
         plt.hold(True)
         runs = getruns(0.25, 1.4)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, meanuw[ind], '--^k', markerfacecolor='none',
-                 label=r'$\lambda=1.4$')
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r"$\overline{u'w'}$")
+        plt.plot(y_R, meanuw[ind], "--^k", markerfacecolor="none",
+                 label=r"$\lambda=1.4$")
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$\overline{u"w"}$")
         plt.legend(loc=4)
         styleplot()
         if save:
-            plt.savefig(savepath+'uw_2tsrs'+savetype)
-    if 'meanuvstsr' in plotlist:
+            plt.savefig(savepath+"uw_2tsrs"+savetype)
+    if "meanuvstsr" in plotlist:
         # Plot mean velocity components vs TSR
-        tsr = np.load('Processed/tsr.npy')
+        tsr = np.load("Processed/tsr.npy")
         runs = range(1,32)
         ind = [run-1 for run in runs]
         plt.figure()
-        plt.plot(tsr[ind], meanu[ind], '-ok', markerfacecolor='none')
-        plt.xlabel(r'$\lambda$')
-        plt.ylabel(r'$\overline{u}/U_\infty$')
+        plt.plot(tsr[ind], meanu[ind], "-ok", markerfacecolor="none")
+        plt.xlabel(r"$\lambda$")
+        plt.ylabel(r"$\overline{u}/U_\infty$")
         plt.hold(True)
-        plt.plot(tsr[ind], meanv[ind], '-sk', markerfacecolor='none')
-        plt.plot(tsr[ind], meanw[ind], '-^k', markerfacecolor='none')
+        plt.plot(tsr[ind], meanv[ind], "-sk", markerfacecolor="none")
+        plt.plot(tsr[ind], meanw[ind], "-^k", markerfacecolor="none")
         runs = range(347,378)
         ind = [run-1 for run in runs]
-        plt.plot(tsr[ind], meanu[ind], '-ok', markerfacecolor='k',
-             label=r'$\overline{u}$')
-        plt.plot(tsr[ind], meanv[ind], '-sk', markerfacecolor='k',
-             label=r'$\overline{v}$')
-        plt.plot(tsr[ind], meanw[ind], '-^k', markerfacecolor='k',
-             label=r'$\overline{w}$')
+        plt.plot(tsr[ind], meanu[ind], "-ok", markerfacecolor="k",
+             label=r"$\overline{u}$")
+        plt.plot(tsr[ind], meanv[ind], "-sk", markerfacecolor="k",
+             label=r"$\overline{v}$")
+        plt.plot(tsr[ind], meanw[ind], "-^k", markerfacecolor="k",
+             label=r"$\overline{w}$")
         plt.legend(ncol=3)
         styleplot()
         if save:
-            plt.savefig(savepath+'meanuvstsr'+savetype)
-    if 'stducont' in plotlist:
+            plt.savefig(savepath+"meanuvstsr"+savetype)
+    if "stducont" in plotlist:
         # Plot contours of streamwise turbulence intensity
         plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, stdu_a, 20)
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
         styleplot()
-        cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                          orientation='horizontal', pad=0.3)
-        cb2.set_label(r'$\sigma_u/U_{\infty}$')
+        cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
+                          orientation="horizontal", pad=0.3)
+        cb2.set_label(r"$\sigma_u/U_{\infty}$")
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+'stducont'+savetype)
-    if 'uvcont' in plotlist:
+            plt.savefig(savepath+"stducont"+savetype)
+    if "uvcont" in plotlist:
         # Plot contours of uv Reynolds stress
         plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, meanuv_a, 15, cmap=plt.cm.coolwarm)
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
-        cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                           orientation='horizontal', pad=0.26)
-        cb2.set_label(r"$\overline{u'v'}/U_\infty^2$")
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
+        cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
+                           orientation="horizontal", pad=0.26)
+        cb2.set_label(r"$\overline{u"v"}/U_\infty^2$")
         cb2.set_ticks(np.arange(-0.02, 0.025, 0.005), update_ticks=True)
         turb_lines()
         ax = plt.axes()
@@ -869,218 +869,218 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+'uvcont'+savetype)
-    if 'meanw_2tsrs' in plotlist:
+            plt.savefig(savepath+"uvcont"+savetype)
+    if "meanw_2tsrs" in plotlist:
         # Plot mean vertical velocity profiles at two TSRs
         plt.figure()
         runs = getruns(0.25, 1.9)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, meanw[ind], '-ok', markerfacecolor='none', 
-                 label=r'$\lambda = 1.9$')
+        plt.plot(y_R, meanw[ind], "-ok", markerfacecolor="none", 
+                 label=r"$\lambda = 1.9$")
         plt.hold(True)
         runs = getruns(0.25, 1.4)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, meanw[ind], '--^k', markerfacecolor='none',
-                 label=r'$\lambda=1.4$')
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$\overline{w}/U_\infty$')
+        plt.plot(y_R, meanw[ind], "--^k", markerfacecolor="none",
+                 label=r"$\lambda=1.4$")
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$\overline{w}/U_\infty$")
         plt.legend(loc=4)
         styleplot()
         if save:
-            plt.savefig(savepath+'meanw_2tsrs'+savetype)
-    if 'meanv_2tsrs' in plotlist:
+            plt.savefig(savepath+"meanw_2tsrs"+savetype)
+    if "meanv_2tsrs" in plotlist:
         # Plot mean cross stream velocity profiles at two TSRs
         plt.figure()
         runs = getruns(0.25, 1.9)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, meanv[ind], '-ok', markerfacecolor='none', 
-                 label=r'$\lambda = 1.9$')
+        plt.plot(y_R, meanv[ind], "-ok", markerfacecolor="none", 
+                 label=r"$\lambda = 1.9$")
         plt.hold(True)
         runs = getruns(0.25, 1.4)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, meanv[ind], '--^k', markerfacecolor='none',
-                 label=r'$\lambda=1.4$')
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$\overline{v}/U_\infty$')
+        plt.plot(y_R, meanv[ind], "--^k", markerfacecolor="none",
+                 label=r"$\lambda=1.4$")
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$\overline{v}/U_\infty$")
         plt.ylim(-0.1501, 0.1001)
         plt.legend(loc=4)
         styleplot()
         if save:
-            plt.savefig(savepath+'meanv_2tsrs'+savetype)
-    if 'stdv_2tsrs' in plotlist:
+            plt.savefig(savepath+"meanv_2tsrs"+savetype)
+    if "stdv_2tsrs" in plotlist:
         # Plot stdv velocities at two different TSRs
         plt.figure()
         runs = getruns(0.25, 1.9)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, stdv[ind], '-ok', markerfacecolor='none', 
-                 label=r'$\lambda = 1.9$')
+        plt.plot(y_R, stdv[ind], "-ok", markerfacecolor="none", 
+                 label=r"$\lambda = 1.9$")
         plt.hold(True)
         runs = getruns(0.25, 1.4)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, stdv[ind], '--^k', markerfacecolor='none',
-                 label=r'$\lambda=1.4$')
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$\sigma_v/U_\infty$')
+        plt.plot(y_R, stdv[ind], "--^k", markerfacecolor="none",
+                 label=r"$\lambda=1.4$")
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$\sigma_v/U_\infty$")
         plt.legend(loc=1)
         styleplot()
         if save:
-            plt.savefig(savepath+'stdv_2tsrs'+savetype)
-    if 'stdw_2tsrs' in plotlist:
+            plt.savefig(savepath+"stdv_2tsrs"+savetype)
+    if "stdw_2tsrs" in plotlist:
         # Plot stdw velocities at two different TSRs
         plt.figure()
         runs = getruns(0.25, 1.9)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, stdw[ind], '-ok', markerfacecolor='none', 
-                 label=r'$\lambda = 1.9$')
+        plt.plot(y_R, stdw[ind], "-ok", markerfacecolor="none", 
+                 label=r"$\lambda = 1.9$")
         plt.hold(True)
         runs = getruns(0.25, 1.4)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, stdw[ind], '--^k', markerfacecolor='none',
-                 label=r'$\lambda=1.4$')
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$\sigma_w/U_\infty$')
+        plt.plot(y_R, stdw[ind], "--^k", markerfacecolor="none",
+                 label=r"$\lambda=1.4$")
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$\sigma_w/U_\infty$")
         plt.legend(loc=1)
         styleplot()
         if save:
-            plt.savefig(savepath+'stdw_2tsrs'+savetype)
-    if 'uv_2tsrs' in plotlist:
+            plt.savefig(savepath+"stdw_2tsrs"+savetype)
+    if "uv_2tsrs" in plotlist:
         # Plot uv Re stress at two different TSRs
         plt.figure()
         runs = getruns(0.25, 1.9)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, meanuv[ind], '-ok', markerfacecolor='none', 
-                 label=r'$\lambda = 1.9$')
+        plt.plot(y_R, meanuv[ind], "-ok", markerfacecolor="none", 
+                 label=r"$\lambda = 1.9$")
         plt.hold(True)
         runs = getruns(0.25, 1.4)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, meanuv[ind], '--^k', markerfacecolor='none',
-                 label=r'$\lambda=1.4$')
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r"$\overline{u'v'}$")
+        plt.plot(y_R, meanuv[ind], "--^k", markerfacecolor="none",
+                 label=r"$\lambda=1.4$")
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$\overline{u"v"}$")
         plt.legend()
         styleplot()
         if save:
-            plt.savefig(savepath+'uv_2tsrs'+savetype)
+            plt.savefig(savepath+"uv_2tsrs"+savetype)
     if "kcont" in plotlist or "all" in plotlist:
         # Plot contours of k
         plt.figure(figsize=(10,5))
         csphi = plt.contourf(y_R, z_H, k_a/(0.5*1.0**2), 20, cmap=plt.cm.coolwarm)
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
-        cbphi = plt.colorbar(csphi, shrink=1, extend='both', 
-                             orientation='horizontal', pad=0.26)
-        cbphi.set_label(r'$k/\frac{1}{2}U_\infty^2$')
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
+        cbphi = plt.colorbar(csphi, shrink=1, extend="both", 
+                             orientation="horizontal", pad=0.26)
+        cbphi.set_label(r"$k/\frac{1}{2}U_\infty^2$")
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         styleplot()
         if save:
-            plt.savefig(savepath+'kcont'+savetype)
-    if 'meankcont' in plotlist:
+            plt.savefig(savepath+"kcont"+savetype)
+    if "meankcont" in plotlist:
         # Plot contours of k
         plt.figure(figsize=(10,5))
         csphi = plt.contourf(y_R, z_H, meank_a/(0.5*1**2), 20, cmap=plt.cm.coolwarm)
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
-        cbphi = plt.colorbar(csphi, shrink=1, extend='both', 
-                             orientation='horizontal', pad=0.26)
-        cbphi.set_label(r'$K/\frac{1}{2}U_\infty^2$')
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
+        cbphi = plt.colorbar(csphi, shrink=1, extend="both", 
+                             orientation="horizontal", pad=0.26)
+        cbphi.set_label(r"$K/\frac{1}{2}U_\infty^2$")
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         styleplot()
         if save:
-            plt.savefig(savepath+'meankcont'+savetype)
-    if 'meanvcont' in plotlist:
+            plt.savefig(savepath+"meankcont"+savetype)
+    if "meanvcont" in plotlist:
         # Plot contours of meanv
         plt.figure(figsize=(10,5))
         cmv = plt.contourf(y_R, z_H, meanv_a, 20)
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
         styleplot()
-        cbmv = plt.colorbar(cmv, shrink=1, extend='both', 
-                          orientation='horizontal', pad=0.2)
-        cbmv.set_label(r'$\overline{v}/U_{\infty}$')
+        cbmv = plt.colorbar(cmv, shrink=1, extend="both", 
+                          orientation="horizontal", pad=0.2)
+        cbmv.set_label(r"$\overline{v}/U_{\infty}$")
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+'meanvcont'+savetype)
-    if 'stdvcont' in plotlist:
+            plt.savefig(savepath+"meanvcont"+savetype)
+    if "stdvcont" in plotlist:
         # Plot contours of stdv
         plt.figure(figsize=(10,5))
         cstdv = plt.contourf(y_R, z_H, stdv_a, 20)
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
         styleplot()
-        cbstdv = plt.colorbar(cstdv, shrink=1, extend='both', 
-                          orientation='horizontal', pad=0.2)
-        cbstdv.set_label(r'$\sigma_v/U_{\infty}$')
+        cbstdv = plt.colorbar(cstdv, shrink=1, extend="both", 
+                          orientation="horizontal", pad=0.2)
+        cbstdv.set_label(r"$\sigma_v/U_{\infty}$")
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+'stdvcont'+savetype)
-    if 'meanwcont' in plotlist:
+            plt.savefig(savepath+"stdvcont"+savetype)
+    if "meanwcont" in plotlist:
         # Plot contours of meanw
         plt.figure(figsize=(10,5))
         cmv = plt.contourf(y_R, z_H, meanw_a, 20)
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
         styleplot()
-        cbmv = plt.colorbar(cmv, shrink=1, extend='both', 
-                          orientation='horizontal', pad=0.2)
-        cbmv.set_label(r'$\overline{w}/U_{\infty}$')
+        cbmv = plt.colorbar(cmv, shrink=1, extend="both", 
+                          orientation="horizontal", pad=0.2)
+        cbmv.set_label(r"$\overline{w}/U_{\infty}$")
         turb_lines()
         if save:
-            plt.savefig(savepath+'meanwcont'+savetype)
-    if 'stdwcont' in plotlist:
+            plt.savefig(savepath+"meanwcont"+savetype)
+    if "stdwcont" in plotlist:
         # Plot contours of stdw
         plt.figure(figsize=(10,5))
         cmv = plt.contourf(y_R, z_H, stdw_a, 20)
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
         styleplot()
-        cbmv = plt.colorbar(cmv, shrink=1, extend='both', 
-                          orientation='horizontal', pad=0.2)
-        cbmv.set_label(r'$\sigma_w/U_{\infty}$')
+        cbmv = plt.colorbar(cmv, shrink=1, extend="both", 
+                          orientation="horizontal", pad=0.2)
+        cbmv.set_label(r"$\sigma_w/U_{\infty}$")
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+'stdwcont'+savetype)
-    if 'vw_2tsrs' in plotlist:
+            plt.savefig(savepath+"stdwcont"+savetype)
+    if "vw_2tsrs" in plotlist:
         # Plot vw Re stress at two different TSRs
         plt.figure()
         runs = getruns(0.25, 1.9)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, meanvw[ind], '-ok', markerfacecolor='none', 
-                 label=r'$\lambda = 1.9$')
+        plt.plot(y_R, meanvw[ind], "-ok", markerfacecolor="none", 
+                 label=r"$\lambda = 1.9$")
         plt.hold(True)
         runs = getruns(0.25, 1.4)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, meanvw[ind], '--^k', markerfacecolor='none',
-                 label=r'$\lambda=1.4$')
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r"$\overline{v'w'}$")
+        plt.plot(y_R, meanvw[ind], "--^k", markerfacecolor="none",
+                 label=r"$\lambda=1.4$")
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$\overline{v"w"}$")
         plt.legend(loc=4)
         styleplot()
         if save:
-            plt.savefig(savepath+'vw_2tsrs'+savetype)
-    if 'vwcont' in plotlist:
+            plt.savefig(savepath+"vw_2tsrs"+savetype)
+    if "vwcont" in plotlist:
         # Plot contours of vw Reynolds stress
         plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, meanvw_a, 20, cmap=plt.cm.coolwarm)
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
-        cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                           orientation='horizontal', pad=0.3)
-        cb2.set_label(r"$\overline{v'w'}/U_\infty^2$")
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
+        cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
+                           orientation="horizontal", pad=0.3)
+        cb2.set_label(r"$\overline{v"w"}/U_\infty^2$")
         cb2.set_ticks(np.linspace(-.008,.006,6), update_ticks=True)
         turb_lines()
         ax = plt.axes()
@@ -1088,16 +1088,16 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+'vwcont'+savetype)
-    if 'uwcont' in plotlist:
+            plt.savefig(savepath+"vwcont"+savetype)
+    if "uwcont" in plotlist:
         # Plot contours of vw Reynolds stress
         plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, meanuw_a, 20, cmap=plt.cm.coolwarm)
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
-        cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                           orientation='horizontal', pad=0.26)
-        cb2.set_label(r"$\overline{u'w'}/U_\infty^2$")
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
+        cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
+                           orientation="horizontal", pad=0.26)
+        cb2.set_label(r"$\overline{u"w"}/U_\infty^2$")
 #        cb2.set_ticks(np.linspace(-.015,.013,6), update_ticks=True)
         turb_lines()
         ax = plt.axes()
@@ -1105,84 +1105,84 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+'uwcont'+savetype)
-    if 'vvcont' in plotlist:
+            plt.savefig(savepath+"uwcont"+savetype)
+    if "vvcont" in plotlist:
         # Plot contours of vv Reynolds stress
         plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, meanvv_a, 20)
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
         styleplot()
-        cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                          orientation='horizontal', pad=0.2)
-        cb2.set_label(r"$\overline{v'v'}$")
+        cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
+                          orientation="horizontal", pad=0.2)
+        cb2.set_label(r"$\overline{v"v"}$")
 #        cb2.set_ticks(np.linspace(-.015,.013,6), update_ticks=True)
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+'vvcont'+savetype)
-    if 'wwcont' in plotlist:
+            plt.savefig(savepath+"vvcont"+savetype)
+    if "wwcont" in plotlist:
         # Plot contours of vv Reynolds stress
         plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, meanww_a, 20)
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
         styleplot()
-        cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                          orientation='horizontal', pad=0.2)
-        cb2.set_label(r"$\overline{w'w'}$")
+        cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
+                          orientation="horizontal", pad=0.2)
+        cb2.set_label(r"$\overline{w"w"}$")
 #        cb2.set_ticks(np.linspace(-.015,.013,6), update_ticks=True)
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+'wwcont'+savetype)
-    if 'uucont' in plotlist:
+            plt.savefig(savepath+"wwcont"+savetype)
+    if "uucont" in plotlist:
         # Plot contours of uu Reynolds stress
         plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, meanuu_a, 20)
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
         styleplot()
-        cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                           orientation='horizontal', pad=0.2)
-        cb2.set_label(r"$\overline{u'u'}$")
+        cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
+                           orientation="horizontal", pad=0.2)
+        cb2.set_label(r"$\overline{u"u"}$")
         cb2.set_ticks(np.linspace(0,.108,6), update_ticks=True)
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+'uucont'+savetype)
-    if 'vv_2tsrs' in plotlist:
+            plt.savefig(savepath+"uucont"+savetype)
+    if "vv_2tsrs" in plotlist:
         # Plot vw Re stress at two different TSRs
         plt.figure()
         runs = getruns(0.25, 1.9)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, meanvv[ind], '-ok', markerfacecolor='none', 
-                 label=r'$\lambda = 1.9$')
+        plt.plot(y_R, meanvv[ind], "-ok", markerfacecolor="none", 
+                 label=r"$\lambda = 1.9$")
         plt.hold(True)
         runs = getruns(0.25, 1.4)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, meanvv[ind], '--^k', markerfacecolor='none',
-                 label=r'$\lambda=1.4$')
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r"$\overline{v'v'}$")
+        plt.plot(y_R, meanvv[ind], "--^k", markerfacecolor="none",
+                 label=r"$\lambda=1.4$")
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$\overline{v"v"}$")
         plt.legend()
         styleplot()
         if save:
-            plt.savefig(savepath+'vv_2tsrs'+savetype)
+            plt.savefig(savepath+"vv_2tsrs"+savetype)
     if "fpeak_u" in plotlist or "all" in plotlist:
         plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, fpeak_u_a, cmap=plt.cm.coolwarm,
                            levels=np.linspace(0,10,21))
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
-        cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                           orientation='horizontal', pad=0.26)
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
+        cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
+                           orientation="horizontal", pad=0.26)
         cb2.set_label(r"$f_{\mathrm{peak}}/f_{\mathrm{turbine}}$")
         cb2.set_ticks(np.linspace(0,10,11), update_ticks=True)
         turb_lines()
@@ -1191,15 +1191,15 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         styleplot()
         if save:
-            plt.savefig(savepath+'fpeak_u'+savetype)
+            plt.savefig(savepath+"fpeak_u"+savetype)
     if "fstrength_u" in plotlist or "all" in plotlist:
         plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, fstrength_u_a, 20, cmap=plt.cm.coolwarm)
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
         styleplot()
-        cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                           orientation='horizontal', pad=0.26)
+        cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
+                           orientation="horizontal", pad=0.26)
         cb2.set_label(r"$S_{\max}/\sigma^2_u$")
         turb_lines()
         ax = plt.axes()
@@ -1207,15 +1207,15 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         styleplot()
         if save:
-            plt.savefig(savepath+'fstrength_u'+savetype)
+            plt.savefig(savepath+"fstrength_u"+savetype)
     if "fpeak_v" in plotlist or "all" in plotlist:
         plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, fpeak_v_a, cmap=plt.cm.coolwarm,
                            levels=np.linspace(0,10,21))
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
-        cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                           orientation='horizontal', pad=0.26)
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
+        cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
+                           orientation="horizontal", pad=0.26)
         cb2.set_label(r"$f_{\mathrm{peak}}/f_{\mathrm{turbine}}$")
         cb2.set_ticks(np.linspace(0,10,11), update_ticks=True)
         turb_lines()
@@ -1224,15 +1224,15 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         styleplot()
         if save:
-            plt.savefig(savepath+'fpeak_v'+savetype)
+            plt.savefig(savepath+"fpeak_v"+savetype)
     if "fstrength_v" in plotlist or "all" in plotlist:
         plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, fstrength_v_a, 20, cmap=plt.cm.coolwarm)
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
         styleplot()
-        cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                           orientation='horizontal', pad=0.26)
+        cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
+                           orientation="horizontal", pad=0.26)
         cb2.set_label(r"$\Psi$")
         turb_lines()
         ax = plt.axes()
@@ -1240,15 +1240,15 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         styleplot()
         if save:
-            plt.savefig(savepath+'fstrength_v'+savetype)
+            plt.savefig(savepath+"fstrength_v"+savetype)
     if "fpeak_w" in plotlist or "all" in plotlist:
         plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, fpeak_w_a, cmap=plt.cm.coolwarm,
                            levels=np.linspace(0,10,21))
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
-        cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                           orientation='horizontal', pad=0.26)
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
+        cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
+                           orientation="horizontal", pad=0.26)
         cb2.set_label(r"$f_{\mathrm{peak}}/f_{\mathrm{turbine}}$")
         cb2.set_ticks(np.linspace(0,10,11), update_ticks=True)
         turb_lines()
@@ -1257,15 +1257,15 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         styleplot()
         if save:
-            plt.savefig(savepath+'fpeak_w'+savetype)
+            plt.savefig(savepath+"fpeak_w"+savetype)
     if "fstrength_w" in plotlist or "all" in plotlist:
         plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, fstrength_w_a, 20, cmap=plt.cm.coolwarm)
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
         styleplot()
-        cb2 = plt.colorbar(cs2, shrink=1, extend='both', 
-                           orientation='horizontal', pad=0.26)
+        cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
+                           orientation="horizontal", pad=0.26)
         cb2.set_label(r"$S_{\max}/\sigma^2_w$")
         turb_lines()
         ax = plt.axes()
@@ -1273,91 +1273,91 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         styleplot()
         if save:
-            plt.savefig(savepath+'fstrength_w'+savetype)
+            plt.savefig(savepath+"fstrength_w"+savetype)
     # Plot estimate for production of turbulence kinetic energy
     if "kprod" in plotlist:
         calc_meanvelgrad()
         plt.figure(figsize=(10,5))
         cs = plt.contourf(y_R, z_H, kprod, 20, cmap=plt.cm.coolwarm)
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
-        cb = plt.colorbar(cs, shrink=1, extend='both', 
-                          orientation='horizontal', pad=0.26)
-        cb.set_label(r"$-\overline{u_i' u_j'}\frac{\partial U_i}{\partial x_j}$")
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
+        cb = plt.colorbar(cs, shrink=1, extend="both", 
+                          orientation="horizontal", pad=0.26)
+        cb.set_label(r"$-\overline{u_i" u_j"}\frac{\partial U_i}{\partial x_j}$")
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
         styleplot()
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+'kprod'+savetype)
-    if 'meankadv' in plotlist:
+            plt.savefig(savepath+"kprod"+savetype)
+    if "meankadv" in plotlist:
         calc_meankgrad()
         # Make quiver plot of K advection
         plt.figure(figsize=(10,5))
-        plt.hlines(0.5, -1, 1, linestyles='solid', colors='r',
+        plt.hlines(0.5, -1, 1, linestyles="solid", colors="r",
                    linewidth=3)
-        plt.vlines(-1, -0.2, 0.5, linestyles='solid', colors='r',
+        plt.vlines(-1, -0.2, 0.5, linestyles="solid", colors="r",
                    linewidth=3)
-        plt.vlines(1, -0.2, 0.5, linestyles='solid', colors='r',
+        plt.vlines(1, -0.2, 0.5, linestyles="solid", colors="r",
                    linewidth=3)
         Q = plt.quiver(y_R, z_H, meanv_a/meanu_a*dKdy, meanw_a/meanu_a*dKdz, 
-                       scale=4, angles='xy')
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
+                       scale=4, angles="xy")
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
         plt.ylim(-0.2, 0.78)
         plt.xlim(-3.2, 3.2)
-        plt.quiverkey(Q, 0.75, 0.1, 0.2, r'$0.2 \mathrm{\, m/s^2}$',
-                      labelpos='E',
-                      coordinates='figure',
-                      fontproperties={'size': 'small'})
+        plt.quiverkey(Q, 0.75, 0.1, 0.2, r"$0.2 \mathrm{\, m/s^2}$",
+                      labelpos="E",
+                      coordinates="figure",
+                      fontproperties={"size": "small"})
         ax = plt.axes()
         ax.set_aspect(2)
         styleplot()
         plt.grid(False)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+'meankadv'+savetype)
+            plt.savefig(savepath+"meankadv"+savetype)
     if "Kturbtrans" in plotlist:
         calc_meankturbtrans()
         plt.figure(figsize=(10,5))
         cs = plt.contourf(y_R, z_H, tty, 20, cmap=plt.cm.coolwarm,
                           levels=np.linspace(-0.08, 0.08, 21))
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
         styleplot()
-        cb = plt.colorbar(cs, shrink=1, extend='both', 
-                          orientation='horizontal', pad=0.26)
-        cb.set_label(r"$-\frac{1}{2}\frac{\partial}{\partial x_j}\overline{u_i' u_j'} U_i$")
+        cb = plt.colorbar(cs, shrink=1, extend="both", 
+                          orientation="horizontal", pad=0.26)
+        cb.set_label(r"$-\frac{1}{2}\frac{\partial}{\partial x_j}\overline{u_i" u_j"} U_i$")
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+'Kturbtrans'+savetype)
+            plt.savefig(savepath+"Kturbtrans"+savetype)
     if "meancomboquiv" in plotlist or "all" in plotlist:
         plt.figure(figsize=(10,6))
         # Add contours of mean velocity
         cs = plt.contourf(y_R, z_H, meanu_a, 20, cmap=plt.cm.coolwarm)
-        cb = plt.colorbar(cs, shrink=1, extend='both', 
-                          orientation='horizontal', pad=0.2)
-        cb.set_label(r'$U/U_{\infty}$')
+        cb = plt.colorbar(cs, shrink=1, extend="both", 
+                          orientation="horizontal", pad=0.2)
+        cb.set_label(r"$U/U_{\infty}$")
         plt.hold(True)
         # Make quiver plot of v and w velocities
-        Q = plt.quiver(y_R, z_H, meanv_a, meanw_a, angles='xy', width=0.0022)
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
+        Q = plt.quiver(y_R, z_H, meanv_a, meanw_a, angles="xy", width=0.0022)
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
         plt.ylim(-0.2, 0.78)
         plt.xlim(-3.2, 3.2)
-        plt.quiverkey(Q, 0.75, 0.3, 0.1, r'$0.1 U_\infty$',
-                   labelpos='E',
-                   coordinates='figure',
-                   fontproperties={'size': 'small'})
-        plt.hlines(0.5, -1, 1, linestyles='solid', colors='gray',
+        plt.quiverkey(Q, 0.75, 0.3, 0.1, r"$0.1 U_\infty$",
+                   labelpos="E",
+                   coordinates="figure",
+                   fontproperties={"size": "small"})
+        plt.hlines(0.5, -1, 1, linestyles="solid", colors="gray",
                    linewidth=3)
-        plt.vlines(-1, -0.2, 0.5, linestyles='solid', colors='gray',
+        plt.vlines(-1, -0.2, 0.5, linestyles="solid", colors="gray",
                    linewidth=3)
-        plt.vlines(1, -0.2, 0.5, linestyles='solid', colors='gray',
+        plt.vlines(1, -0.2, 0.5, linestyles="solid", colors="gray",
                    linewidth=3)
         ax = plt.axes()
         ax.set_aspect(2)
@@ -1365,7 +1365,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         if save:
             plt.savefig(savepath+"meancomboquiv"+savetype)
-    if 'xvorticity' in plotlist:
+    if "xvorticity" in plotlist:
         z = 1.0*z_H
         y = R*y_R
         dWdy = np.zeros(np.shape(meanu_a))
@@ -1377,10 +1377,10 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         # Make quiver plot of K advection
         plt.figure(figsize=(10,5))
         cs = plt.contourf(y_R, z_H, dWdy-dVdz, 20, cmap=plt.cm.coolwarm)
-        plt.xlabel(r'$y/R$')
-        plt.ylabel(r'$z/H$')
-        cb = plt.colorbar(cs, shrink=1, extend='both', 
-                          orientation='horizontal', pad=0.26)
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
+        cb = plt.colorbar(cs, shrink=1, extend="both", 
+                          orientation="horizontal", pad=0.26)
         cb.set_label(r"$\Omega_x$")
         turb_lines()
         ax = plt.axes()
@@ -1388,7 +1388,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         styleplot()
         if save:
-            plt.savefig(savepath+'xvorticity'+savetype)
+            plt.savefig(savepath+"xvorticity"+savetype)
     if "Kbargraphs" in plotlist:
         """Make a bar graph of terms contributing to dK/dx:
           * Cross-stream advection
@@ -1470,7 +1470,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         print("K recovery rate (%/D) =", 
               2*np.sum(quantities)/(0.5*U**2)/D*100)
         if save:
-            plt.savefig(savepath+'Kbargraph'+savetype)
+            plt.savefig(savepath+"Kbargraph"+savetype)
     plt.show()
     # Look at exergy efficiency -- probably wrong
     # Calculate spatial average <> of velocities and velocities squared
@@ -1509,7 +1509,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
     print("C_P/C_D =", 0.255/cd_meas)
    
 def calc_re():
-    a = np.load('Processed/a.npy')    
+    a = np.load("Processed/a.npy")    
     U = 1.0
     tsr = np.arange(0.1, 3.2, 0.1)
     a = a[0:len(tsr)]
@@ -1519,23 +1519,23 @@ def calc_re():
     remed = U*tsr*c/nu
     remax = (U*tsr+U)*c/nu
     remin = np.abs((U*tsr-U)*c/nu)
-    plt.close('all')
-    plt.plot(tsr, remed/10**5, '-.k')
+    plt.close("all")
+    plt.plot(tsr, remed/10**5, "-.k")
     plt.hold(True)
-    plt.plot(tsr, remax/10**5, 'k', label=r'$Re_c$ bounds')
-    plt.plot(tsr, remin/10**5, 'k')
-    plt.xlabel(r'$\lambda$')
-    plt.ylabel(r'$Re_c$ $(\times 10^5)$')
+    plt.plot(tsr, remax/10**5, "k", label=r"$Re_c$ bounds")
+    plt.plot(tsr, remin/10**5, "k")
+    plt.xlabel(r"$\lambda$")
+    plt.ylabel(r"$Re_c$ $(\times 10^5)$")
 #    plt.legend(loc=4)
     styleplot()
     
 def plot_torque_ripple():
     i = range(31)
-    torque_ripple = np.load('Processed/torque_ripple.npy')
-    tsr = np.load('Processed/tsr.npy')
-    plt.plot(tsr[i], torque_ripple[i], '-ok', markerfacecolor = 'none')
-    plt.xlabel(r'$\lambda$', labelpad=20)
-    plt.ylabel(r'Torque ripple')
+    torque_ripple = np.load("Processed/torque_ripple.npy")
+    tsr = np.load("Processed/tsr.npy")
+    plt.plot(tsr[i], torque_ripple[i], "-ok", markerfacecolor = "none")
+    plt.xlabel(r"$\lambda$", labelpad=20)
+    plt.ylabel(r"Torque ripple")
     styleplot()  
     plt.show()
     print("Torque ripple at TSR =", str(tsr[12])+":", torque_ripple[12])
@@ -1557,7 +1557,7 @@ def export_data():
     vectemp = np.mean(np.load("Processed/vectemp.npy")[runs])
     vectemp = np.round(vectemp, decimals=2)
     runnumber = range(1, 32)
-    metadata = ["Processed performance data from UNH RVAT experiment",
+    metadata = ["Processed performance data from UNH-RVAT tow tank experiments",
                 "Performed on March 9-10, 2013",
                 "Rev" + str(rev) + " - Generated " + datestring,
                 sep,
@@ -1568,7 +1568,7 @@ def export_data():
                 "Mean ADV temperature: " + str(vectemp) + " degrees C",
                 sep,
                 "For more experimental details refer to:",
-                "Bachant and Wosnik (2013) 'Performance and Wake Measurements for a Vertical Axis Turbine at Moderate Reynolds Number'", 
+                "Bachant and Wosnik (2013) "Performance and Wake Measurements for a Vertical Axis Turbine at Moderate Reynolds Number"", 
                 "Proceedings of ASME Fluids Engineering Division Summer Meeting 2013, Paper FED2013-16575",
                 sep,
                 "Columns:",
@@ -1581,9 +1581,9 @@ def export_data():
     s = 6
     clabels = ["Run".center(s), "U".center(s), "TSR".center(s),
                "C_P".center(s), "C_D".center(s)]
-    with open('Processed/csv/unh-rvat-perf-2013-03-rev'+str(rev)+".txt",'wb') \
+    with open("Processed/csv/unh-rvat-perf-2013-03-rev"+str(rev)+".txt","wb") \
     as csvfile:
-        fwriter = csv.writer(csvfile, delimiter='\t')
+        fwriter = csv.writer(csvfile, delimiter="\t")
         for i in range(len(metadata)):
             fwriter.writerow([metadata[i]])
         fwriter.writerow(clabels)
