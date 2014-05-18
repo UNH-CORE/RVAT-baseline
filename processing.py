@@ -183,7 +183,7 @@ def batchperf(runs="all"):
     np.save('Processed/phase_ct', phase_ct)
     
 def find_amp_and_phase(angle, data, npeaks=3):
-    amp = np.max(data) - np.min(data)
+    amp = (np.max(data) - np.min(data))/2
     phase = angle[np.where(data == data.max())[0][0]] % (360/npeaks)
     return amp, phase
 
@@ -567,7 +567,7 @@ def plotperf_periodic():
     tsr = np.load('Processed/tsr.npy')[i]
     cp = np.load('Processed/cp.npy')[i]
     cd = np.load('Processed/cd.npy')[i]
-    ct = np.load('Processed/ct.npy')[i]
+#    ct = np.load('Processed/ct.npy')[i]
     amp_tsr = np.load('Processed/amp_tsr.npy')[i]
     amp_cp = np.load('Processed/amp_cp.npy')[i]
     amp_cd = np.load('Processed/amp_cd.npy')[i]
@@ -577,10 +577,10 @@ def plotperf_periodic():
     phase_cd = np.load('Processed/phase_cd.npy')[i]
     phase_ct = np.load('Processed/phase_ct.npy')[i]
     plt.figure()
-    plt.plot(tsr, amp_tsr)
+    plt.plot(tsr, amp_cp)
     styleplot()
     plt.figure()
-    plt.plot(tsr, phase_tsr)
+    plt.plot(tsr, phase_cp)
     
 def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
     z_H = np.arange(0, 0.75, 0.125)
@@ -1604,11 +1604,12 @@ def main():
 #    plotsinglerun(110, perf=False, wake=False, autocorr=True)
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
-    batchperf()
+#    batchperf()
 #    batchwake()
 #    plotperf(save=False, savepath=sp)
 #    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=True, savepath=p)
 #    plotmultispec(save=False, savepath=p)
+    plotperf_periodic()
     
 if __name__ == "__main__":
     ts = time.time()
