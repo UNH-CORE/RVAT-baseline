@@ -155,11 +155,14 @@ def batchperf(runs="all"):
         torque_ripple[n] = (np.max(torque_seg) \
                            - np.min(torque_seg))/np.mean(torque_seg)
         cp_seg = cp_s[2000*t1:2000*t2]
+        cd_seg = cd_s[2000*t1:2000*t2]
         ct_seg = ct_s[2000*t1:2000*t2]
         tsr_seg = tsr_s[2000*t1:2000*t2]
         angle_seg = angle[2000*t1:2000*t2]
         amp_tsr[n], phase_tsr[n] = find_amp_and_phase(angle_seg, tsr_seg)
         amp_cp[n], phase_cp[n] = find_amp_and_phase(angle_seg, cp_seg)
+        amp_cd[n], phase_cd[n] = find_amp_and_phase(angle_seg, cd_seg)
+        amp_ct[n], phase_ct[n] = find_amp_and_phase(angle_seg, ct_seg)
     np.save('Processed/cp', cp)
     np.save('Processed/cd', cd)
     np.save('Processed/tsr', tsr)
@@ -170,6 +173,14 @@ def batchperf(runs="all"):
     np.save('Processed/nrevs', nrevs)
     np.save('Processed/a', a)
     np.save('Processed/torque_ripple', torque_ripple)
+    np.save('Processed/amp_tsr', amp_tsr)
+    np.save('Processed/phase_tsr', phase_tsr)
+    np.save('Processed/amp_cp', amp_cp)
+    np.save('Processed/phase_cp', phase_cp)
+    np.save('Processed/amp_cd', amp_cd)
+    np.save('Processed/phase_cd', phase_cd)
+    np.save('Processed/amp_ct', amp_ct)
+    np.save('Processed/phase_ct', phase_ct)
     
 def find_amp_and_phase(angle, data, npeaks=3):
     amp = np.max(data) - np.min(data)
