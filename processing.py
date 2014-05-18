@@ -1538,16 +1538,21 @@ def export_data():
                              ("%.3f" %cd[run]).center(s)])
     
 def main(): 
-    plt.close("all")    
+    plt.close("all")
+    p = "Google Drive/Research/Papers/JOT CFT near-wake/Figures"
+    if "linux" in sys.platform:
+        p = "/home/pete/" + p
+    elif "win" in sys.platform:
+        p = "C:/Users/Pete/" + p
+
 #    plotsinglerun(110, perf=False, wake=False, autocorr=True)
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    batchperf()
 #    batchwake()
-    sp = 'C:/Users/Pete/Google Drive/Research/Papers/JOT CFT near-wake/Figures/'
 #    plotperf(save=False, savepath=sp)
-#    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=True, savepath=sp)
-#    plotmultispec(save=False, savepath=sp)
+#    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=True, savepath=p)
+    plotmultispec(save=False, savepath=p)
     
 if __name__ == "__main__":
     ts = time.time()
