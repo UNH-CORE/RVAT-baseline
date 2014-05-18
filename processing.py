@@ -154,11 +154,11 @@ def batchperf(runs="all"):
         torque_seg = Ttrans[2000*t1:2000*t2[n]]
         torque_ripple[n] = (np.max(torque_seg) \
                            - np.min(torque_seg))/np.mean(torque_seg)
-        cp_seg = cp_s[2000*t1:2000*t2]
-        cd_seg = cd_s[2000*t1:2000*t2]
-        ct_seg = ct_s[2000*t1:2000*t2]
-        tsr_seg = tsr_s[2000*t1:2000*t2]
-        angle_seg = angle[2000*t1:2000*t2]
+        cp_seg = cp_s[2000*t1:2000*t2[n]]
+        cd_seg = cd_s[2000*t1:2000*t2[n]]
+        ct_seg = ct_s[2000*t1:2000*t2[n]]
+        tsr_seg = tsr_s[2000*t1:2000*t2[n]]
+        angle_seg = angle[2000*t1:2000*t2[n]]
         amp_tsr[n], phase_tsr[n] = find_amp_and_phase(angle_seg, tsr_seg)
         amp_cp[n], phase_cp[n] = find_amp_and_phase(angle_seg, cp_seg)
         amp_cd[n], phase_cd[n] = find_amp_and_phase(angle_seg, cd_seg)
@@ -1584,11 +1584,11 @@ def main():
 #    plotsinglerun(110, perf=False, wake=False, autocorr=True)
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
-#    batchperf()
+    batchperf()
 #    batchwake()
 #    plotperf(save=False, savepath=sp)
 #    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=True, savepath=p)
-    plotmultispec(save=False, savepath=p)
+#    plotmultispec(save=False, savepath=p)
     
 if __name__ == "__main__":
     ts = time.time()
