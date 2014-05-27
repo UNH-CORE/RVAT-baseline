@@ -69,16 +69,16 @@ def loadvectemp(run):
 def loadtdms(run):
     filename = "TDMS/run" + str(run) + ".tdms"
     (objects,rawdata) = pyTDMS.read(filename)
-    Ttrans = np.asarray(rawdata["/"Untitled"/"TorqueTrans""])
-    Tarm = np.asarray(rawdata["/"Untitled"/"TorqueArm""])
-    dragL = np.asarray(rawdata["/"Untitled"/"DragL""])
-    dragR = np.asarray(rawdata["/"Untitled"/"DragR""])
+    Ttrans = np.asarray(rawdata["/'Untitled'/'TorqueTrans'"])
+    Tarm = np.asarray(rawdata["/'Untitled'/'TorqueArm'"])
+    dragL = np.asarray(rawdata["/'Untitled'/'DragL'"])
+    dragR = np.asarray(rawdata["/'Untitled'/'DragR'"])
     Tarm = Tarm - np.mean(Tarm[0:2000])
     tareDrag = 49.2407
     drag = dragL + dragR
     drag = drag - np.mean(drag[0:2000])
     drag = drag - tareDrag
-    angle = np.asarray(rawdata["/"Untitled"/"Untitled""])
+    angle = np.asarray(rawdata["/'Untitled'/'Untitled'"])
     angle = angle[0:len(Tarm)]
     rpm = np.zeros(len(Tarm))
     t = np.arange(0, float(len(Tarm))/2000, 0.0005)
@@ -808,7 +808,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.plot(y_R, meanuw[ind], "--^k", markerfacecolor="none",
                  label=r"$\lambda=1.4$")
         plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$\overline{u"w"}$")
+        plt.ylabel(r"$\overline{u'w'}$")
         plt.legend(loc=4)
         styleplot()
         if save:
@@ -861,7 +861,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.ylabel(r"$z/H$")
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
                            orientation="horizontal", pad=0.26)
-        cb2.set_label(r"$\overline{u"v"}/U_\infty^2$")
+        cb2.set_label(r"$\overline{u'v'}/U_\infty^2$")
         cb2.set_ticks(np.arange(-0.02, 0.025, 0.005), update_ticks=True)
         turb_lines()
         ax = plt.axes()
@@ -956,7 +956,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.plot(y_R, meanuv[ind], "--^k", markerfacecolor="none",
                  label=r"$\lambda=1.4$")
         plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$\overline{u"v"}$")
+        plt.ylabel(r"$\overline{u'v'}$")
         plt.legend()
         styleplot()
         if save:
@@ -1067,7 +1067,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.plot(y_R, meanvw[ind], "--^k", markerfacecolor="none",
                  label=r"$\lambda=1.4$")
         plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$\overline{v"w"}$")
+        plt.ylabel(r"$\overline{v'w'}$")
         plt.legend(loc=4)
         styleplot()
         if save:
@@ -1080,7 +1080,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.ylabel(r"$z/H$")
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
                            orientation="horizontal", pad=0.3)
-        cb2.set_label(r"$\overline{v"w"}/U_\infty^2$")
+        cb2.set_label(r"$\overline{v'w'}/U_\infty^2$")
         cb2.set_ticks(np.linspace(-.008,.006,6), update_ticks=True)
         turb_lines()
         ax = plt.axes()
@@ -1097,7 +1097,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.ylabel(r"$z/H$")
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
                            orientation="horizontal", pad=0.26)
-        cb2.set_label(r"$\overline{u"w"}/U_\infty^2$")
+        cb2.set_label(r"$\overline{u'w'}/U_\infty^2$")
 #        cb2.set_ticks(np.linspace(-.015,.013,6), update_ticks=True)
         turb_lines()
         ax = plt.axes()
@@ -1115,7 +1115,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
                           orientation="horizontal", pad=0.2)
-        cb2.set_label(r"$\overline{v"v"}$")
+        cb2.set_label(r"$\overline{v'v'}$")
 #        cb2.set_ticks(np.linspace(-.015,.013,6), update_ticks=True)
         turb_lines()
         ax = plt.axes()
@@ -1132,7 +1132,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
                           orientation="horizontal", pad=0.2)
-        cb2.set_label(r"$\overline{w"w"}$")
+        cb2.set_label(r"$\overline{w'w'}$")
 #        cb2.set_ticks(np.linspace(-.015,.013,6), update_ticks=True)
         turb_lines()
         ax = plt.axes()
@@ -1170,7 +1170,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.plot(y_R, meanvv[ind], "--^k", markerfacecolor="none",
                  label=r"$\lambda=1.4$")
         plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$\overline{v"v"}$")
+        plt.ylabel(r"$\overline{v'v'}$")
         plt.legend()
         styleplot()
         if save:
@@ -1283,7 +1283,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         plt.ylabel(r"$z/H$")
         cb = plt.colorbar(cs, shrink=1, extend="both", 
                           orientation="horizontal", pad=0.26)
-        cb.set_label(r"$-\overline{u_i" u_j"}\frac{\partial U_i}{\partial x_j}$")
+        cb.set_label(r"$-\overline{u_i' u_j'}\frac{\partial U_i}{\partial x_j}$")
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
@@ -1328,7 +1328,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         styleplot()
         cb = plt.colorbar(cs, shrink=1, extend="both", 
                           orientation="horizontal", pad=0.26)
-        cb.set_label(r"$-\frac{1}{2}\frac{\partial}{\partial x_j}\overline{u_i" u_j"} U_i$")
+        cb.set_label(r"$-\frac{1}{2}\frac{\partial}{\partial x_j}\overline{u_i' u_j'} U_i$")
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
@@ -1568,7 +1568,7 @@ def export_data():
                 "Mean ADV temperature: " + str(vectemp) + " degrees C",
                 sep,
                 "For more experimental details refer to:",
-                "Bachant and Wosnik (2013) "Performance and Wake Measurements for a Vertical Axis Turbine at Moderate Reynolds Number"", 
+                'Bachant and Wosnik (2013) "Performance and Wake Measurements for a Vertical Axis Turbine at Moderate Reynolds Number"', 
                 "Proceedings of ASME Fluids Engineering Division Summer Meeting 2013, Paper FED2013-16575",
                 sep,
                 "Columns:",
@@ -1609,8 +1609,8 @@ def main():
 #    batchwake()
 #    plotperf(save=False, savepath=sp)
 #    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=True, savepath=p)
-#    plotmultispec(save=False, savepath=p)
-    plotperf_periodic()
+    plotmultispec(save=True, savepath=p)
+#    plotperf_periodic()
     
 if __name__ == "__main__":
     ts = time.time()
