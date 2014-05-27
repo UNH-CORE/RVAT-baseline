@@ -344,7 +344,7 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
     plt.loglog(f/f_turbine, spec, "k")
     plt.xlim((0, 50))
     plt.xlabel(r"$f/f_{\mathrm{turbine}}$")
-    plt.ylabel(r"Power spectral density")
+    plt.ylabel(r"Spectral density")
     # Should the spectrum be normalized?
     plot_vertical_lines([1, 3, 6, 9])
     f_line = np.linspace(10,40)
@@ -380,7 +380,7 @@ def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
     plt.loglog(f/f_turbine, spec, "k")
     plt.xlim((0, 50))
     plt.xlabel(r"$f/f_{\mathrm{turbine}}$")
-    plt.ylabel(r"Power spectral density")
+    plt.ylabel(r"Spectral density")
     # Should the spectrum be normalized?
     plot_vertical_lines([1, 3, 6, 9])
     styleplot()
