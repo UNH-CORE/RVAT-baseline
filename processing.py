@@ -57,17 +57,17 @@ def loadvectemp(run):
                           
 def loadtdms(run):
     filename = "TDMS/run" + str(run) + ".tdms"
-    (objects,rawdata) = pyTDMS.read(filename)
-    Ttrans = np.asarray(rawdata["/'Untitled'/'TorqueTrans'"])
-    Tarm = np.asarray(rawdata["/'Untitled'/'TorqueArm'"])
-    dragL = np.asarray(rawdata["/'Untitled'/'DragL'"])
-    dragR = np.asarray(rawdata["/'Untitled'/'DragR'"])
+    objects, rawdata = pyTDMS.read(filename)
+    Ttrans = np.asarray(rawdata[b"/'Untitled'/'TorqueTrans'"])
+    Tarm = np.asarray(rawdata[b"/'Untitled'/'TorqueArm'"])
+    dragL = np.asarray(rawdata[b"/'Untitled'/'DragL'"])
+    dragR = np.asarray(rawdata[b"/'Untitled'/'DragR'"])
     Tarm = Tarm - np.mean(Tarm[0:2000])
     tareDrag = 49.2407
     drag = dragL + dragR
     drag = drag - np.mean(drag[0:2000])
     drag = drag - tareDrag
-    angle = np.asarray(rawdata["/'Untitled'/'Untitled'"])
+    angle = np.asarray(rawdata[b"/'Untitled'/'Untitled'"])
     angle = angle[0:len(Tarm)]
     rpm = np.zeros(len(Tarm))
     t = np.arange(0, float(len(Tarm))/2000, 0.0005)
@@ -389,6 +389,7 @@ def main():
 #    batchperf()
 #    batchwake()
 #    export_perf_csv(rev=1)
+    loadtdms(1)
 
     
 if __name__ == "__main__":

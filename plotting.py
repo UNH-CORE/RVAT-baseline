@@ -315,11 +315,11 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         dVdz = np.zeros(np.shape(meanu_a))
         dWdy = np.zeros(np.shape(meanu_a))
         dWdz = np.zeros(np.shape(meanu_a))
-        for n in xrange(len(z)):
+        for n in range(len(z)):
             dUdy[n,:] = fdiff.second_order_diff(meanu_a[n,:], y)
             dVdy[n,:] = fdiff.second_order_diff(meanv_a[n,:], y)
             dWdy[n,:] = fdiff.second_order_diff(meanw_a[n,:], y)
-        for n in xrange(len(y)):
+        for n in range(len(y)):
             dUdz[:,n] = fdiff.second_order_diff(meanu_a[:,n], z)
             dVdz[:,n] = fdiff.second_order_diff(meanv_a[:,n], z)
             dWdz[:,n] = fdiff.second_order_diff(meanw_a[:,n], z)
@@ -332,9 +332,9 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         y = R*y_R
         dKdy = np.zeros(np.shape(meanu_a))
         dKdz = np.zeros(np.shape(meanu_a))
-        for n in xrange(len(z)):
+        for n in range(len(z)):
             dKdy[n,:] = fdiff.second_order_diff(meank_a[n,:], y)
-        for n in xrange(len(y)):
+        for n in range(len(y)):
             dKdz[:,n] = fdiff.second_order_diff(meank_a[:,n], z)
         return dKdy, dKdz
     if "meanucont" in plotlist or "all" in plotlist:
@@ -988,9 +988,9 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         y = R*y_R
         dWdy = np.zeros(np.shape(meanu_a))
         dVdz = np.zeros(np.shape(meanu_a))
-        for n in xrange(len(z)):
+        for n in range(len(z)):
             dWdy[n,:] = fdiff.second_order_diff(meanw_a[n,:], y)
-        for n in xrange(len(y)):
+        for n in range(len(y)):
             dVdz[:,n] = fdiff.second_order_diff(meanv_a[:,n], z)
         # Make quiver plot of K advection
         plt.figure(figsize=(10,5))
@@ -1231,7 +1231,7 @@ def main():
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperf(save=False, savepath=sp)
-#    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=True, savepath=p)
+#    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=False, savepath=p)
 #    plotmultispec(save=False, savepath=p)
 #    plotperf_periodic()
         
