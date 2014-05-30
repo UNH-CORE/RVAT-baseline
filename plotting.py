@@ -204,6 +204,8 @@ def plotvelhist(run):
     
 def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
              print_analysis=False):
+    if not isinstance(plotlist, list):
+        plotlist = [plotlist]
     z_H = np.arange(0, 0.75, 0.125)
     y_R = np.hstack([-3.,-2.75,-2.5,-2.25,-2.,-1.8,np.arange(-1.6,0.1,0.1)])
     y_R = np.hstack([y_R, -np.flipud(y_R[0:-1])])
