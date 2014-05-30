@@ -178,6 +178,7 @@ def plotmultispec(save=False, savepath="", savetype=".pdf"):
     plt.tight_layout()
     if save:
         plt.savefig(savepath + "/multispec" + savetype)
+    plt.show()
     
 def plot_vertical_lines(x, ymaxscale=100):
     ymin = plt.axis()[2]
