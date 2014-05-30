@@ -17,6 +17,7 @@ from scipy.signal import decimate
 from scipy.interpolate import interp1d
 import fdiff
 import sys
+import os
 
 # Some constants
 R = 0.5
@@ -328,11 +329,12 @@ def batchwake():
     np.save("Processed/fpeak_w", fpeak_w)
     np.save("Processed/fstrength_w", fstrength_w)
     
-def export_data():
-    """Export processed data to text file."""
+def export_perf_csv(rev=0):
+    """Export processed data to csv file."""
+    if not os.path.isdir("Processed/csv"):
+        os.mkdir("Processed/csv")
     import datetime
     datestring = datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")
-    rev = 0
     sep = "----------------------------------------------------"
     runs = range(31)
     tsr = np.load("Processed/tsr.npy")[runs]
@@ -369,9 +371,9 @@ def export_data():
     s = 6
     clabels = ["Run".center(s), "U".center(s), "TSR".center(s),
                "C_P".center(s), "C_D".center(s)]
-    with open("Processed/csv/unh-rvat-perf-2013-03-rev"+str(rev)+".txt","wb") \
+    with open("Processed/csv/unh-rvat-perf-2013-03-rev"+str(rev)+".csv","wb") \
     as csvfile:
-        fwriter = csv.writer(csvfile, delimiter="\t")
+        fwriter = csv.writer(csvfile)
         for i in range(len(metadata)):
             fwriter.writerow([metadata[i]])
         fwriter.writerow(clabels)
@@ -386,6 +388,7 @@ def main():
     """Main function."""
 #    batchperf()
 #    batchwake()
+    export_perf_csv(rev=1)
 
     
 if __name__ == "__main__":
