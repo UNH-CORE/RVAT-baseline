@@ -105,7 +105,7 @@ def find_t2(t, angle, t1, t2):
 def calc_eta2(cp, cd):
     if cd < 0.8889:
         a = (-1+np.sqrt(1-cd))/(-2)
-    if cd >= 0.8889:  
+    elif cd >= 0.8889:  
         F = 1
         a = (18*F - 20 - 3*np.sqrt(cd*(50-36*F)+12*F*(3*F-4)))/(36*F - 50)
     eta2 = cp/((1-a)*cd)
@@ -1609,7 +1609,7 @@ def main():
 #    batchwake()
 #    plotperf(save=False, savepath=sp)
 #    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=True, savepath=p)
-    plotmultispec(save=True, savepath=p)
+    plotmultispec(save=False, savepath=p)
 #    plotperf_periodic()
     
 if __name__ == "__main__":
