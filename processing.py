@@ -30,7 +30,7 @@ rho = 1000.0
 nu = 1e-6
     
 def import_testplan():
-    wb = xlrd.open_workbook("Test plan.xlsx")
+    wb = xlrd.open_workbook("Test plan/Test plan.xlsx")
     ws = wb.sheet_by_index(0)
     runs = ws.col_values(0)
     # Find row with run 1 in it
