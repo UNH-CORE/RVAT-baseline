@@ -202,7 +202,8 @@ def plotvelhist(run):
     plt.grid(False)
     plt.show()
     
-def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
+def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
+             print_analysis=False):
     z_H = np.arange(0, 0.75, 0.125)
     y_R = np.hstack([-3.,-2.75,-2.5,-2.25,-2.,-1.8,np.arange(-1.6,0.1,0.1)])
     y_R = np.hstack([y_R, -np.flipud(y_R[0:-1])])
@@ -1091,41 +1092,42 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf"):
         if save:
             plt.savefig(savepath+"Kbargraph"+savetype)
     plt.show()
-    # Look at exergy efficiency -- probably wrong
-    # Calculate spatial average <> of velocities and velocities squared
-    Ubr_1 = 1.0 
-    Ubr_2 = np.trapz(np.trapz(meanu_a, y_R*R, axis=1), dx=0.125)/(3.0*0.625)
-    U2br_1 = 1.0**2
-    U2br_2 = np.trapz(np.trapz(meanu2_a, y_R*R, axis=1), dx=0.125)/(3.0*0.625)
-    kbarbr_1 = 0.5*1.0**2
-    kbarbr_2 = np.trapz(np.trapz(kbar_a, y_R*R, axis=1), dx=0.125)/(3.0*0.625)
-    phibr_1 = 0.5**1.0*1.0**2
-    phibr_2 = np.trapz(np.trapz(phi_a, y_R*R, axis=1), dx=0.125)/(3.0*0.625)
-    A_2 = 3*0.625*2
-    A_1 = A_2*Ubr_2/Ubr_1 # Solve for A1 using continuity
-    cd_meas = 0.964 # .964
-    fd_meas = 0.5*rho*cd_meas*A_t*1.0**2
-    p_1 = 0.0 # Gage pressure 1 in Pascals
-    p_2 = -(fd_meas - p_1*A_1 - rho*(A_1*U2br_1 - A_2*U2br_2))/A_2
-    power_d = rho*(Ubr_1*A_1*(kbarbr_1 + p_1/rho) - Ubr_2*A_2*(kbarbr_2 + p_2/rho))
-    power_d = rho*phibr_1*A_1 + Ubr_1*p_1*A_1 - rho*phibr_2*A_2 - Ubr_2*p_2*A_2
-    power_d_k = rho*phibr_1*A_1 - rho*phibr_2*A_2 
-    power_d_p = Ubr_1*p_1*A_1 - Ubr_2*p_2*A_2
-    ptot1 = 0.5*U**2 + 0.0
-    ptot2 = ptot1 - fd_meas/rho/A_2
-    U_2 = average_over_area(meanu_a, y_R, z_H)
-#    U_2 = 1.0
-    power_d = (U*ptot1 - U_2*ptot2)*(rho*A_2)
-    eta2 = 0.5*rho*0.255/power_d
-    print("eta_II =", eta2)
-    print("A1/A2 =", A_1/A_2)
-    print("p_2 =", p_2/rho)
-    print("U_2 =", U_2)
-    print("ptot_2 =", ptot2)
-    print("Shaft power output:", 0.5*rho*1.0*0.255*1.0**3)
-    print("Kinetic power dissipation:", power_d_k)
-    print("Static power dissipation:", power_d_p)
-    print("C_P/C_D =", 0.255/cd_meas)
+    if print_analysis:
+        # Look at exergy efficiency -- probably wrong
+        # Calculate spatial average <> of velocities and velocities squared
+        Ubr_1 = 1.0 
+        Ubr_2 = np.trapz(np.trapz(meanu_a, y_R*R, axis=1), dx=0.125)/(3.0*0.625)
+        U2br_1 = 1.0**2
+        U2br_2 = np.trapz(np.trapz(meanu2_a, y_R*R, axis=1), dx=0.125)/(3.0*0.625)
+        kbarbr_1 = 0.5*1.0**2
+        kbarbr_2 = np.trapz(np.trapz(kbar_a, y_R*R, axis=1), dx=0.125)/(3.0*0.625)
+        phibr_1 = 0.5**1.0*1.0**2
+        phibr_2 = np.trapz(np.trapz(phi_a, y_R*R, axis=1), dx=0.125)/(3.0*0.625)
+        A_2 = 3*0.625*2
+        A_1 = A_2*Ubr_2/Ubr_1 # Solve for A1 using continuity
+        cd_meas = 0.964 # .964
+        fd_meas = 0.5*rho*cd_meas*A_t*1.0**2
+        p_1 = 0.0 # Gage pressure 1 in Pascals
+        p_2 = -(fd_meas - p_1*A_1 - rho*(A_1*U2br_1 - A_2*U2br_2))/A_2
+        power_d = rho*(Ubr_1*A_1*(kbarbr_1 + p_1/rho) - Ubr_2*A_2*(kbarbr_2 + p_2/rho))
+        power_d = rho*phibr_1*A_1 + Ubr_1*p_1*A_1 - rho*phibr_2*A_2 - Ubr_2*p_2*A_2
+        power_d_k = rho*phibr_1*A_1 - rho*phibr_2*A_2 
+        power_d_p = Ubr_1*p_1*A_1 - Ubr_2*p_2*A_2
+        ptot1 = 0.5*U**2 + 0.0
+        ptot2 = ptot1 - fd_meas/rho/A_2
+        U_2 = average_over_area(meanu_a, y_R, z_H)
+    #    U_2 = 1.0
+        power_d = (U*ptot1 - U_2*ptot2)*(rho*A_2)
+        eta2 = 0.5*rho*0.255/power_d
+        print("eta_II =", eta2)
+        print("A1/A2 =", A_1/A_2)
+        print("p_2 =", p_2/rho)
+        print("U_2 =", U_2)
+        print("ptot_2 =", ptot2)
+        print("Shaft power output:", 0.5*rho*1.0*0.255*1.0**3)
+        print("Kinetic power dissipation:", power_d_k)
+        print("Static power dissipation:", power_d_p)
+        print("C_P/C_D =", 0.255/cd_meas)
     
 def plot_torque_ripple():
     i = range(31)
