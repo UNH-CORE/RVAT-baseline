@@ -43,7 +43,7 @@ def import_testplan():
             "y/R" : np.asarray(y_R), "z/H" : np.asarray(z_H)}
     
 def loadvec(run):
-    data = np.loadtxt("Vectrino/vec" + str(run) + ".dat")
+    data = np.loadtxt("Raw/Vectrino/vec" + str(run) + ".dat")
     t = data[:,0]
     u = data[:,3]
     v = data[:,4]
@@ -51,12 +51,12 @@ def loadvec(run):
     return t, u, v, w
 
 def loadvectemp(run):
-    with open("Vectrino/vec" + str(run) + ".hdr") as f:
+    with open("Raw/Vectrino/vec" + str(run) + ".hdr") as f:
         temp = f.readlines()[117].split()[1]
     return float(temp)
                           
 def loadtdms(run):
-    filename = "TDMS/run" + str(run) + ".tdms"
+    filename = "Raw/TDMS/run" + str(run) + ".tdms"
     objects, rawdata = pyTDMS.read(filename)
     Ttrans = np.asarray(rawdata[b"/'Untitled'/'TorqueTrans'"])
     Tarm = np.asarray(rawdata[b"/'Untitled'/'TorqueArm'"])
@@ -390,8 +390,6 @@ def main():
 #    batchwake()
 #    export_perf_csv(rev=1)
     loadtdms(1)
-    print(import_testplan())
-
     
 if __name__ == "__main__":
     main()
