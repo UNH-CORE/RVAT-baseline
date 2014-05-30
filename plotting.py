@@ -6,6 +6,18 @@ Created on Fri May 30 00:34:48 2014
 """
 from processing import *
 
+def styleplot():
+    font = {"family":"serif","serif":"cmr10","size":23}
+    lines = {"markersize":9, "markeredgewidth":0.9}
+    legend = {"numpoints":1, "fontsize": "small"}
+    matplotlib.rc("text", usetex = True)
+    matplotlib.rc("font", **font)
+    matplotlib.rc("lines", **lines)
+    matplotlib.rc("legend", **legend)
+    matplotlib.rc("xtick", **{"major.pad":12})
+    plt.grid(True)
+    plt.tight_layout()
+
 def plotsinglerun(run, perf=True, wake=False, autocorr=False, save=False):
     t1 = 13
     t2 = 30

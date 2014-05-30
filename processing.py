@@ -27,18 +27,6 @@ d_shaft = 0.095
 A_t = 1.0
 rho = 1000.0
 nu = 1e-6
-
-def styleplot():
-    font = {"family":"serif","serif":"cmr10","size":23}
-    lines = {"markersize":9, "markeredgewidth":0.9}
-    legend = {"numpoints":1, "fontsize": "small"}
-    matplotlib.rc("text", usetex = True)
-    matplotlib.rc("font", **font)
-    matplotlib.rc("lines", **lines)
-    matplotlib.rc("legend", **legend)
-    matplotlib.rc("xtick", **{"major.pad":12})
-    plt.grid(True)
-    plt.tight_layout()
     
 def import_testplan():
     wb = xlrd.open_workbook("Test plan, 2013.03 VAT, Rev4.xlsx")
