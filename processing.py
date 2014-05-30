@@ -388,11 +388,8 @@ def main():
     """Main function."""
 #    batchperf()
 #    batchwake()
-    export_perf_csv(rev=1)
+#    export_perf_csv(rev=1)
 
     
 if __name__ == "__main__":
-    ts = time.time()
     main()
-    te = time.time()
-    print("Elapsed time:", te-ts, "s")
