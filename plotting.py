@@ -4,6 +4,7 @@ Created on Fri May 30 00:34:48 2014
 
 @author: Pete
 """
+from __future__ import division, print_function 
 from processing import *
 
 def styleplot():
@@ -1226,12 +1227,12 @@ def main():
     elif "win" in sys.platform:
         p = "C:/Users/Pete/" + p
         
-#    plotsinglerun(110, perf=False, wake=False, autocorr=True)
+    plotsinglerun(110, perf=False, wake=False, autocorr=True)
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperf(save=False, savepath=sp)
 #    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=True, savepath=p)
-    plotmultispec(save=False, savepath=p)
+#    plotmultispec(save=False, savepath=p)
 #    plotperf_periodic()
         
 if __name__ == "__main__":
