@@ -30,7 +30,7 @@ rho = 1000.0
 nu = 1e-6
     
 def import_testplan():
-    wb = xlrd.open_workbook("Test plan, 2013.03 VAT, Rev4.xlsx")
+    wb = xlrd.open_workbook("Test plan.xlsx")
     ws = wb.sheet_by_index(0)
     runs = ws.col_values(0)
     # Find row with run 1 in it
@@ -390,6 +390,7 @@ def main():
 #    batchwake()
 #    export_perf_csv(rev=1)
     loadtdms(1)
+    print(import_testplan())
 
     
 if __name__ == "__main__":
