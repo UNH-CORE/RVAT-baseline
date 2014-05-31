@@ -356,7 +356,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+"meanucont"+savetype)
+            plt.savefig(savepath+"/meanucont"+savetype)
     if "v-wquiver" in plotlist or "all" in plotlist:
         # Make quiver plot of v and w velocities
         plt.figure(figsize=(10,5))
@@ -380,7 +380,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+"v-wquiver"+savetype)
+            plt.savefig(savepath+"/v-wquiver"+savetype)
     if "meanu_2tsrs" in plotlist:
         # Plot mean velocities at two different TSRs
         plt.figure()
@@ -398,7 +398,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.legend(loc=4)
         styleplot()
         if save:
-            plt.savefig(savepath+"meanu_2tsrs"+savetype)
+            plt.savefig(savepath+"/meanu_2tsrs"+savetype)
     if "stdu_2tsrs" in plotlist:
         # Plot stdu velocities at two different TSRs
         plt.figure()
@@ -416,7 +416,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.legend(loc=1)
         styleplot()
         if save:
-            plt.savefig(savepath+"stdu_2tsrs"+savetype)
+            plt.savefig(savepath+"/stdu_2tsrs"+savetype)
     if "uw_2tsrs" in plotlist:
         # Plot uw Re stress at two different TSRs
         plt.figure()
@@ -434,7 +434,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.legend(loc=4)
         styleplot()
         if save:
-            plt.savefig(savepath+"uw_2tsrs"+savetype)
+            plt.savefig(savepath+"/uw_2tsrs"+savetype)
     if "meanuvstsr" in plotlist:
         # Plot mean velocity components vs TSR
         tsr = np.load("Processed/tsr.npy")
@@ -458,7 +458,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.legend(ncol=3)
         styleplot()
         if save:
-            plt.savefig(savepath+"meanuvstsr"+savetype)
+            plt.savefig(savepath+"/meanuvstsr"+savetype)
     if "stducont" in plotlist:
         # Plot contours of streamwise turbulence intensity
         plt.figure(figsize=(10,5))
@@ -474,7 +474,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+"stducont"+savetype)
+            plt.savefig(savepath+"/stducont"+savetype)
     if "uvcont" in plotlist:
         # Plot contours of uv Reynolds stress
         plt.figure(figsize=(10,5))
@@ -491,7 +491,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         styleplot()
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+"uvcont"+savetype)
+            plt.savefig(savepath+"/uvcont"+savetype)
     if "meanw_2tsrs" in plotlist:
         # Plot mean vertical velocity profiles at two TSRs
         plt.figure()
@@ -509,7 +509,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.legend(loc=4)
         styleplot()
         if save:
-            plt.savefig(savepath+"meanw_2tsrs"+savetype)
+            plt.savefig(savepath+"/meanw_2tsrs"+savetype)
     if "meanv_2tsrs" in plotlist:
         # Plot mean cross stream velocity profiles at two TSRs
         plt.figure()
@@ -528,7 +528,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.legend(loc=4)
         styleplot()
         if save:
-            plt.savefig(savepath+"meanv_2tsrs"+savetype)
+            plt.savefig(savepath+"/meanv_2tsrs"+savetype)
     if "stdv_2tsrs" in plotlist:
         # Plot stdv velocities at two different TSRs
         plt.figure()
@@ -546,7 +546,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.legend(loc=1)
         styleplot()
         if save:
-            plt.savefig(savepath+"stdv_2tsrs"+savetype)
+            plt.savefig(savepath+"/stdv_2tsrs"+savetype)
     if "stdw_2tsrs" in plotlist:
         # Plot stdw velocities at two different TSRs
         plt.figure()
@@ -564,7 +564,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.legend(loc=1)
         styleplot()
         if save:
-            plt.savefig(savepath+"stdw_2tsrs"+savetype)
+            plt.savefig(savepath+"/stdw_2tsrs"+savetype)
     if "uv_2tsrs" in plotlist:
         # Plot uv Re stress at two different TSRs
         plt.figure()
@@ -582,7 +582,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.legend()
         styleplot()
         if save:
-            plt.savefig(savepath+"uv_2tsrs"+savetype)
+            plt.savefig(savepath+"/uv_2tsrs"+savetype)
     if "kcont" in plotlist or "all" in plotlist:
         # Plot contours of k
         plt.figure(figsize=(10,5))
@@ -598,7 +598,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         styleplot()
         if save:
-            plt.savefig(savepath+"kcont"+savetype)
+            plt.savefig(savepath+"/kcont"+savetype)
     if "meankcont" in plotlist:
         # Plot contours of k
         plt.figure(figsize=(10,5))
@@ -614,7 +614,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         styleplot()
         if save:
-            plt.savefig(savepath+"meankcont"+savetype)
+            plt.savefig(savepath+"/meankcont"+savetype)
     if "meanvcont" in plotlist:
         # Plot contours of meanv
         plt.figure(figsize=(10,5))
@@ -630,7 +630,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+"meanvcont"+savetype)
+            plt.savefig(savepath+"/meanvcont"+savetype)
     if "stdvcont" in plotlist:
         # Plot contours of stdv
         plt.figure(figsize=(10,5))
@@ -646,7 +646,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+"stdvcont"+savetype)
+            plt.savefig(savepath+"/stdvcont"+savetype)
     if "meanwcont" in plotlist:
         # Plot contours of meanw
         plt.figure(figsize=(10,5))
@@ -659,7 +659,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         cbmv.set_label(r"$\overline{w}/U_{\infty}$")
         turb_lines()
         if save:
-            plt.savefig(savepath+"meanwcont"+savetype)
+            plt.savefig(savepath+"/meanwcont"+savetype)
     if "stdwcont" in plotlist:
         # Plot contours of stdw
         plt.figure(figsize=(10,5))
@@ -675,7 +675,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+"stdwcont"+savetype)
+            plt.savefig(savepath+"/stdwcont"+savetype)
     if "vw_2tsrs" in plotlist:
         # Plot vw Re stress at two different TSRs
         plt.figure()
@@ -693,7 +693,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.legend(loc=4)
         styleplot()
         if save:
-            plt.savefig(savepath+"vw_2tsrs"+savetype)
+            plt.savefig(savepath+"/vw_2tsrs"+savetype)
     if "vwcont" in plotlist:
         # Plot contours of vw Reynolds stress
         plt.figure(figsize=(10,5))
@@ -710,7 +710,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         styleplot()
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+"vwcont"+savetype)
+            plt.savefig(savepath+"/vwcont"+savetype)
     if "uwcont" in plotlist:
         # Plot contours of vw Reynolds stress
         plt.figure(figsize=(10,5))
@@ -727,7 +727,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         styleplot()
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+"uwcont"+savetype)
+            plt.savefig(savepath+"/uwcont"+savetype)
     if "vvcont" in plotlist:
         # Plot contours of vv Reynolds stress
         plt.figure(figsize=(10,5))
@@ -744,7 +744,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+"vvcont"+savetype)
+            plt.savefig(savepath+"/vvcont"+savetype)
     if "wwcont" in plotlist:
         # Plot contours of vv Reynolds stress
         plt.figure(figsize=(10,5))
@@ -761,7 +761,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+"wwcont"+savetype)
+            plt.savefig(savepath+"/wwcont"+savetype)
     if "uucont" in plotlist:
         # Plot contours of uu Reynolds stress
         plt.figure(figsize=(10,5))
@@ -778,7 +778,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+"uucont"+savetype)
+            plt.savefig(savepath+"/uucont"+savetype)
     if "vv_2tsrs" in plotlist:
         # Plot vw Re stress at two different TSRs
         plt.figure()
@@ -796,7 +796,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.legend()
         styleplot()
         if save:
-            plt.savefig(savepath+"vv_2tsrs"+savetype)
+            plt.savefig(savepath+"/vv_2tsrs"+savetype)
     if "fpeak_u" in plotlist or "all" in plotlist:
         plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, fpeak_u_a, cmap=plt.cm.coolwarm,
@@ -813,7 +813,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         styleplot()
         if save:
-            plt.savefig(savepath+"fpeak_u"+savetype)
+            plt.savefig(savepath+"/fpeak_u"+savetype)
     if "fstrength_u" in plotlist or "all" in plotlist:
         plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, fstrength_u_a, 20, cmap=plt.cm.coolwarm)
@@ -829,7 +829,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         styleplot()
         if save:
-            plt.savefig(savepath+"fstrength_u"+savetype)
+            plt.savefig(savepath+"/fstrength_u"+savetype)
     if "fpeak_v" in plotlist or "all" in plotlist:
         plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, fpeak_v_a, cmap=plt.cm.coolwarm,
@@ -846,7 +846,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         styleplot()
         if save:
-            plt.savefig(savepath+"fpeak_v"+savetype)
+            plt.savefig(savepath+"/fpeak_v"+savetype)
     if "fstrength_v" in plotlist or "all" in plotlist:
         plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, fstrength_v_a, 20, cmap=plt.cm.coolwarm)
@@ -862,7 +862,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         styleplot()
         if save:
-            plt.savefig(savepath+"fstrength_v"+savetype)
+            plt.savefig(savepath+"/fstrength_v"+savetype)
     if "fpeak_w" in plotlist or "all" in plotlist:
         plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, fpeak_w_a, cmap=plt.cm.coolwarm,
@@ -879,7 +879,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         styleplot()
         if save:
-            plt.savefig(savepath+"fpeak_w"+savetype)
+            plt.savefig(savepath+"/fpeak_w"+savetype)
     if "fstrength_w" in plotlist or "all" in plotlist:
         plt.figure(figsize=(10,5))
         cs2 = plt.contourf(y_R, z_H, fstrength_w_a, 20, cmap=plt.cm.coolwarm)
@@ -912,7 +912,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         styleplot()
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+"kprod"+savetype)
+            plt.savefig(savepath+"/kprod"+savetype)
     if "meankadv" in plotlist:
         calc_meankgrad()
         # Make quiver plot of K advection
@@ -939,7 +939,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.grid(False)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+"meankadv"+savetype)
+            plt.savefig(savepath+"/meankadv"+savetype)
     if "Kturbtrans" in plotlist:
         calc_meankturbtrans()
         plt.figure(figsize=(10,5))
@@ -956,7 +956,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
-            plt.savefig(savepath+"Kturbtrans"+savetype)
+            plt.savefig(savepath+"/Kturbtrans"+savetype)
     if "meancomboquiv" in plotlist or "all" in plotlist:
         plt.figure(figsize=(10,6))
         # Add contours of mean velocity
@@ -986,7 +986,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         styleplot()
         if save:
-            plt.savefig(savepath+"meancomboquiv"+savetype)
+            plt.savefig(savepath+"/meancomboquiv"+savetype)
     if "xvorticity" in plotlist:
         z = 1.0*z_H
         y = R*y_R
@@ -1010,7 +1010,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         styleplot()
         if save:
-            plt.savefig(savepath+"xvorticity"+savetype)
+            plt.savefig(savepath+"/xvorticity"+savetype)
     if "Kbargraphs" in plotlist:
         """Make a bar graph of terms contributing to dK/dx:
           * Cross-stream advection
@@ -1093,7 +1093,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
             print("K recovery rate (%/D) =", 
                   2*np.sum(quantities)/(0.5*U**2)/D*100)
         if save:
-            plt.savefig(savepath+"Kbargraph"+savetype)
+            plt.savefig(savepath+"/Kbargraph"+savetype)
     plt.show()
     if print_analysis:
         # Look at exergy efficiency -- probably wrong
@@ -1179,7 +1179,7 @@ def plotperf(plotlist=["cp", "cd"],
         plt.ylabel(r"$\eta_{II}$")
         styleplot()
         if save:
-            plt.savefig(savepath+"eta2"+savetype)
+            plt.savefig(savepath+"/eta2"+savetype)
         # Power coefficient plot
         plt.figure()
         plt.plot(tsr[i], cp[i], "-ok", markerfacecolor = "none")
@@ -1187,7 +1187,7 @@ def plotperf(plotlist=["cp", "cd"],
         plt.ylabel(r"$C_P$")
         styleplot()
         if save:
-            plt.savefig(savepath+"cpvstsr"+savetype)
+            plt.savefig(savepath+"/cpvstsr"+savetype)
         # Drag coefficient plot
         plt.figure()
         plt.plot(tsr[i], cd[i], "-ok", markerfacecolor = "none")
@@ -1196,7 +1196,7 @@ def plotperf(plotlist=["cp", "cd"],
         plt.ylim(0, 1.2001)
         styleplot()
         if save:
-            plt.savefig(savepath+"cdvstsr"+savetype)
+            plt.savefig(savepath+"/cdvstsr"+savetype)
         # Torque coefficient plot
         ct = cp/tsr
         plt.figure()
@@ -1205,9 +1205,9 @@ def plotperf(plotlist=["cp", "cd"],
         plt.ylabel(r"$C_T$")
         styleplot()
         if save:
-            plt.savefig(savepath+"ctvstsr"+savetype)
+            plt.savefig(savepath+"/ctvstsr"+savetype)
     else:
-        plt.figure(figsize=(11,5))
+        plt.figure(figsize=(12,5))
         plt.subplot(121)
         plt.plot(tsr[i], cp[i], "-ok", markerfacecolor = "none")
         plt.xlabel(r"$\lambda$", labelpad=20)
@@ -1220,7 +1220,7 @@ def plotperf(plotlist=["cp", "cd"],
         plt.ylim(0, 1.2001)
         styleplot()
         if save:
-            plt.savefig(savepath+"perf"+savetype)
+            plt.savefig(savepath+"/perf"+savetype)
     plt.show()
         
 def plotperf_periodic():
