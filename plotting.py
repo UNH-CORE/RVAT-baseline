@@ -1089,8 +1089,9 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
 #                    xycoords="figure fraction", fontsize=18)
         styleplot()
         plt.grid(False)
-        print("K recovery rate (%/D) =", 
-              2*np.sum(quantities)/(0.5*U**2)/D*100)
+        if print_analysis:
+            print("K recovery rate (%/D) =", 
+                  2*np.sum(quantities)/(0.5*U**2)/D*100)
         if save:
             plt.savefig(savepath+"Kbargraph"+savetype)
     plt.show()
@@ -1232,11 +1233,11 @@ def main():
     elif "win" in sys.platform:
         p = "C:/Users/Pete/" + p
         
-    plotsinglerun(110, perf=False, wake=False, autocorr=True)
+#    plotsinglerun(110, perf=False, wake=False, autocorr=True)
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperf(save=False, savepath=sp)
-#    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=False, savepath=p)
+    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=False, savepath=p)
 #    plotmultispec(save=False, savepath=p)
 #    plotperf_periodic()
         
