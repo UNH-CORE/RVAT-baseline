@@ -1164,46 +1164,64 @@ def plot_Re_c():
 #    plt.legend(loc=4)
     styleplot()
     
-def plotperf(save=False, savepath="", savetype=".pdf"):
+def plotperf(plotlist=["cp", "cd"],
+             subplots=True, save=False, savepath="", savetype=".pdf"):
     i = range(31)
     cp = np.load("Processed/cp.npy")
     cd = np.load("Processed/cd.npy")
     tsr = np.load("Processed/tsr.npy")
     eta2 = np.load("Processed/eta2.npy")
-    # Exergy efficiency plot
-    plt.figure()
-    plt.plot(tsr[i], eta2[i], "-ok", markerfacecolor = "none")
-    plt.xlabel(r"$\lambda$", labelpad=20)
-    plt.ylabel(r"$\eta_{II}$")
-    styleplot()
-    if save:
-        plt.savefig(savepath+"eta2"+savetype)
-    # Power coefficient plot
-    plt.figure()
-    plt.plot(tsr[i], cp[i], "-ok", markerfacecolor = "none")
-    plt.xlabel(r"$\lambda$", labelpad=20)
-    plt.ylabel(r"$C_P$")
-    styleplot()
-    if save:
-        plt.savefig(savepath+"cpvstsr"+savetype)
-    # Drag coefficient plot
-    plt.figure()
-    plt.plot(tsr[i], cd[i], "-ok", markerfacecolor = "none")
-    plt.xlabel(r"$\lambda$", labelpad=20)
-    plt.ylabel(r"$C_D$")
-    plt.ylim(0, 1.2001)
-    styleplot()
-    if save:
-        plt.savefig(savepath+"cdvstsr"+savetype)
-    # Torque coefficient plot
-    ct = cp/tsr
-    plt.figure()
-    plt.plot(tsr[i], ct[i], "-ok", markerfacecolor = "none")
-    plt.xlabel(r"$\lambda$", labelpad=20)
-    plt.ylabel(r"$C_T$")
-    styleplot()
-    if save:
-        plt.savefig(savepath+"ctvstsr"+savetype)
+    if not subplots:
+        # Exergy efficiency plot
+        plt.figure()
+        plt.plot(tsr[i], eta2[i], "-ok", markerfacecolor = "none")
+        plt.xlabel(r"$\lambda$", labelpad=20)
+        plt.ylabel(r"$\eta_{II}$")
+        styleplot()
+        if save:
+            plt.savefig(savepath+"eta2"+savetype)
+        # Power coefficient plot
+        plt.figure()
+        plt.plot(tsr[i], cp[i], "-ok", markerfacecolor = "none")
+        plt.xlabel(r"$\lambda$", labelpad=20)
+        plt.ylabel(r"$C_P$")
+        styleplot()
+        if save:
+            plt.savefig(savepath+"cpvstsr"+savetype)
+        # Drag coefficient plot
+        plt.figure()
+        plt.plot(tsr[i], cd[i], "-ok", markerfacecolor = "none")
+        plt.xlabel(r"$\lambda$", labelpad=20)
+        plt.ylabel(r"$C_D$")
+        plt.ylim(0, 1.2001)
+        styleplot()
+        if save:
+            plt.savefig(savepath+"cdvstsr"+savetype)
+        # Torque coefficient plot
+        ct = cp/tsr
+        plt.figure()
+        plt.plot(tsr[i], ct[i], "-ok", markerfacecolor = "none")
+        plt.xlabel(r"$\lambda$", labelpad=20)
+        plt.ylabel(r"$C_T$")
+        styleplot()
+        if save:
+            plt.savefig(savepath+"ctvstsr"+savetype)
+    else:
+        plt.figure(figsize=(11,5))
+        plt.subplot(121)
+        plt.plot(tsr[i], cp[i], "-ok", markerfacecolor = "none")
+        plt.xlabel(r"$\lambda$", labelpad=20)
+        plt.ylabel(r"$C_P$")
+        plt.grid()
+        plt.subplot(122)
+        plt.plot(tsr[i], cd[i], "-ok", markerfacecolor = "none")
+        plt.xlabel(r"$\lambda$", labelpad=20)
+        plt.ylabel(r"$C_D$")
+        plt.ylim(0, 1.2001)
+        styleplot()
+        if save:
+            plt.savefig(savepath+"perf"+savetype)
+    plt.show()
         
 def plotperf_periodic():
     i = range(31)
@@ -1236,8 +1254,8 @@ def main():
 #    plotsinglerun(110, perf=False, wake=False, autocorr=True)
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
-#    plotperf(save=False, savepath=sp)
-    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=False, savepath=p)
+    plotperf(subplots=True, save=True, savepath=p)
+#    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=False, savepath=p)
 #    plotmultispec(save=False, savepath=p)
 #    plotperf_periodic()
         
