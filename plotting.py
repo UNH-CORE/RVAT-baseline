@@ -31,26 +31,23 @@ def plotsinglerun(run, perf=True, wake=False, autocorr=False, save=False):
     vecloaded = False
     if perf:
         cp = (Ttrans+0.5)*tsr/0.5/500.0
+        ct = cp/tsr
         cd_ts = drag/500.0
         max_cd = np.max(cd_ts[t1*2000:t2*2000])
         min_cd = np.min(cd_ts[t1*2000:t2*2000])
         max_torque = np.max(Ttrans[t1*2000:t2*2000])
         min_torque = np.min(Ttrans[t1*2000:t2*2000])
         cd, std_cd = calcstats(cd_ts, t1, t2, 2000)
-        cp, std_cp = calcstats(cp, t1, t2, 2000)
+        meancp, std_cp = calcstats(cp, t1, t2, 2000)
         meanT, stdT = calcstats(Ttrans, t1, t2, 2000)
         meanrpm, std_rpm = calcstats(rpm, t1, t2, 2000)
-#        plt.plot(t, Ttrans, "k")
-        plt.hold(True)
-        plt.plot(t, Ttrans, "k")
+        plt.plot(t, cp, "k")
         plt.xlabel(r"$t$(s)")
-#        plt.ylabel(r"Torque (Nm)")
-#        plt.vlines([t1, t2],np.min(Ttrans),np.max(Ttrans),
-#                   color="r",linestyles="dashed")
-#        plt.vlines([t2t],np.min(Ttrans),np.max(Ttrans),
-#                   color="k",linestyles="dashed")
+        plt.ylabel(r"$C_P$")
+        plot_vertical_lines([t1, t2t], color="black")
+        plot_vertical_lines([t2], color="gray")
         styleplot()
-        print("TSR =", meantsr, "; C_P =", cp)
+        print("TSR =", meantsr, "; C_P =", meancp)
         print("Number of revolutions:", nrevs)
         print("(1/2)(max_cd-min_cd)/cd:", np.abs(max_cd-min_cd)*0.5/cd)
         print("(1/2)(Tmax-Tmin)/Tmean:", np.abs(max_torque-min_torque)*0.5/meanT)
@@ -180,11 +177,14 @@ def plotmultispec(save=False, savepath="", savetype=".pdf"):
         plt.savefig(savepath + "/multispec" + savetype)
     plt.show()
     
-def plot_vertical_lines(x, ymaxscale=100):
+def plot_vertical_lines(xlist, ymaxscale=1, color="gray"):
+    if not isinstance(xlist, list):
+        x = [x]
     ymin = plt.axis()[2]
     ymax = plt.axis()[3]*ymaxscale
-    plt.vlines(x, ymin, ymax,
-               color="gray", linestyles="dashed")
+    for x in xlist:
+        plt.vlines(x, ymin, ymax,
+                   color=color, linestyles="dashed")
     plt.ylim((ymin, ymax))
     
 def plotvelhist(run):
@@ -1094,7 +1094,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
                   2*np.sum(quantities)/(0.5*U**2)/D*100)
         if save:
             plt.savefig(savepath+"/Kbargraph"+savetype)
-    plt.show()
+    plt.show(block=False)
     if print_analysis:
         # Look at exergy efficiency -- probably wrong
         # Calculate spatial average <> of velocities and velocities squared
@@ -1163,10 +1163,10 @@ def plot_Re_c():
     plt.ylabel(r"$Re_c$ $(\times 10^5)$")
 #    plt.legend(loc=4)
     styleplot()
-    
+
 def plotperf(plotlist=["cp", "cd"],
              subplots=True, save=False, savepath="", savetype=".pdf"):
-    i = range(31)
+    i = np.arange(31)
     cp = np.load("Processed/cp.npy")
     cd = np.load("Processed/cd.npy")
     tsr = np.load("Processed/tsr.npy")
@@ -1251,11 +1251,12 @@ def main():
     elif "win" in sys.platform:
         p = "C:/Users/Pete/" + p
         
-#    plotsinglerun(110, perf=False, wake=False, autocorr=True)
+    plotsinglerun(111, perf=True, wake=False, autocorr=False)
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
-    plotperf(subplots=True, save=True, savepath=p)
-#    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=False, savepath=p)
+#    plotperf(subplots=True, save=False, savepath=p)
+#    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=False, savepath=p,
+#             print_analysis=True)
 #    plotmultispec(save=False, savepath=p)
 #    plotperf_periodic()
         
