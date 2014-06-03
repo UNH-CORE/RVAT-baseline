@@ -4,7 +4,7 @@ March 2013 experiments with the VAT
 
 """
 from __future__ import division, print_function
-import pyTDMS
+import pytdms
 import xlrd
 import timeseries
 from timeseries import *
@@ -57,7 +57,7 @@ def loadvectemp(run):
                           
 def loadtdms(run):
     filename = "Raw/TDMS/run" + str(run) + ".tdms"
-    objects, rawdata = pyTDMS.read(filename)
+    objects, rawdata = pytdms.read(filename)
     Ttrans = np.asarray(rawdata[b"/'Untitled'/'TorqueTrans'"])
     Tarm = np.asarray(rawdata[b"/'Untitled'/'TorqueArm'"])
     dragL = np.asarray(rawdata[b"/'Untitled'/'DragL'"])
