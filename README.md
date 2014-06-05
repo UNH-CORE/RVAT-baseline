@@ -7,10 +7,10 @@ derived data set from the Spring 2013 UNH-RVAT tow tank testing.
 Dependencies
 ------------
 
-  * Python
+  * Python (2 or 3)
   * NumPy
   * matplotlib
-  * (pytdms)[https://github.com/petebachant/pytdms] (for processing raw data)
+  * [pytdms](https://github.com/petebachant/pytdms) (for processing raw data)
 
 Publications
 ------------
