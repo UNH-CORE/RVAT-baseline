@@ -1,10 +1,21 @@
-2013 Spring RVAT tow tank experimental data
-===========================================
-This repository will contain the reduced dataset from the Spring 2013 UNH-RVAT tow tank testing. 
+2013 Spring RVAT tow tank experiments
+=====================================
 
-Citation
---------
-If you use this data, please use the citation below:
+This repository will contain the processing and plotting code, as well as the 
+derived data set from the Spring 2013 UNH-RVAT tow tank testing. 
+
+Dependencies
+------------
+
+  * Python
+  * NumPy
+  * matplotlib
+  * (pytdms)[https://github.com/petebachant/pytdms] (for processing raw data)
+
+Publications
+------------
+These data were used in the following publications. See the `git log` for specific commits used for each.
+
 
 ```bibtex
 @INPROCEEDINGS{
