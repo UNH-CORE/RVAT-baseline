@@ -7,7 +7,7 @@ Created on Fri May 30 00:34:48 2014
 from __future__ import division, print_function 
 from processing import *
 
-def styleplot():
+def setpltparams():
     font = {"family":"serif","serif":"cmr10","size":23}
     lines = {"markersize":9, "markeredgewidth":0.9}
     legend = {"numpoints":1, "fontsize": "small"}
@@ -16,6 +16,8 @@ def styleplot():
     matplotlib.rc("lines", **lines)
     matplotlib.rc("legend", **legend)
     matplotlib.rc("xtick", **{"major.pad":12})
+
+def styleplot():
     plt.grid(True)
     plt.tight_layout()
 
@@ -1221,6 +1223,8 @@ def plotperf(plotlist=["cp", "cd"],
         styleplot()
         if save:
             plt.savefig(savepath+"/perf"+savetype)
+    print("At tsr = 1.9, C_P =", cp[np.where(np.round(tsr, decimals=2)==1.9)[0][0]],
+          "; C_D =", cd[np.where(np.round(tsr, decimals=2)==1.9)[0][0]])
     plt.show()
         
 def plotperf_periodic():
@@ -1243,7 +1247,8 @@ def plotperf_periodic():
     plt.figure()
     plt.plot(tsr, phase_cd)
         
-def main(): 
+def main():
+    setpltparams()
     plt.close("all")
     p = "Google Drive/Research/Papers/JOT CFT near-wake/Figures"
     if "linux" in sys.platform:
@@ -1251,10 +1256,10 @@ def main():
     elif "win" in sys.platform:
         p = "C:/Users/Pete/" + p
         
-    plotsinglerun(111, perf=True, wake=False, autocorr=False)
+#    plotsinglerun(111, perf=True, wake=False, autocorr=False)
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
-#    plotperf(subplots=True, save=False, savepath=p)
+    plotperf(subplots=True, save=False, savepath=p)
 #    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=False, savepath=p,
 #             print_analysis=True)
 #    plotmultispec(save=False, savepath=p)
