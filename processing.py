@@ -4,7 +4,6 @@ March 2013 experiments with the VAT
 
 """
 from __future__ import division, print_function
-import pytdms
 import xlrd
 import timeseries
 from timeseries import *
@@ -18,6 +17,11 @@ from scipy.interpolate import interp1d
 import fdiff
 import sys
 import os
+
+try:
+    import pytdms
+except ImportError:
+    processtdms = False
 
 # Some constants
 R = 0.5
