@@ -1222,23 +1222,12 @@ def plotperf(plotlist=["cp", "cd"],
         
 def plotperf_periodic():
     i = range(31)
-    tsr = np.load("Processed/tsr.npy")[i]
-    cp = np.load("Processed/cp.npy")[i]
-    cd = np.load("Processed/cd.npy")[i]
-#    ct = np.load("Processed/ct.npy")[i]
-    amp_tsr = np.load("Processed/amp_tsr.npy")[i]
-    amp_cp = np.load("Processed/amp_cp.npy")[i]
-    amp_cd = np.load("Processed/amp_cd.npy")[i]
-    amp_ct = np.load("Processed/amp_ct.npy")[i]
-    phase_tsr = np.load("Processed/phase_tsr.npy")[i]
-    phase_cp = np.load("Processed/phase_cp.npy")[i]
-    phase_cd = np.load("Processed/phase_cd.npy")[i]
-    phase_ct = np.load("Processed/phase_ct.npy")[i]
+    d = pd.read_csv("Processed/processed.csv")
     plt.figure()
-    plt.plot(tsr, amp_cd)
+    plt.plot(d.tsr[i], d.amp_cd[i])
     styleplot()
     plt.figure()
-    plt.plot(tsr, phase_cd)
+    plt.plot(d.tsr[i], d.phase_cd[i])
         
 def main():
     setpltparams()
@@ -1252,11 +1241,11 @@ def main():
 #    plotsinglerun(111, perf=True, wake=False, autocorr=False, xaxis="angle")
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
-    plotperf(subplots=True, save=False, savepath=p)
+#    plotperf(subplots=True, save=False, savepath=p)
 #    plotwake(["meancomboquiv"], save=False, savepath=p,
 #             print_analysis=True)
 #    plotmultispec(save=False, savepath=p)
-#    plotperf_periodic()
+    plotperf_periodic()
         
 if __name__ == "__main__":
     main()
