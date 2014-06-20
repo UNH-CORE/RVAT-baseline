@@ -251,7 +251,7 @@ def find_run_ind(y_R, z_H, tsr):
                                 tp["tsr"]==tsr))[0][0]
     return i
 
-def batchwake(saveas=".csv"):
+def batchwake(saveas=".csv", t1=13):
     try:
         df = pd.read_csv("Processed/processed.csv")
         for key in df.keys():
@@ -271,7 +271,6 @@ def batchwake(saveas=".csv"):
     df["y/R"] = testplan["y/R"]
     df["z/H"] = testplan["z/H"]
     runs = testplan["Run"]
-    t1 = 13
     meanu = np.zeros(len(runs))
     meanv = np.zeros(len(runs))
     meanw = np.zeros(len(runs))
@@ -340,6 +339,7 @@ def batchwake(saveas=".csv"):
         df["t2"] = t2
         df["tsr"] = tsr
         df["meanu"] = meanu
+        df["meanv"] = meanv
         df.to_csv("Processed/processed.csv", index=False)
     elif "npy" in saveas.lower():
         np.save("Processed/meanu", meanu)
