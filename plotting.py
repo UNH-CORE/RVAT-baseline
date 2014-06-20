@@ -231,6 +231,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
     df["k"] = 0.5*(df.stdu**2 + df.stdv**2 + df.stdw**2)
     df["meank"] = 0.5*(df.meanu**2 + df.meanv**2 + df.meanw**2)
     df["kbar"] = df.meank + df.k
+    df["phi"] = 
     # Create empty 2D arrays for contour plots, etc.
     grdata = {}
     grdims = (len(z_H), len(y_R))
@@ -247,6 +248,9 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         i = [run - 1 for run in runs]
         for q in quantities:
             grdata[q][n,:] = df[q][i]
+    meanu, meanv, meanw = grdata["meanu"], grdata["meanv"], grdata["meanw"]
+    uv, vv, vw = grdata["meanupvp"], grdata["meanvpvp"], grdata["meanvpwp"]
+    uw, ww = grdata["meanupwp"], grdata["meanwpwp"]
     def turb_lines():
         plt.hlines(0.5, -1, 1, linestyles="solid", linewidth=2)
         plt.vlines(-1, 0, 0.5, linestyles="solid", linewidth=2)
@@ -260,9 +264,6 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         ddz_vwV = np.zeros(grdims)
         ddy_vwW = np.zeros(grdims)
         ddz_wwW = np.zeros(grdims)
-        meanu, meanv, meanw = grdata["meanu"], grdata["meanv"], grdata["meanw"]
-        uv, vv, vw = grdata["meanupvp"], grdata["meanvpvp"], grdata["meanvpwp"]
-        uw, ww = grdata["meanupwp"], grdata["meanwpwp"]
         for n in range(len(z)):
             ddy_uvU[n,:] = fdiff.second_order_diff((uv*meanu)[n,:], y)
             ddy_vvV[n,:] = fdiff.second_order_diff((vv*meanv)[n,:], y)
@@ -278,22 +279,22 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
     def calc_kprod_meandiss():
         z = H*z_H
         y = R*y_R
-        dUdy = np.zeros(np.shape(meanu_a))
-        dUdz = np.zeros(np.shape(meanu_a))
-        dVdy = np.zeros(np.shape(meanu_a))
-        dVdz = np.zeros(np.shape(meanu_a))
-        dWdy = np.zeros(np.shape(meanu_a))
-        dWdz = np.zeros(np.shape(meanu_a))
+        dUdy = np.zeros(grdims)
+        dUdz = np.zeros(grdims)
+        dVdy = np.zeros(grdims)
+        dVdz = np.zeros(grdims)
+        dWdy = np.zeros(grdims)
+        dWdz = np.zeros(grdims)
         for n in range(len(z)):
-            dUdy[n,:] = fdiff.second_order_diff(meanu_a[n,:], y)
-            dVdy[n,:] = fdiff.second_order_diff(meanv_a[n,:], y)
-            dWdy[n,:] = fdiff.second_order_diff(meanw_a[n,:], y)
+            dUdy[n,:] = fdiff.second_order_diff(meanu[n,:], y)
+            dVdy[n,:] = fdiff.second_order_diff(meanv[n,:], y)
+            dWdy[n,:] = fdiff.second_order_diff(meanw[n,:], y)
         for n in range(len(y)):
-            dUdz[:,n] = fdiff.second_order_diff(meanu_a[:,n], z)
-            dVdz[:,n] = fdiff.second_order_diff(meanv_a[:,n], z)
-            dWdz[:,n] = fdiff.second_order_diff(meanw_a[:,n], z)
-        kprod = meanuv_a*dUdy + meanuw_a*dUdz + meanvw_a*dVdz + meanvw_a*dWdy\
-                + meanvv_a*dVdy + meanww_a*dWdz
+            dUdz[:,n] = fdiff.second_order_diff(meanu[:,n], z)
+            dVdz[:,n] = fdiff.second_order_diff(meanv[:,n], z)
+            dWdz[:,n] = fdiff.second_order_diff(meanw[:,n], z)
+        kprod = uv*dUdy + uw*dUdz + vw*dVdz + vw*dWdy\
+                + vv*dVdy + ww*dWdz
         meandiss = -2.0*nu*(dUdy**2 + dUdz**2 + dVdy**2 + dVdz**2 + dWdy**2 + dWdz**2)
         return kprod, meandiss
     def calc_meankgrad():
@@ -1064,13 +1065,13 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         # Look at exergy efficiency -- probably wrong
         # Calculate spatial average <> of velocities and velocities squared
         Ubr_1 = 1.0 
-        Ubr_2 = np.trapz(np.trapz(meanu_a, y_R*R, axis=1), dx=0.125)/(3.0*0.625)
+        Ubr_2 = np.trapz(np.trapz(meanu, y_R*R, axis=1), dx=0.125)/(3.0*0.625)
         U2br_1 = 1.0**2
-        U2br_2 = np.trapz(np.trapz(meanu2_a, y_R*R, axis=1), dx=0.125)/(3.0*0.625)
+        U2br_2 = np.trapz(np.trapz(grdata["meanuu"], y_R*R, axis=1), dx=0.125)/(3.0*0.625)
         kbarbr_1 = 0.5*1.0**2
-        kbarbr_2 = np.trapz(np.trapz(kbar_a, y_R*R, axis=1), dx=0.125)/(3.0*0.625)
+        kbarbr_2 = np.trapz(np.trapz(grdata["kbar"], y_R*R, axis=1), dx=0.125)/(3.0*0.625)
         phibr_1 = 0.5**1.0*1.0**2
-        phibr_2 = np.trapz(np.trapz(phi_a, y_R*R, axis=1), dx=0.125)/(3.0*0.625)
+        phibr_2 = np.trapz(np.trapz(grdata["phi"], y_R*R, axis=1), dx=0.125)/(3.0*0.625)
         A_2 = 3*0.625*2
         A_1 = A_2*Ubr_2/Ubr_1 # Solve for A1 using continuity
         cd_meas = 0.964 # .964
@@ -1083,7 +1084,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         power_d_p = Ubr_1*p_1*A_1 - Ubr_2*p_2*A_2
         ptot1 = 0.5*U**2 + 0.0
         ptot2 = ptot1 - fd_meas/rho/A_2
-        U_2 = average_over_area(meanu_a, y_R, z_H)
+        U_2 = average_over_area(meanu, y_R, z_H)
     #    U_2 = 1.0
         power_d = (U*ptot1 - U_2*ptot2)*(rho*A_2)
         eta2 = 0.5*rho*0.255/power_d
