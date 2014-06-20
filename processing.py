@@ -106,11 +106,9 @@ def calc_eta2(cp, cd):
     return a, eta2
     
 
-def batchperf(runs="all", saveas=".csv"):
+def batchperf(t1=13, t2_guess=30):
     if runs == "all":
         runs = range(1,378) # 377 runs total
-    t1 = 13
-    t2t = 30
     cp = np.zeros(len(runs))
     cd = np.zeros(len(runs))
     ct = np.zeros(len(runs))
@@ -136,7 +134,7 @@ def batchperf(runs="all", saveas=".csv"):
         print("Processing performance data from run", runs[n], "of", \
         str(np.max(runs))+"...")
         t, angle, Ttrans, Tarm, drag, rpm, tsr_s = loadtdms(runs[n])
-        t2[n], nrevs[n] = find_t2(t, angle, t1, t2t)
+        t2[n], nrevs[n] = find_t2(t, angle, t1, t2_guess)
         tsr[n], std_tsr[n] = calcstats(tsr_s, t1, t2[n], 2000)
         cp_s = Ttrans*tsr_s/0.5/500
         cd_s = drag/500.0
