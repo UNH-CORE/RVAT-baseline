@@ -8,14 +8,17 @@ from __future__ import division, print_function
 from processing import *
 
 def setpltparams():
-    font = {"family":"serif","serif":"cmr10","size":20}
-    lines = {"markersize":9, "markeredgewidth":0.9}
-    legend = {"numpoints":1, "fontsize": "small"}
-    matplotlib.rc("text", usetex = True)
+    font = {"family" : "serif", 
+            "serif" : "cmr10",
+            "sans-serif" : "cmr10",
+            "size" : 23}
+    lines = {"markersize" : 9, "markeredgewidth" : 0.9}
+    legend = {"numpoints" : 1, "fontsize" : "small"}
+    matplotlib.rc("text", usetex=True)
     matplotlib.rc("font", **font)
     matplotlib.rc("lines", **lines)
     matplotlib.rc("legend", **legend)
-    matplotlib.rc("xtick", **{"major.pad":10})
+    matplotlib.rc("xtick", **{"major.pad":12})
 
 def styleplot():
     plt.grid(True)
@@ -144,7 +147,7 @@ def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
     i = find_run_ind(y_R, z_H, tsr)
     print("Plotting spectra from run", i+1)
     t1 = 13
-    t2 = np.load("Processed/t2.npy")[i]
+    t2 = pd.read_csv("Processed/processed.csv")["t2"][i]
     t, angle, Ttrans, Tarm, drag, rpm, tsr_ts = loadtdms(i+1) # Run name is index + 1
     torque = Tarm/(0.5*rho*A_t*R*U**2)
     torque_seg = torque[2000*t1:2000*t2] - np.mean(torque[2000*t1:2000*t2])
@@ -155,7 +158,7 @@ def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
     f_max = f[np.where(spec==np.max(spec))[0][0]]
     strength = np.max(spec)/np.var(torque_seg)*(f[1] - f[0])
     print("Strongest frequency f/f_turbine:", f_max/f_turbine)
-    print("Relative strength:", strength)
+    print("Spectral concentration:", strength)
     if newfig:
         plt.figure()
     plt.loglog(f/f_turbine, spec, "k")
@@ -1240,13 +1243,13 @@ def main():
         
 #    plotsinglerun(111, perf=True, wake=False, autocorr=False, xaxis="angle")
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
-#    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
+    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperf(subplots=True, save=False, savepath=p)
 #    plotwake(["meancomboquiv"], save=False, savepath=p,
 #             print_analysis=True)
 #    plotmultispec(save=False, savepath=p)
 #    plotperf_periodic()
-    plotvelhist(5)
+#    plotvelhist(5)
         
 if __name__ == "__main__":
     main()
