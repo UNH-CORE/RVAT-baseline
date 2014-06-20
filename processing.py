@@ -343,6 +343,14 @@ def batchwake():
     np.save("Processed/fpeak_w", fpeak_w)
     np.save("Processed/fstrength_w", fstrength_w)
     
+def convert_npy_to_csv():
+    files = os.listdir("Processed")
+    df = pd.DataFrame()
+    for f in files:
+        if (".npy") in f:
+            df[f.replace(".npy", "")] = np.load("Processed/" + f)
+    df.to_csv("Processed/processed.csv")
+    
 def export_perf_csv(rev=0):
     """Export processed data to csv file."""
     if not os.path.isdir("Processed/csv"):
@@ -400,10 +408,11 @@ def export_perf_csv(rev=0):
     
 def main():
     """Main function."""
-    batchperf()
+#    batchperf()
 #    batchwake()
 #    export_perf_csv(rev=1)
 #    loadtdms(1)
+    convert_npy_to_csv()
     
 if __name__ == "__main__":
     main()
