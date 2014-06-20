@@ -214,28 +214,9 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
     y_R = np.hstack([y_R, -np.flipud(y_R[0:-1])])
     y_R = np.round(y_R, decimals=4)
     # Load processed data
-    meanu = np.load("Processed/meanu.npy")
-    meanv = np.load("Processed/meanv.npy")
-    meanw = np.load("Processed/meanw.npy")
-    stdu = np.load("Processed/stdu.npy")
-    stdv = np.load("Processed/stdv.npy")
-    stdw = np.load("Processed/stdw.npy")
-    meanuv = np.load("Processed/meanuv.npy")
-    meanuw = np.load("Processed/meanuw.npy")
-    meanvw = np.load("Processed/meanvw.npy")
-    meanvv = np.load("Processed/meanvv.npy")
-    meanww = np.load("Processed/meanww.npy")
-    meanuu = np.load("Processed/meanuu.npy")
-    phi = np.load("Processed/phi.npy")
-    meanu2 = np.load("Processed/meanu2.npy")
-    fpeak_u = np.load("Processed/fpeak_u.npy")
-    fstrength_u = np.load("Processed/fstrength_u.npy")
-    fpeak_v = np.load("Processed/fpeak_v.npy")
-    fstrength_v = np.load("Processed/fstrength_v.npy")
-    fpeak_w = np.load("Processed/fpeak_w.npy")
-    fstrength_w = np.load("Processed/fstrength_w.npy")
-    k = 0.5*(stdu**2 + stdv**2 + stdw**2)
-    meank = 0.5*(meanu**2 + meanv**2 + meanw**2)
+    df = pd.read_csv("Processed/processed.csv")
+    k = 0.5*(df.stdu**2 + df.stdv**2 + df.stdw**2)
+    meank = 0.5*(df.meanu**2 + df.meanv**2 + df.meanw**2)
     kbar = meank + k
     # Create empty 2D arrays for contour plots, etc.
     meanu_a = np.zeros((len(z_H), len(y_R)))
@@ -265,29 +246,29 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
     for n in range(len(z_H)):
         runs = getruns(z_H[n], tsr=1.9)
         ind = [run - 1 for run in runs]
-        meanu_a[n,:] = meanu[ind]
-        meanv_a[n,:] = meanv[ind]
-        meanw_a[n,:] = meanw[ind]
-        stdu_a[n,:] = stdu[ind]
-        stdv_a[n,:] = stdv[ind]
-        stdw_a[n,:] = stdw[ind]
-        meanuv_a[n,:] = meanuv[ind]
-        meanuw_a[n,:] = meanuw[ind]
-        meanvw_a[n,:] = meanvw[ind]
-        meanvv_a[n,:] = meanvv[ind]
-        meanww_a[n,:] = meanww[ind]
-        meanuu_a[n,:] = meanuu[ind]
-        phi_a[n,:] = phi[ind]
+        meanu_a[n,:] = df.meanu[ind]
+        meanv_a[n,:] = df.meanv[ind]
+        meanw_a[n,:] = df.meanw[ind]
+        stdu_a[n,:] = df.stdu[ind]
+        stdv_a[n,:] = df.stdv[ind]
+        stdw_a[n,:] = df.stdw[ind]
+        meanuv_a[n,:] = df.meanupvp[ind]
+        meanuw_a[n,:] = df.meanupwp[ind]
+        meanvw_a[n,:] = df.meanvpwp[ind]
+        meanvv_a[n,:] = df.meanvpvp[ind]
+        meanww_a[n,:] = df.meanwpwp[ind]
+        meanuu_a[n,:] = df.meanupup[ind]
+#        phi_a[n,:] = phi[ind]
         k_a[n,:] = k[ind]
         meank_a[n,:] = meank[ind]
-        meanu2_a[n,:] = meanu2[ind]
+        meanuu_a[n,:] = df.meanuu[ind]
         kbar_a[n,:] = kbar[ind]
-        fpeak_u_a[n,:] = fpeak_u[ind]
-        fstrength_u_a[n,:] = fstrength_u[ind]
-        fpeak_v_a[n,:] = fpeak_v[ind]
-        fstrength_v_a[n,:] = fstrength_v[ind]
-        fpeak_w_a[n,:] = fpeak_w[ind]
-        fstrength_w_a[n,:] = fstrength_w[ind]
+        fpeak_u_a[n,:] = df.fpeak_u[ind]
+        fstrength_u_a[n,:] = df.fstrength_u[ind]
+        fpeak_v_a[n,:] = df.fpeak_v[ind]
+        fstrength_v_a[n,:] = df.fstrength_v[ind]
+        fpeak_w_a[n,:] = df.fpeak_w[ind]
+        fstrength_w_a[n,:] = df.fstrength_w[ind]
     def turb_lines():
         plt.hlines(0.5, -1, 1, linestyles="solid", linewidth=2)
         plt.vlines(-1, 0, 0.5, linestyles="solid", linewidth=2)
@@ -1257,12 +1238,12 @@ def main():
     elif "win" in sys.platform:
         p = "C:/Users/Pete/" + p
         
-    plotsinglerun(111, perf=True, wake=False, autocorr=False)
+#    plotsinglerun(111, perf=True, wake=False, autocorr=False)
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperf(subplots=True, save=False, savepath=p)
-#    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=False, savepath=p,
-#             print_analysis=True)
+    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=False, savepath=p,
+             print_analysis=True)
 #    plotmultispec(save=False, savepath=p)
 #    plotperf_periodic()
         
