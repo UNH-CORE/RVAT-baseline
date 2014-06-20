@@ -251,13 +251,27 @@ def find_run_ind(y_R, z_H, tsr):
                                 tp["tsr"]==tsr))[0][0]
     return i
 
-def batchwake():
-    runs = range(1, 378)
-    y_R = np.hstack([-3.,-2.75,-2.5,-2.25,-2.,-1.8,np.arange(-1.6,0.1,0.1)])
-    y_R = np.hstack([y_R, -np.flipud(y_R[0:-1])])
+def batchwake(saveas=".csv"):
+    try:
+        df = pd.read_csv("Processed/processed.csv")
+        for key in df.keys():
+            if "Unnamed" in key:
+                del df[key]
+        tsr = df["tsr"]
+        t2 = df["t2"]
+    except IOError:
+        df = pd.DataFrame()
+        t2 = np.load("Processed/t2.npy")
+        tsr = np.load("Processed/tsr.npy")
+    except KeyError:
+        t2 = np.load("Processed/t2.npy")
+        tsr = np.load("Processed/tsr.npy")
+    testplan = pd.read_csv("Test plan/Test plan.csv")
+    df["run"] = testplan["Run"]
+    df["y/R"] = testplan["y/R"]
+    df["z/H"] = testplan["z/H"]
+    runs = testplan["Run"]
     t1 = 13
-    t2 = np.load("Processed/t2.npy")
-    tsr = np.load("Processed/tsr.npy")
     meanu = np.zeros(len(runs))
     meanv = np.zeros(len(runs))
     meanw = np.zeros(len(runs))
@@ -321,27 +335,34 @@ def batchwake():
         f_max = f[np.where(spec==np.max(spec))[0][0]]
         fstrength_w[n] = np.max(spec)/np.var(w_seg)*(f[1] - f[0])
         fpeak_w[n] = f_max/f_turbine
-    np.save("Processed/meanu", meanu)
-    np.save("Processed/meanv", meanv)
-    np.save("Processed/meanw", meanw)
-    np.save("Processed/stdu", stdu)
-    np.save("Processed/stdv", stdv)
-    np.save("Processed/stdw", stdw)
-    np.save("Processed/meanuv", meanuv)
-    np.save("Processed/meanuw", meanuw)
-    np.save("Processed/meanvw", meanvw)
-    np.save("Processed/phi", phi)
-    np.save("Processed/meanu2", meanu2)
-    np.save("Processed/meanvv", meanvv)
-    np.save("Processed/meanww", meanww)
-    np.save("Processed/meanuu", meanuu)
-    np.save("Processed/vectemp", vectemp)
-    np.save("Processed/fpeak_u", fpeak_u)
-    np.save("Processed/fstrength_u", fstrength_u)
-    np.save("Processed/fpeak_v", fpeak_v)
-    np.save("Processed/fstrength_v", fstrength_v)
-    np.save("Processed/fpeak_w", fpeak_w)
-    np.save("Processed/fstrength_w", fstrength_w)
+    if "csv" in saveas.lower():
+        df["t1_vec"] = t1
+        df["t2"] = t2
+        df["tsr"] = tsr
+        df["meanu"] = meanu
+        df.to_csv("Processed/processed.csv", index=False)
+    elif "npy" in saveas.lower():
+        np.save("Processed/meanu", meanu)
+        np.save("Processed/meanv", meanv)
+        np.save("Processed/meanw", meanw)
+        np.save("Processed/stdu", stdu)
+        np.save("Processed/stdv", stdv)
+        np.save("Processed/stdw", stdw)
+        np.save("Processed/meanuv", meanuv)
+        np.save("Processed/meanuw", meanuw)
+        np.save("Processed/meanvw", meanvw)
+        np.save("Processed/phi", phi)
+        np.save("Processed/meanu2", meanu2)
+        np.save("Processed/meanvv", meanvv)
+        np.save("Processed/meanww", meanww)
+        np.save("Processed/meanuu", meanuu)
+        np.save("Processed/vectemp", vectemp)
+        np.save("Processed/fpeak_u", fpeak_u)
+        np.save("Processed/fstrength_u", fstrength_u)
+        np.save("Processed/fpeak_v", fpeak_v)
+        np.save("Processed/fstrength_v", fstrength_v)
+        np.save("Processed/fpeak_w", fpeak_w)
+        np.save("Processed/fstrength_w", fstrength_w)
     
 def convert_npy_to_csv():
     files = os.listdir("Processed")
@@ -409,10 +430,10 @@ def export_perf_csv(rev=0):
 def main():
     """Main function."""
 #    batchperf()
-#    batchwake()
+    batchwake()
 #    export_perf_csv(rev=1)
 #    loadtdms(1)
-    convert_npy_to_csv()
+#    convert_npy_to_csv()
     
 if __name__ == "__main__":
     main()
