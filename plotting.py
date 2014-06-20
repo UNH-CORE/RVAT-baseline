@@ -1161,10 +1161,11 @@ def plot_Re_c():
 def plotperf(plotlist=["cp", "cd"],
              subplots=True, save=False, savepath="", savetype=".pdf"):
     i = np.arange(31)
-    cp = np.load("Processed/cp.npy")
-    cd = np.load("Processed/cd.npy")
-    tsr = np.load("Processed/tsr.npy")
-    eta2 = np.load("Processed/eta2.npy")
+    data = pd.read_csv("Processed/processed.csv")
+    cp = data.cp
+    cd = data.cd
+    tsr = data.tsr
+    eta2 = data.eta2
     if not subplots:
         # Exergy efficiency plot
         plt.figure()
@@ -1248,10 +1249,10 @@ def main():
     elif "win" in sys.platform:
         p = "C:/Users/Pete/" + p
         
-    plotsinglerun(111, perf=True, wake=False, autocorr=False, xaxis="angle")
+#    plotsinglerun(111, perf=True, wake=False, autocorr=False, xaxis="angle")
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
-#    plotperf(subplots=True, save=False, savepath=p)
+    plotperf(subplots=True, save=False, savepath=p)
 #    plotwake(["meancomboquiv"], save=False, savepath=p,
 #             print_analysis=True)
 #    plotmultispec(save=False, savepath=p)
