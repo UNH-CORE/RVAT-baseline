@@ -251,7 +251,7 @@ def find_run_ind(y_R, z_H, tsr):
                                 tp["tsr"]==tsr))[0][0]
     return i
 
-def batchwake(saveas=".csv", t1=13):
+def batchwake(t1=13):
     try:
         df = pd.read_csv("Processed/processed.csv")
         for key in df.keys():
@@ -270,52 +270,42 @@ def batchwake(saveas=".csv", t1=13):
     df["run"] = testplan["Run"]
     df["y/R"] = testplan["y/R"]
     df["z/H"] = testplan["z/H"]
+    df["t1_vec"] = t1
+    df["t2"] = t2
     runs = testplan["Run"]
-    meanu = np.zeros(len(runs))
-    meanv = np.zeros(len(runs))
-    meanw = np.zeros(len(runs))
-    stdu = np.zeros(len(runs))
-    stdv = np.zeros(len(runs))
-    stdw = np.zeros(len(runs))
-    meanuv = np.zeros(len(runs))
-    meanuw = np.zeros(len(runs))
-    meanvw = np.zeros(len(runs))
-    meanvv = np.zeros(len(runs))
-    meanww = np.zeros(len(runs))
-    meanuu = np.zeros(len(runs))
-    phi = np.zeros(len(runs))
-    meanu2 = np.zeros(len(runs))
-    vectemp = np.zeros(len(runs))
-    fpeak_u = np.zeros(len(runs))
-    fstrength_u = np.zeros(len(runs))
-    fpeak_v = np.zeros(len(runs))
-    fstrength_v = np.zeros(len(runs))
-    fpeak_w = np.zeros(len(runs))
-    fstrength_w = np.zeros(len(runs))
+    quantities = ["meanu", "meanv", "meanw", "stdu", "stdv", "stdw",
+                  "meanupvp", "meanupwp", "meanvpwp", "meanupup", "meanvpvp", 
+                  "meanwpwp", "meanuu", "vectemp", "fpeak_u", "fstrength_u", 
+                  "fpeak_v", "fstrength_v", "fpeak_w", "fstrength_w"]
+    for q in quantities:
+        if not q in df:
+            df[q] = np.zeros(len(runs))
     
     for n in range(len(runs)):
         print("Processing velocity data from run", str(runs[n]) + "...")
         tv,u,v,w = loadvec(runs[n])
         phi_s = 0.5*u*(u**2 + v**2 + w**2)
-        u2 = u**2
-        meanu[n], stdu[n] = calcstats(u, t1, t2[n], 200)
-        meanv[n], stdv[n] = calcstats(v, t1, t2[n], 200)
-        meanw[n], stdw[n] = calcstats(w, t1, t2[n], 200)
-        uv = (u-meanu[n])*(v-meanv[n])
-        uw = (u-meanu[n])*(w-meanw[n])
-        vw = (v-meanv[n])*(w-meanw[n])
-        vv = (v-meanv[n])*(v-meanv[n])
-        ww = (w-meanw[n])*(w-meanw[n])
-        uu = (u-meanu[n])*(u-meanu[n])
-        meanuv[n] = np.mean(uv[t1*200:t2[n]*200])
-        meanuw[n] = np.mean(uw[t1*200:t2[n]*200])
-        meanvw[n] = np.mean(vw[t1*200:t2[n]*200])
-        meanvv[n] = np.mean(vv[t1*200:t2[n]*200])
-        meanww[n] = np.mean(ww[t1*200:t2[n]*200])
-        meanuu[n] = np.mean(uu[t1*200:t2[n]*200])
-        phi[n] = np.mean(phi_s[t1*200:t2[n]*200])
-        meanu2[n] = np.mean(u2[t1*200:t2[n]*200])
-        vectemp[n] = loadvectemp(runs[n])
+        uu = u**2
+        meanu, stdu = calcstats(u, t1, t2[n], 200)
+        meanv, stdv = calcstats(v, t1, t2[n], 200)
+        meanw, stdw = calcstats(w, t1, t2[n], 200)
+        df.meanu[n], df.meanv[n], df.meanw[n] = meanu, meanv, meanw
+        df.stdu[n], df.stdv[n], df.stdw[n] = stdu, stdv, stdw
+        upvp = (u-meanu)*(v-meanv)
+        upwp = (u-meanu)*(w-meanw)
+        vpwp = (v-meanv)*(w-meanw)
+        vpvp = (v-meanv)*(v-meanv)
+        wpwp = (w-meanw)*(w-meanw)
+        upup = (u-meanu)*(u-meanu)
+        df.meanupvp[n] = np.mean(upvp[t1*200:t2[n]*200])
+        df.meanupwp[n] = np.mean(upwp[t1*200:t2[n]*200])
+        df.meanvpwp[n] = np.mean(vpwp[t1*200:t2[n]*200])
+        df.meanvpvp[n] = np.mean(vpvp[t1*200:t2[n]*200])
+        df.meanwpwp[n] = np.mean(wpwp[t1*200:t2[n]*200])
+        df.meanupup[n] = np.mean(upup[t1*200:t2[n]*200])
+#        phi[n] = np.mean(phi_s[t1*200:t2[n]*200])
+        df.meanuu[n] = np.mean(uu[t1*200:t2[n]*200])
+        df.vectemp[n] = loadvectemp(runs[n])
         # Spectral calculations
         u_seg = u[200*t1:200*t2[n]] - np.mean(u[200*t1:200*t2[n]])
         v_seg = v[200*t1:200*t2[n]] - np.mean(v[200*t1:200*t2[n]])
@@ -324,45 +314,18 @@ def batchwake(saveas=".csv", t1=13):
         # Find maximum frequency and its relative strength
         f, spec = psd(tv, u_seg, window=None)
         f_max = f[np.where(spec==np.max(spec))[0][0]]
-        fstrength_u[n] = np.max(spec)/np.var(u_seg)*(f[1] - f[0])
-        fpeak_u[n] = f_max/f_turbine
+        df.fstrength_u[n] = np.max(spec)/np.var(u_seg)*(f[1] - f[0])
+        df.fpeak_u[n] = f_max/f_turbine
         f, spec = psd(tv, v_seg, window=None)
         f_max = f[np.where(spec==np.max(spec))[0][0]]
-        fstrength_v[n] = np.max(spec)/np.var(v_seg)*(f[1] - f[0])
-        fpeak_v[n] = f_max/f_turbine
+        df.fstrength_v[n] = np.max(spec)/np.var(v_seg)*(f[1] - f[0])
+        df.fpeak_v[n] = f_max/f_turbine
         f, spec = psd(tv, w_seg, window=None)
         f_max = f[np.where(spec==np.max(spec))[0][0]]
-        fstrength_w[n] = np.max(spec)/np.var(w_seg)*(f[1] - f[0])
-        fpeak_w[n] = f_max/f_turbine
-    if "csv" in saveas.lower():
-        df["t1_vec"] = t1
-        df["t2"] = t2
-        df["tsr"] = tsr
-        df["meanu"] = meanu
-        df["meanv"] = meanv
-        df.to_csv("Processed/processed.csv", index=False)
-    elif "npy" in saveas.lower():
-        np.save("Processed/meanu", meanu)
-        np.save("Processed/meanv", meanv)
-        np.save("Processed/meanw", meanw)
-        np.save("Processed/stdu", stdu)
-        np.save("Processed/stdv", stdv)
-        np.save("Processed/stdw", stdw)
-        np.save("Processed/meanuv", meanuv)
-        np.save("Processed/meanuw", meanuw)
-        np.save("Processed/meanvw", meanvw)
-        np.save("Processed/phi", phi)
-        np.save("Processed/meanu2", meanu2)
-        np.save("Processed/meanvv", meanvv)
-        np.save("Processed/meanww", meanww)
-        np.save("Processed/meanuu", meanuu)
-        np.save("Processed/vectemp", vectemp)
-        np.save("Processed/fpeak_u", fpeak_u)
-        np.save("Processed/fstrength_u", fstrength_u)
-        np.save("Processed/fpeak_v", fpeak_v)
-        np.save("Processed/fstrength_v", fstrength_v)
-        np.save("Processed/fpeak_w", fpeak_w)
-        np.save("Processed/fstrength_w", fstrength_w)
+        df.fstrength_w[n] = np.max(spec)/np.var(w_seg)*(f[1] - f[0])
+        df.fpeak_w[n] = f_max/f_turbine
+    # Save to CSV
+    df.to_csv("Processed/processed.csv", index=False)
     
 def convert_npy_to_csv():
     files = os.listdir("Processed")
