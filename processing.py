@@ -17,6 +17,7 @@ from scipy.interpolate import interp1d
 import fdiff
 import sys
 import os
+import pandas as ps
 
 try:
     import pytdms
@@ -105,7 +106,7 @@ def calc_eta2(cp, cd):
     return a, eta2
     
 
-def batchperf(runs="all"):
+def batchperf(runs="all", saveas=".csv"):
     if runs == "all":
         runs = range(1,378) # 377 runs total
     t1 = 13
@@ -156,25 +157,34 @@ def batchperf(runs="all"):
         amp_cp[n], phase_cp[n] = find_amp_and_phase(angle_seg, cp_seg)
         amp_cd[n], phase_cd[n] = find_amp_and_phase(angle_seg, cd_seg)
         amp_ct[n], phase_ct[n] = find_amp_and_phase(angle_seg, ct_seg)
-    np.save("Processed/cp", cp)
-    np.save("Processed/cd", cd)
-    np.save("Processed/ct", ct)
-    np.save("Processed/tsr", tsr)
-    np.save("Processed/std_tsr", std_tsr)
-    np.save("Processed/std_cp", std_cp)
-    np.save("Processed/t2", t2)
-    np.save("Processed/eta2", eta2)
-    np.save("Processed/nrevs", nrevs)
-    np.save("Processed/a", a)
-    np.save("Processed/torque_ripple", torque_ripple)
-    np.save("Processed/amp_tsr", amp_tsr)
-    np.save("Processed/phase_tsr", phase_tsr)
-    np.save("Processed/amp_cp", amp_cp)
-    np.save("Processed/phase_cp", phase_cp)
-    np.save("Processed/amp_cd", amp_cd)
-    np.save("Processed/phase_cd", phase_cd)
-    np.save("Processed/amp_ct", amp_ct)
-    np.save("Processed/phase_ct", phase_ct)
+    if "csv" in saveas.lower():
+        df = pd.DataFrame()
+        df["run"] = runs
+        df["cp"] = cp
+        df["cd"] = cd
+        df["ct"] = ct
+        df["tsr"] = tsr
+        df.to_csv("Processed/perf.csv")
+    elif "npy" in saveas.lower():
+        np.save("Processed/cp", cp)
+        np.save("Processed/cd", cd)
+        np.save("Processed/ct", ct)
+        np.save("Processed/tsr", tsr)
+        np.save("Processed/std_tsr", std_tsr)
+        np.save("Processed/std_cp", std_cp)
+        np.save("Processed/t2", t2)
+        np.save("Processed/eta2", eta2)
+        np.save("Processed/nrevs", nrevs)
+        np.save("Processed/a", a)
+        np.save("Processed/torque_ripple", torque_ripple)
+        np.save("Processed/amp_tsr", amp_tsr)
+        np.save("Processed/phase_tsr", phase_tsr)
+        np.save("Processed/amp_cp", amp_cp)
+        np.save("Processed/phase_cp", phase_cp)
+        np.save("Processed/amp_cd", amp_cd)
+        np.save("Processed/phase_cd", phase_cd)
+        np.save("Processed/amp_ct", amp_ct)
+        np.save("Processed/phase_ct", phase_ct)
     
 def find_amp_and_phase(angle, data, npeaks=3):
     amp = (np.max(data) - np.min(data))/2
@@ -390,10 +400,10 @@ def export_perf_csv(rev=0):
     
 def main():
     """Main function."""
-#    batchperf()
+    batchperf()
 #    batchwake()
 #    export_perf_csv(rev=1)
-    loadtdms(1)
+#    loadtdms(1)
     
 if __name__ == "__main__":
     main()
