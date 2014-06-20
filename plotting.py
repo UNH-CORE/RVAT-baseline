@@ -228,60 +228,25 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
     y_R = np.round(y_R, decimals=4)
     # Load processed data
     df = pd.read_csv("Processed/processed.csv")
-    k = 0.5*(df.stdu**2 + df.stdv**2 + df.stdw**2)
-    meank = 0.5*(df.meanu**2 + df.meanv**2 + df.meanw**2)
-    kbar = meank + k
+    df["k"] = 0.5*(df.stdu**2 + df.stdv**2 + df.stdw**2)
+    df["meank"] = 0.5*(df.meanu**2 + df.meanv**2 + df.meanw**2)
+    df["kbar"] = df.meank + df.k
     # Create empty 2D arrays for contour plots, etc.
-    meanu_a = np.zeros((len(z_H), len(y_R)))
-    meanv_a = np.zeros((len(z_H), len(y_R)))
-    meanw_a = np.zeros((len(z_H), len(y_R)))
-    stdu_a = np.zeros((len(z_H), len(y_R)))
-    stdv_a = np.zeros((len(z_H), len(y_R)))
-    stdw_a = np.zeros((len(z_H), len(y_R)))
-    meanuv_a = np.zeros((len(z_H), len(y_R)))
-    meanuw_a = np.zeros((len(z_H), len(y_R)))
-    meanvw_a = np.zeros((len(z_H), len(y_R)))
-    meanvv_a = np.zeros((len(z_H), len(y_R)))
-    meanww_a = np.zeros((len(z_H), len(y_R)))
-    meanuu_a = np.zeros((len(z_H), len(y_R)))
-    phi_a = np.zeros((len(z_H), len(y_R)))
-    k_a = np.zeros((len(z_H), len(y_R)))
-    meank_a = np.zeros((len(z_H), len(y_R)))
-    meanu2_a = np.zeros((len(z_H), len(y_R)))
-    fpeak_u_a = np.zeros((len(z_H), len(y_R)))
-    fstrength_u_a = np.zeros((len(z_H), len(y_R)))
-    fpeak_v_a = np.zeros((len(z_H), len(y_R)))
-    fstrength_v_a = np.zeros((len(z_H), len(y_R)))
-    fpeak_w_a = np.zeros((len(z_H), len(y_R)))
-    fstrength_w_a = np.zeros((len(z_H), len(y_R)))
-    kbar_a = np.zeros((len(z_H), len(y_R)))
+    grdata = {}
+    grdims = (len(z_H), len(y_R))
+    quantities = ["meanu", "meanv", "meanw", "stdu", "stdv", "stdw",
+                  "meanupvp", "meanupwp", "meanvpwp", "meanupup", "meanvpvp", 
+                  "meanwpwp", "meanuu", "vectemp", "fpeak_u", "fstrength_u", 
+                  "fpeak_v", "fstrength_v", "fpeak_w", "fstrength_w", "k",
+                  "meank", "kbar"]
+    for q in quantities:
+        grdata[q] = np.zeros(grdims)
     # Populate 2D arrays for velocity fields
     for n in range(len(z_H)):
         runs = getruns(z_H[n], tsr=1.9)
-        ind = [run - 1 for run in runs]
-        meanu_a[n,:] = df.meanu[ind]
-        meanv_a[n,:] = df.meanv[ind]
-        meanw_a[n,:] = df.meanw[ind]
-        stdu_a[n,:] = df.stdu[ind]
-        stdv_a[n,:] = df.stdv[ind]
-        stdw_a[n,:] = df.stdw[ind]
-        meanuv_a[n,:] = df.meanupvp[ind]
-        meanuw_a[n,:] = df.meanupwp[ind]
-        meanvw_a[n,:] = df.meanvpwp[ind]
-        meanvv_a[n,:] = df.meanvpvp[ind]
-        meanww_a[n,:] = df.meanwpwp[ind]
-        meanuu_a[n,:] = df.meanupup[ind]
-#        phi_a[n,:] = phi[ind]
-        k_a[n,:] = k[ind]
-        meank_a[n,:] = meank[ind]
-        meanuu_a[n,:] = df.meanuu[ind]
-        kbar_a[n,:] = kbar[ind]
-        fpeak_u_a[n,:] = df.fpeak_u[ind]
-        fstrength_u_a[n,:] = df.fstrength_u[ind]
-        fpeak_v_a[n,:] = df.fpeak_v[ind]
-        fstrength_v_a[n,:] = df.fstrength_v[ind]
-        fpeak_w_a[n,:] = df.fpeak_w[ind]
-        fstrength_w_a[n,:] = df.fstrength_w[ind]
+        i = [run - 1 for run in runs]
+        for q in quantities:
+            grdata[q][n,:] = df[q][i]
     def turb_lines():
         plt.hlines(0.5, -1, 1, linestyles="solid", linewidth=2)
         plt.vlines(-1, 0, 0.5, linestyles="solid", linewidth=2)
@@ -289,20 +254,23 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
     def calc_meankturbtrans():
         z = H*z_H
         y = R*y_R
-        ddy_uvU = np.zeros(np.shape(meanu_a))
-        ddz_uwU = np.zeros(np.shape(meanu_a))
-        ddy_vvV = np.zeros(np.shape(meanu_a))
-        ddz_vwV = np.zeros(np.shape(meanu_a))
-        ddy_vwW = np.zeros(np.shape(meanu_a))
-        ddz_wwW = np.zeros(np.shape(meanu_a))
+        ddy_uvU = np.zeros(grdims)
+        ddz_uwU = np.zeros(grdims)
+        ddy_vvV = np.zeros(grdims)
+        ddz_vwV = np.zeros(grdims)
+        ddy_vwW = np.zeros(grdims)
+        ddz_wwW = np.zeros(grdims)
+        meanu, meanv, meanw = grdata["meanu"], grdata["meanv"], grdata["meanw"]
+        uv, vv, vw = grdata["meanupvp"], grdata["meanvpvp"], grdata["meanvpwp"]
+        uw, ww = grdata["meanupwp"], grdata["meanwpwp"]
         for n in range(len(z)):
-            ddy_uvU[n,:] = fdiff.second_order_diff((meanuv_a*meanu_a)[n,:], y)
-            ddy_vvV[n,:] = fdiff.second_order_diff((meanvv_a*meanv_a)[n,:], y)
-            ddy_vwW[n,:] = fdiff.second_order_diff((meanvw_a*meanw_a)[n,:], y)
+            ddy_uvU[n,:] = fdiff.second_order_diff((uv*meanu)[n,:], y)
+            ddy_vvV[n,:] = fdiff.second_order_diff((vv*meanv)[n,:], y)
+            ddy_vwW[n,:] = fdiff.second_order_diff((vw*meanw)[n,:], y)
         for n in range(len(y)):
-            ddz_uwU[:,n] = fdiff.second_order_diff((meanuw_a*meanu_a)[:,n], z)
-            ddz_vwV[:,n] = fdiff.second_order_diff((meanvw_a*meanv_a)[:,n], z)
-            ddz_wwW[:,n] = fdiff.second_order_diff((meanww_a*meanw_a)[:,n], z)
+            ddz_uwU[:,n] = fdiff.second_order_diff((uw*meanu)[:,n], z)
+            ddz_vwV[:,n] = fdiff.second_order_diff((vw*meanv)[:,n], z)
+            ddz_wwW[:,n] = fdiff.second_order_diff((ww*meanw)[:,n], z)
         tt = -0.5*(ddy_uvU + ddz_uwU + ddy_vvV + ddz_vwV + ddy_vwW + ddz_wwW)
         tty = -0.5*(ddy_uvU + ddy_vvV + ddy_vwW) # Only ddy terms
         ttz = -0.5*(ddz_uwU + ddz_vwV + ddz_wwW) # Only ddz terms
@@ -1245,9 +1213,9 @@ def main():
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperf(subplots=True, save=False, savepath=p)
-#    plotwake(["meancomboquiv"], save=False, savepath=p,
-#             print_analysis=True)
-    plotmultispec(save=False, savepath=p)
+    plotwake(["meanu"], save=False, savepath=p,
+             print_analysis=True)
+#    plotmultispec(save=False, savepath=p)
 #    plotperf_periodic()
 #    plotvelhist(5)
         
