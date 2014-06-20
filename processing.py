@@ -68,10 +68,10 @@ def loadtdms(run):
     dragL = np.asarray(rawdata[b"/'Untitled'/'DragL'"])
     dragR = np.asarray(rawdata[b"/'Untitled'/'DragR'"])
     Tarm = Tarm - np.mean(Tarm[0:2000])
-    tareDrag = 49.2407
+    taredrag = 49.2407
     drag = dragL + dragR
     drag = drag - np.mean(drag[0:2000])
-    drag = drag - tareDrag
+    drag = drag - taredrag
     angle = np.asarray(rawdata[b"/'Untitled'/'Untitled'"])
     angle = angle[0:len(Tarm)]
     rpm = np.zeros(len(Tarm))

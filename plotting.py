@@ -8,25 +8,26 @@ from __future__ import division, print_function
 from processing import *
 
 def setpltparams():
-    font = {"family":"serif","serif":"cmr10","size":23}
+    font = {"family":"serif","serif":"cmr10","size":20}
     lines = {"markersize":9, "markeredgewidth":0.9}
     legend = {"numpoints":1, "fontsize": "small"}
     matplotlib.rc("text", usetex = True)
     matplotlib.rc("font", **font)
     matplotlib.rc("lines", **lines)
     matplotlib.rc("legend", **legend)
-    matplotlib.rc("xtick", **{"major.pad":12})
+    matplotlib.rc("xtick", **{"major.pad":10})
 
 def styleplot():
     plt.grid(True)
     plt.tight_layout()
 
-def plotsinglerun(run, perf=True, wake=False, autocorr=False, save=False):
+def plotsinglerun(run, perf=True, wake=False, autocorr=False, save=False,
+                  xaxis="time"):
     t1 = 13
     t2 = 30
     t2t = 30
     t, angle, Ttrans, Tarm, drag, rpm, tsr = loadtdms(run)
-    t2, nrevs = find_t2(t, angle, t1, t2t)
+    t2, nrevs, nbp = find_t2(t, angle, t1, t2t)
     meantsr, std_tsr = calcstats(tsr, t1, t2, 2000)
     omega = meantsr*U/R
     blade_period = 2*np.pi/omega/3
@@ -43,12 +44,21 @@ def plotsinglerun(run, perf=True, wake=False, autocorr=False, save=False):
         meancp, std_cp = calcstats(cp, t1, t2, 2000)
         meanT, stdT = calcstats(Ttrans, t1, t2, 2000)
         meanrpm, std_rpm = calcstats(rpm, t1, t2, 2000)
-        plt.plot(angle, cp, "k")
-        plt.plot(angle, cd_ts, "r")
-        plt.xlabel(r"$t$(s)")
-        plt.ylabel(r"$C_P$")
-        plot_vertical_lines([t1, t2t], color="black")
-        plot_vertical_lines([t2], color="gray")
+        if xaxis == "time":
+            x = t
+            xlabel = r"$t$(s)"
+        else:
+            x = angle
+            xlabel = r"Turbine rotation (deg)"
+        plt.plot(x, cp, "k", label="Power")
+        plt.plot(x, cd_ts, "r", label="Drag")
+        plt.plot(x, ct, "--b", label="Torque")
+        plt.xlabel(xlabel)
+        plt.ylabel(r"Nondimensional coefficient")
+        plt.legend(loc="lower left")
+        if xaxis == "time":
+            plot_vertical_lines([t1, t2t], color="black")
+            plot_vertical_lines([t2], color="gray")
         styleplot()
         print("TSR =", meantsr, "; C_P =", meancp)
         print("Number of revolutions:", nrevs)
@@ -1238,12 +1248,12 @@ def main():
     elif "win" in sys.platform:
         p = "C:/Users/Pete/" + p
         
-#    plotsinglerun(111, perf=True, wake=False, autocorr=False)
+    plotsinglerun(111, perf=True, wake=False, autocorr=False, xaxis="angle")
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperf(subplots=True, save=False, savepath=p)
-    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=False, savepath=p,
-             print_analysis=True)
+#    plotwake(["meancomboquiv"], save=False, savepath=p,
+#             print_analysis=True)
 #    plotmultispec(save=False, savepath=p)
 #    plotperf_periodic()
         
