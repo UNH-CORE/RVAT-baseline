@@ -204,12 +204,12 @@ def plotvelhist(run):
     """Plots the velocity histogram for a given run."""
     i = run - 1 # Run indexing starts from 1!
     t1 = 13
-    t2 = np.load("Processed/t2.npy")[i]
+    t2 = pd.read_csv("Processed/processed.csv")["t2"][i]
     t, u, v, w = loadvec(run)
     u = u[t1*200:t2*200]
     plt.figure()
-    plt.hist(u, bins=50, histtype="step", color="k", normed=True)
-    plt.xlabel(r"$u/U_\infty$")
+    plt.hist(u-u.mean(), bins=50, histtype="step", color="k", normed=True)
+    plt.xlabel(r"$u-U$")
     plt.ylabel("Samples (normalized)")
     styleplot()
     plt.grid(False)
@@ -1245,7 +1245,8 @@ def main():
 #    plotwake(["meancomboquiv"], save=False, savepath=p,
 #             print_analysis=True)
 #    plotmultispec(save=False, savepath=p)
-    plotperf_periodic()
+#    plotperf_periodic()
+    plotvelhist(5)
         
 if __name__ == "__main__":
     main()
