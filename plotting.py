@@ -43,7 +43,8 @@ def plotsinglerun(run, perf=True, wake=False, autocorr=False, save=False):
         meancp, std_cp = calcstats(cp, t1, t2, 2000)
         meanT, stdT = calcstats(Ttrans, t1, t2, 2000)
         meanrpm, std_rpm = calcstats(rpm, t1, t2, 2000)
-        plt.plot(t, cp, "k")
+        plt.plot(angle, cp, "k")
+        plt.plot(angle, cd_ts, "r")
         plt.xlabel(r"$t$(s)")
         plt.ylabel(r"$C_P$")
         plot_vertical_lines([t1, t2t], color="black")
@@ -1256,10 +1257,10 @@ def main():
     elif "win" in sys.platform:
         p = "C:/Users/Pete/" + p
         
-#    plotsinglerun(111, perf=True, wake=False, autocorr=False)
+    plotsinglerun(111, perf=True, wake=False, autocorr=False)
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
-    plotperf(subplots=True, save=False, savepath=p)
+#    plotperf(subplots=True, save=False, savepath=p)
 #    plotwake(["fpeak_v", "fstrength_v", "Kbargraph"], save=False, savepath=p,
 #             print_analysis=True)
 #    plotmultispec(save=False, savepath=p)
