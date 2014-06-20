@@ -87,14 +87,14 @@ def loadtdms(run):
 def find_t2(t, angle, t1, t2):
     angle1 = angle[2000*t1]
     angle2 = angle[2000*t2]
-    N3rdRevs = np.floor((angle2-angle1)/120)
+    nbladepass = np.floor((angle2-angle1)/120)
     nrevs = np.floor((angle2-angle1)/360)
-    angle2 = angle1 + N3rdRevs*120
+    angle2 = angle1 + nbladepass*120
 #    angle2 = angle1 + nrevs*360
     t2i = np.where(np.round(angle)==np.round(angle2))
     t2 = t[t2i]
     t2 = np.round(t2[0], decimals=2)
-    return t2, nrevs
+    return t2, nrevs, nbladepass
     
 def calc_eta2(cp, cd):
     if cd < 0.8889:
@@ -107,82 +107,50 @@ def calc_eta2(cp, cd):
     
 
 def batchperf(t1=13, t2_guess=30):
-    if runs == "all":
-        runs = range(1,378) # 377 runs total
-    cp = np.zeros(len(runs))
-    cd = np.zeros(len(runs))
-    ct = np.zeros(len(runs))
-    tsr = np.zeros(len(runs))
-    std_tsr = np.zeros(len(runs))
-    std_cp = np.zeros(len(runs))
-    std_cd = np.zeros(len(runs))
-    std_ct = np.zeros(len(runs))
-    t2 = np.zeros(len(runs))
-    eta2 = np.zeros(len(runs))
-    nrevs = np.zeros(len(runs))
-    a = np.zeros(len(runs))
-    torque_ripple = np.zeros(len(runs))
-    amp_tsr = np.zeros(len(runs))
-    phase_tsr = np.zeros(len(runs))
-    amp_cp = np.zeros(len(runs))
-    phase_cp = np.zeros(len(runs))
-    amp_cd = np.zeros(len(runs))
-    phase_cd = np.zeros(len(runs))
-    amp_ct = np.zeros(len(runs))
-    phase_ct = np.zeros(len(runs))
+    testplan = pd.read_csv("Test plan/Test plan.csv")
+    try:
+        df = pd.read_csv("Processed/processed.csv")
+    except IOError:
+        df = pd.DataFrame()
+    runs = testplan["Run"]
+    df["run"] = runs
+    df["t1_perf"] = t1
+    quantities = ["t2", "nbladepass", "tsr", "cp", "cd", "ct", "std_tsr", 
+                  "std_cp", "std_cd", "std_ct", "eta2", "a", "torque_ripple",
+                  "amp_tsr", "phase_tsr", "amp_cp", "phase_cp", "amp_cd",
+                  "phase_cd", "amp_ct", "phase_ct"]
+    for q in quantities:
+        if not q in df:
+            df[q] = np.zeros(len(runs))
     for n in range(len(runs)):
         print("Processing performance data from run", runs[n], "of", \
         str(np.max(runs))+"...")
         t, angle, Ttrans, Tarm, drag, rpm, tsr_s = loadtdms(runs[n])
-        t2[n], nrevs[n] = find_t2(t, angle, t1, t2_guess)
-        tsr[n], std_tsr[n] = calcstats(tsr_s, t1, t2[n], 2000)
+        t2, nrevs, df.nbladepass[n] = find_t2(t, angle, t1, t2_guess)
+        df.t2[n] = t2
+        df.tsr[n], df.std_tsr[n] = calcstats(tsr_s, t1, t2, 2000)
         cp_s = Ttrans*tsr_s/0.5/500
         cd_s = drag/500.0
         ct_s = cp_s/tsr_s
-        cp[n], std_cp[n] = calcstats(cp_s, t1, t2[n], 2000)
-        cd[n], std_cd[n] = calcstats(cd_s, t1, t2[n], 2000)
-        ct[n], std_ct[n] = calcstats(ct_s, t1, t2[n], 2000)
-        a[n], eta2[n] = calc_eta2(cp[n], cd[n])
-        torque_seg = Ttrans[2000*t1:2000*t2[n]]
-        torque_ripple[n] = (np.max(torque_seg) \
-                           - np.min(torque_seg))/np.mean(torque_seg)
-        cp_seg = cp_s[2000*t1:2000*t2[n]]
-        cd_seg = cd_s[2000*t1:2000*t2[n]]
-        ct_seg = ct_s[2000*t1:2000*t2[n]]
-        tsr_seg = tsr_s[2000*t1:2000*t2[n]]
-        angle_seg = angle[2000*t1:2000*t2[n]]
-        amp_tsr[n], phase_tsr[n] = find_amp_and_phase(angle_seg, tsr_seg)
-        amp_cp[n], phase_cp[n] = find_amp_and_phase(angle_seg, cp_seg)
-        amp_cd[n], phase_cd[n] = find_amp_and_phase(angle_seg, cd_seg)
-        amp_ct[n], phase_ct[n] = find_amp_and_phase(angle_seg, ct_seg)
-    if "csv" in saveas.lower():
-        df = pd.DataFrame()
-        df["run"] = runs
-        df["cp"] = cp
-        df["cd"] = cd
-        df["ct"] = ct
-        df["tsr"] = tsr
-        df.to_csv("Processed/perf.csv")
-    elif "npy" in saveas.lower():
-        np.save("Processed/cp", cp)
-        np.save("Processed/cd", cd)
-        np.save("Processed/ct", ct)
-        np.save("Processed/tsr", tsr)
-        np.save("Processed/std_tsr", std_tsr)
-        np.save("Processed/std_cp", std_cp)
-        np.save("Processed/t2", t2)
-        np.save("Processed/eta2", eta2)
-        np.save("Processed/nrevs", nrevs)
-        np.save("Processed/a", a)
-        np.save("Processed/torque_ripple", torque_ripple)
-        np.save("Processed/amp_tsr", amp_tsr)
-        np.save("Processed/phase_tsr", phase_tsr)
-        np.save("Processed/amp_cp", amp_cp)
-        np.save("Processed/phase_cp", phase_cp)
-        np.save("Processed/amp_cd", amp_cd)
-        np.save("Processed/phase_cd", phase_cd)
-        np.save("Processed/amp_ct", amp_ct)
-        np.save("Processed/phase_ct", phase_ct)
+        df.cp[n], df.std_cp[n] = calcstats(cp_s, t1, t2, 2000)
+        df.cd[n], df.std_cd[n] = calcstats(cd_s, t1, t2, 2000)
+        df.ct[n], df.std_ct[n] = calcstats(ct_s, t1, t2, 2000)
+        df.a[n], df.eta2[n] = calc_eta2(df.cp[n], df.cd[n])
+        torque_seg = Ttrans[2000*t1:2000*t2]
+        df.torque_ripple[n] = (np.max(torque_seg) \
+                               - np.min(torque_seg))/np.mean(torque_seg)
+        cp_seg = cp_s[2000*t1:2000*t2]
+        cd_seg = cd_s[2000*t1:2000*t2]
+        ct_seg = ct_s[2000*t1:2000*t2]
+        tsr_seg = tsr_s[2000*t1:2000*t2]
+        angle_seg = angle[2000*t1:2000*t2]
+        df.amp_tsr[n], df.phase_tsr[n] = find_amp_and_phase(angle_seg, tsr_seg)
+        df.amp_cp[n], df.phase_cp[n] = find_amp_and_phase(angle_seg, cp_seg)
+        df.amp_cd[n], df.phase_cd[n] = find_amp_and_phase(angle_seg, cd_seg)
+        df.amp_ct[n], df.phase_ct[n] = find_amp_and_phase(angle_seg, ct_seg)
+    # Save to CSV
+    df.to_csv("Processed/processed.csv", index=False)
+
     
 def find_amp_and_phase(angle, data, npeaks=3):
     amp = (np.max(data) - np.min(data))/2
@@ -390,8 +358,8 @@ def export_perf_csv(rev=0):
     
 def main():
     """Main function."""
-#    batchperf()
-    batchwake()
+    batchperf()
+#    batchwake()
 #    export_perf_csv(rev=1)
 #    loadtdms(1)
 #    convert_npy_to_csv()
