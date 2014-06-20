@@ -109,7 +109,7 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
     i = find_run_ind(y_R, z_H, tsr)
     print("Plotting spectra from run", i+1)
     t1 = 13
-    t2 = np.load("Processed/t2.npy")[i]
+    t2 = pd.read_csv("Processed/processed.csv")["t2"][i]
     t, u, v, w = loadvec(i+1) # Run name is index + 1
     v_seg = v[200*t1:200*t2] - np.mean(v[200*t1:200*t2])
     f, spec = psd(t, v_seg, window="Hanning")
@@ -130,12 +130,12 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
     plt.xlabel(r"$f/f_{\mathrm{turbine}}$")
     plt.ylabel(r"Spectral density")
     # Should the spectrum be normalized?
-    plot_vertical_lines([1, 3, 6, 9])
     f_line = np.linspace(10,40)
     spec_line = f_line**(-5./3)*0.1
     plt.hold(True)
     plt.loglog(f_line, spec_line)
     plt.ylim((10**-9, 1))
+    plot_vertical_lines([1, 3, 6, 9])
     styleplot()
     plt.grid()
     if show:
@@ -1243,11 +1243,11 @@ def main():
         
 #    plotsinglerun(111, perf=True, wake=False, autocorr=False, xaxis="angle")
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
-    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
+#    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperf(subplots=True, save=False, savepath=p)
 #    plotwake(["meancomboquiv"], save=False, savepath=p,
 #             print_analysis=True)
-#    plotmultispec(save=False, savepath=p)
+    plotmultispec(save=False, savepath=p)
 #    plotperf_periodic()
 #    plotvelhist(5)
         
