@@ -107,7 +107,7 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
     """Plots the velocity spectrum for a single run."""
     # Find index for the desired parameters
     i = find_run_ind(y_R, z_H, tsr)
-    print("Plotting spectra from run", i+1)
+    print("Plotting spectra from run", str(i+1)+"...")
     t1 = 13
     t2 = pd.read_csv("Processed/processed.csv")["t2"][i]
     t, u, v, w = loadvec(i+1) # Run name is index + 1
@@ -119,7 +119,7 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
     f_max = f[np.where(spec==np.max(spec))[0][0]]
     strength = np.max(spec)/np.var(v_seg)*(f[1] - f[0])
     print("Strongest frequency f/f_turbine:", f_max/f_turbine)
-    print("Relative strength:", strength)
+    print("Spectral concentration:", strength)
     # Calculate shaft shedding frequency
     St = 0.19 # Approximate for Re_d = 1e5
     f_cyl = St*U/d_shaft
@@ -145,7 +145,7 @@ def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
     """Plots the performance spectra for a single run."""
     # Find index for the desired parameters
     i = find_run_ind(y_R, z_H, tsr)
-    print("Plotting spectra from run", i+1)
+    print("Plotting spectra from run", str(i+1)+"...")
     t1 = 13
     t2 = pd.read_csv("Processed/processed.csv")["t2"][i]
     t, angle, Ttrans, Tarm, drag, rpm, tsr_ts = loadtdms(i+1) # Run name is index + 1
@@ -153,7 +153,6 @@ def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
     torque_seg = torque[2000*t1:2000*t2] - np.mean(torque[2000*t1:2000*t2])
     f, spec = psd(t, torque_seg, window="Hanning")
     f_turbine = tsr*U/R/(2*np.pi)
-    f_blade = f_turbine*3
     # Find maximum frequency and its relative strength
     f_max = f[np.where(spec==np.max(spec))[0][0]]
     strength = np.max(spec)/np.var(torque_seg)*(f[1] - f[0])
@@ -1179,11 +1178,11 @@ def main():
         p = "C:/Users/Pete/" + p
         
 #    plotsinglerun(111, perf=True, wake=False, autocorr=False, xaxis="angle")
-    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
+#    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperf(subplots=True, save=False, savepath=p)
 #    plotwake(["meancomboquiv"], save=False, savepath=p)
-#    plotmultispec(save=False, savepath=p)
+    plotmultispec(save=False, savepath=p)
 #    plotperf_periodic()
 #    plotvelhist(5)
         
