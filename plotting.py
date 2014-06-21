@@ -114,7 +114,6 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
     v_seg = v[200*t1:200*t2] - np.mean(v[200*t1:200*t2])
     f, spec = psd(t, v_seg, window="Hanning")
     f_turbine = tsr*U/R/(2*np.pi)
-    f_blade = f_turbine*3
     # Find maximum frequency and its relative strength
     f_max = f[np.where(spec==np.max(spec))[0][0]]
     strength = np.max(spec)/np.var(v_seg)*(f[1] - f[0])
