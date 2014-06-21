@@ -318,7 +318,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
     if "v-wquiver" in plotlist or "all" in plotlist:
         # Make quiver plot of v and w velocities
         plt.figure(figsize=(10,5))
-        Q = plt.quiver(y_R, z_H, meanv, meanw, angles="xy")
+        Q = plt.quiver(y_R, z_H, meanv, meanw)
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$z/H$")
         plt.ylim(-0.2, 0.78)
