@@ -1179,10 +1179,10 @@ def main():
         p = "C:/Users/Pete/" + p
         
 #    plotsinglerun(111, perf=True, wake=False, autocorr=False, xaxis="angle")
-#    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
+    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperf(subplots=True, save=False, savepath=p)
-    plotwake(["all"], save=False, savepath=p)
+#    plotwake(["meancomboquiv"], save=False, savepath=p)
 #    plotmultispec(save=False, savepath=p)
 #    plotperf_periodic()
 #    plotvelhist(5)

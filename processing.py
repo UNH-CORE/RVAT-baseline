@@ -35,17 +35,7 @@ rho = 1000.0
 nu = 1e-6
     
 def import_testplan():
-    wb = xlrd.open_workbook("Test plan/Test plan.xlsx")
-    ws = wb.sheet_by_index(0)
-    runs = ws.col_values(0)
-    # Find row with run 1 in it
-    firstrow = runs.index(1)
-    runs = [int(run) for run in runs[firstrow:]]
-    tsr = ws.col_values(1)[firstrow:]
-    y_R = ws.col_values(2)[firstrow:]
-    z_H = ws.col_values(4)[firstrow:]
-    return {"runs" : np.asarray(runs), "tsr" : np.asarray(tsr), 
-            "y/R" : np.asarray(y_R), "z/H" : np.asarray(z_H)}
+    return pd.read_csv("Test plan/Test plan.csv")
     
 def loadvec(run):
     data = np.loadtxt("Raw/Vectrino/vec" + str(run) + ".dat")
@@ -212,9 +202,9 @@ def getruns(z_H, tsr):
 def find_run_ind(y_R, z_H, tsr):
     """Finds the run index corresponding to the inputs."""
     tp = import_testplan()
-    i = np.where(np.logical_and(tp["y/R"]==y_R, 
-                                tp["z/H"]==z_H,
-                                tp["tsr"]==tsr))[0][0]
+    i = np.where(np.logical_and(tp["y/R"].values==y_R, 
+                                tp["z/H"].values==z_H,
+                                tp["TSR"].values==tsr))[0][0]
     return i
 
 def batchwake(t1=13):
