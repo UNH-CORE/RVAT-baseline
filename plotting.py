@@ -6,6 +6,7 @@ Created on Fri May 30 00:34:48 2014
 """
 from __future__ import division, print_function 
 from processing import *
+from collections import namedtuple
 
 def setpltparams():
     font = {"family" : "serif", 
@@ -230,21 +231,17 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
     df["meank"] = 0.5*(df.meanu**2 + df.meanv**2 + df.meanw**2)
     df["kbar"] = df.meank + df.k
     # Create empty 2D arrays for contour plots, etc.
-    grdata = {}
     grdims = (len(z_H), len(y_R))
     quantities = ["meanu", "meanv", "meanw", "stdu", "stdv", "stdw",
                   "meanupvp", "meanupwp", "meanvpwp", "meanupup", "meanvpvp", 
                   "meanwpwp", "meanuu", "vectemp", "fpeak_u", "fstrength_u", 
                   "fpeak_v", "fstrength_v", "fpeak_w", "fstrength_w", "k",
                   "meank", "kbar"]
-    for q in quantities:
-        grdata[q] = np.zeros(grdims)
-    # Populate 2D arrays for velocity fields
-    for n in range(len(z_H)):
-        runs = getruns(z_H[n], tsr=1.9)
-        i = [run - 1 for run in runs]
-        for q in quantities:
-            grdata[q][n,:] = df[q][i]
+    # Create DataFrame pivoted for velocity field contour and quiver plots
+    i = np.arange(31, 301)
+    grdata = df[quantities + ["y/R", "z/H"]].iloc[i]
+    grdata = grdata.pivot(index="z/H", columns="y/R")
+    # Create some global variables from the grid data for cleaner syntax
     meanu, meanv, meanw = grdata["meanu"], grdata["meanv"], grdata["meanw"]
     uv, vv, vw = grdata["meanupvp"], grdata["meanvpvp"], grdata["meanvpwp"]
     uw, ww = grdata["meanupwp"], grdata["meanwpwp"]
@@ -1180,8 +1177,8 @@ def main():
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperf(subplots=True, save=False, savepath=p)
-#    plotwake(["meancomboquiv"], save=False, savepath=p)
-    plotmultispec(save=False, savepath=p)
+    plotwake(["meancomboquiv"], save=False, savepath=p)
+#    plotmultispec(save=False, savepath=p)
 #    plotperf_periodic()
 #    plotvelhist(5)
         
