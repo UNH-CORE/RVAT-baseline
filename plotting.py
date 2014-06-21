@@ -221,17 +221,12 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
              print_analysis=False):
     if not isinstance(plotlist, list):
         plotlist = [plotlist]
-    z_H = np.arange(0, 0.75, 0.125)
-    y_R = np.hstack([-3.,-2.75,-2.5,-2.25,-2.,-1.8,np.arange(-1.6,0.1,0.1)])
-    y_R = np.hstack([y_R, -np.flipud(y_R[0:-1])])
-    y_R = np.round(y_R, decimals=4)
     # Load processed data
     df = pd.read_csv("Processed/processed.csv")
     df["k"] = 0.5*(df.stdu**2 + df.stdv**2 + df.stdw**2)
     df["meank"] = 0.5*(df.meanu**2 + df.meanv**2 + df.meanw**2)
     df["kbar"] = df.meank + df.k
     # Create empty 2D arrays for contour plots, etc.
-    grdims = (len(z_H), len(y_R))
     quantities = ["meanu", "meanv", "meanw", "stdu", "stdv", "stdw",
                   "meanupvp", "meanupwp", "meanvpwp", "meanupup", "meanvpvp", 
                   "meanwpwp", "meanuu", "vectemp", "fpeak_u", "fstrength_u", 
@@ -241,6 +236,9 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
     i = np.arange(31, 301)
     grdata = df[quantities + ["y/R", "z/H"]].iloc[i]
     grdata = grdata.pivot(index="z/H", columns="y/R")
+    y_R = grdata.meanu.columns.values
+    z_H = grdata.index.values
+    grdims = grdata.shape
     # Create some global variables from the grid data for cleaner syntax
     meanu, meanv, meanw = grdata["meanu"], grdata["meanv"], grdata["meanw"]
     uv, vv, vw = grdata["meanupvp"], grdata["meanvpvp"], grdata["meanvpwp"]
@@ -931,12 +929,12 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         cb.set_label(r"$U/U_{\infty}$")
         plt.hold(True)
         # Make quiver plot of v and w velocities
-        Q = plt.quiver(y_R, z_H, meanv, meanw, angles="xy", width=0.0022)
+        q = plt.quiver(y_R, z_H, meanv, meanw, width=0.0022)
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$z/H$")
         plt.ylim(-0.2, 0.78)
         plt.xlim(-3.2, 3.2)
-        plt.quiverkey(Q, 0.75, 0.3, 0.1, r"$0.1 U_\infty$",
+        plt.quiverkey(q, 0.75, 0.3, 0.1, r"$0.1 U_\infty$",
                    labelpos="E",
                    coordinates="figure",
                    fontproperties={"size": "small"})
