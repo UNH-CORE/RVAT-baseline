@@ -2,11 +2,20 @@
 =====================================
 
 This repository contains the processing and plotting code, as well as the 
-derived data set from the Spring 2013 UNH-RVAT tow tank testing. See the 
-[IPython notebook](http://nbviewer.ipython.org/github/UNH-CORE/2013-Spring-RVAT-tow-tank/blob/master/notebook.ipynb "View on nbviewer.ipython.org") for usage examples.
+derived data set from the Spring 2013 UNH-RVAT tow tank testing.
 
-Dependencies
-------------
+Download/usage
+--------------
+
+To download, use the git clone URL to the right. For example, in a terminal
+
+    git clone https://github.com/UNH-CORE/2013-Spring-RVAT-tow-tank.git
+
+To generate plots, use functions in the `plotting` module. See the 
+[IPython notebook](http://nbviewer.ipython.org/github/UNH-CORE/2013-Spring-RVAT-tow-tank/blob/master/notebook.ipynb "View on nbviewer.ipython.org") for examples.
+
+### Dependencies
+Note: There are some dependencies that are unavailable. These will be resolved shortly.
 
   * Python (2 or 3)
   * NumPy
