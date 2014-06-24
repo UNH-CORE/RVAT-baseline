@@ -16,9 +16,9 @@ Publications
 ------------
 These data were used in the following publications. See the `git log` for specific commits used for each.
 
-
+### Commit `f8cc166d657b`
 ```bibtex
-@INPROCEEDINGS{
+@INPROCEEDINGS{Bachant2013
   author = {Bachant, P. and Wosnik, M.},
   title = {Performance and near-wake measurements for a vertical axis turbine
 	   at moderate Reynolds number},
@@ -34,4 +34,3 @@ License
 <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/4.0/88x31.png" />
 </a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 Creative Commons Attribution 4.0 International License</a>.
->>>>>>> a256f953611c9ad63b58b8e15525455832dcaf32
