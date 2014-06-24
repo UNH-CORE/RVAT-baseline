@@ -1,6 +1,7 @@
 *
-*/*
 !.gitignore
 !processing.py
 !plotting.py
 !README.md
+!Processed
+!Processed/processed.csv
