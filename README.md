@@ -1,8 +1,9 @@
 2013 Spring RVAT tow tank experiments
 =====================================
 
-This repository will contain the processing and plotting code, as well as the 
-derived data set from the Spring 2013 UNH-RVAT tow tank testing. 
+This repository contains the processing and plotting code, as well as the 
+derived data set from the Spring 2013 UNH-RVAT tow tank testing. See the 
+[IPython notebook](http://nbviewer.ipython.org/github/UNH-CORE/2013-Spring-RVAT-tow-tank/blob/master/notebook.ipynb "View on nbviewer.ipython.org") for usage examples.
 
 Dependencies
 ------------
@@ -27,6 +28,11 @@ These data were used in the following publications. See the `git log` for specif
 }
 
 ```
+
+Other resources
+---------------
+
+Turbine CAD (STEP) files are available at http://figshare.com/articles/UNH_RVAT_CAD_models/1062009
 
 License
 -------
