@@ -14,6 +14,8 @@ To download, use the git clone URL to the right. For example, in a terminal
 To generate plots, use functions in the `plotting` module. See the 
 [IPython notebook](http://nbviewer.ipython.org/github/UNH-CORE/2013-Spring-RVAT-tow-tank/blob/master/notebook.ipynb "View on nbviewer.ipython.org") for examples.
 
+To contribute back to the main repository, use GitHub's fork/pull mechanism.
+
 ### Dependencies
 Note: There are some dependencies that are unavailable. These will be resolved shortly.
 
@@ -22,11 +24,26 @@ Note: There are some dependencies that are unavailable. These will be resolved s
   * matplotlib
   * [pytdms](https://github.com/petebachant/pytdms) (for processing raw data)
 
+## How to cite
+Please cite 
+
+```bibtex
+@Misc{Bachant2014_data,
+  Title                    = {2013 Spring UNH-RVAT tow tank data set},
+  Author                   = {Peter Bachant and Martin Wosnik},
+  HowPublished             = {fig\textbf{share}. http://dx.doi.org/10.6084/m9.figshare.1080781},
+  Month                    = {June},
+  Year                     = {2014},
+  Doi                      = {10.6084/m9.figshare.1080781},
+  Url                      = {http://dx.doi.org/10.6084/m9.figshare.1080781}
+}
+```
+
 Publications
 ------------
 These data were used in the following publications. See the `git log` for specific commits used for each.
 
-### Commit `f8cc166d657b`
+### Commit `f8cc166`
 ```bibtex
 @INPROCEEDINGS{Bachant2013
   author = {Bachant, P. and Wosnik, M.},
