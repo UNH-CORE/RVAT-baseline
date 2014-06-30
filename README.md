@@ -1,8 +1,8 @@
-2013 Spring RVAT tow tank experiments
-=====================================
+2013 UNH-RVAT baseline experiment
+=================================
 
 This repository contains the processing and plotting code, as well as the 
-derived data set from the Spring 2013 UNH-RVAT tow tank testing.
+derived data set from the UNH-RVAT tow tank experiment performed in Spring 2013.
 
 Download/usage
 --------------
@@ -29,7 +29,7 @@ Please cite
 
 ```bibtex
 @Misc{Bachant2014_data,
-  Title                    = {2013 Spring UNH-RVAT tow tank data set},
+  Title                    = {2013 UNH-RVAT baseline experiment dataset},
   Author                   = {Peter Bachant and Martin Wosnik},
   HowPublished             = {fig\textbf{share}. http://dx.doi.org/10.6084/m9.figshare.1080781},
   Month                    = {June},
