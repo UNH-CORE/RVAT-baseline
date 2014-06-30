@@ -5,8 +5,8 @@ March 2013 experiments with the VAT
 """
 from __future__ import division, print_function
 import xlrd
-import timeseries
-from timeseries import *
+from pxl import timeseries, fdiff
+from pxl.timeseries import *
 import numpy as np
 import csv
 import matplotlib.pyplot as plt
@@ -14,7 +14,6 @@ import time
 import matplotlib
 from scipy.signal import decimate
 from scipy.interpolate import interp1d
-import fdiff
 import sys
 import os
 import pandas as pd
@@ -24,7 +23,7 @@ import json
 try:
     import pytdms
 except ImportError:
-    processtdms = False
+    pytdms = False
 
 # Some constants
 R = 0.5
@@ -382,10 +381,10 @@ def export_perf_csv(rev=0):
     
 def main():
     """Main function."""
-    batchperf()
+#    batchperf()
 #    batchwake()
 #    export_perf_csv(rev=1)
-#    loadtdms(1)
+    loadtdms(1)
 #    convert_npy_to_csv()
     
 if __name__ == "__main__":
