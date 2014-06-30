@@ -53,7 +53,9 @@ def loadvectemp(run):
     return float(temp)
                           
 def loadtdms(run):
-    filename = "Raw/TDMS/run" + str(run) + ".tdms"
+    filename = "Raw/TDMS/run{}.tdms".format(run)
+    if not os.path.isfile(filename):
+        download_tdms(run)
     objects, rawdata = pytdms.read(filename)
     Ttrans = np.asarray(rawdata[b"/'Untitled'/'TorqueTrans'"])
     Tarm = np.asarray(rawdata[b"/'Untitled'/'TorqueArm'"])
@@ -85,6 +87,7 @@ def download_tdms(run):
         os.mkdir("Raw/TDMS")
     urllib.urlretrieve(urls["run{}.tdms".format(run)], 
                             filename="Raw/TDMS/run{}.tdms".format(run))
+    print("Done")
     
 def find_t2(t, angle, t1, t2):
     angle1 = angle[2000*t1]
