@@ -17,7 +17,9 @@ from scipy.interpolate import interp1d
 import fdiff
 import sys
 import os
-import pandas as ps
+import pandas as pd
+import urllib
+import json
 
 try:
     import pytdms
@@ -73,6 +75,16 @@ def loadtdms(run):
     Ttrans = Ttrans + Ttare
     Tarm = Tarm + Ttare
     return t, angle, Ttrans, Tarm, drag, rpm, tsr
+    
+def download_tdms(run):
+    """This function downloads a TDMS file from figshare"""
+    with open("Raw/urls.json") as f:
+        urls = json.load(f)
+    print("Downloading TDMS file from run {}...".format(run))
+    if not os.path.isdir("Raw/TDMS"):
+        os.mkdir("Raw/TDMS")
+    urllib.urlretrieve(urls["run{}.tdms".format(run)], 
+                            filename="Raw/TDMS/run{}.tdms".format(run))
     
 def find_t2(t, angle, t1, t2):
     angle1 = angle[2000*t1]
