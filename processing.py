@@ -40,7 +40,9 @@ def import_testplan():
     return pd.read_csv("Test plan/Test plan.csv")
     
 def loadvec(run):
-    data = np.loadtxt("Raw/Vectrino/vec" + str(run) + ".dat")
+    if not os.path.isfile("Raw/Vectrino/vec{}.dat".format(run)):
+        download_vecdata(run)
+    data = np.loadtxt("Raw/Vectrino/vec{}.dat".format(run))
     t = data[:,0]
     u = data[:,3]
     v = data[:,4]
@@ -48,9 +50,26 @@ def loadvec(run):
     return t, u, v, w
 
 def loadvectemp(run):
+    if not os.path.isfile("Raw/Vectrino/vec{}.hdr".format(run)):
+        download_vecdata(run)
     with open("Raw/Vectrino/vec" + str(run) + ".hdr") as f:
         temp = f.readlines()[117].split()[1]
     return float(temp)
+    
+def download_vecdata(run):
+    """Downloads Vectrino header and data files for a given run."""
+    with open("Raw/urls.json") as f:
+        urls = json.load(f)
+    if not os.path.isdir("Raw/Vectrino"):
+        os.mkdir("Raw/Vectrino")
+    print("Downloading Vectrino data file from run {}...".format(run))
+    urllib.urlretrieve(urls["vec{}.dat".format(run)], 
+                            filename="Raw/Vectrino/vec{}.dat".format(run))
+    print("Done")
+    print("Downloading Vectrino header file from run {}...".format(run))
+    urllib.urlretrieve(urls["vec{}.hdr".format(run)], 
+                       filename="Raw/Vectrino/vec{}.hdr".format(run))
+    print("Done")
                           
 def loadtdms(run):
     filename = "Raw/TDMS/run{}.tdms".format(run)
@@ -86,7 +105,7 @@ def download_tdms(run):
     if not os.path.isdir("Raw/TDMS"):
         os.mkdir("Raw/TDMS")
     urllib.urlretrieve(urls["run{}.tdms".format(run)], 
-                            filename="Raw/TDMS/run{}.tdms".format(run))
+                       filename="Raw/TDMS/run{}.tdms".format(run))
     print("Done")
     
 def find_t2(t, angle, t1, t2):
