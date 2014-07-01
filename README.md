@@ -1,4 +1,4 @@
-# 2013 UNH-RVAT baseline performance and near-wake measurements
+# UNH-RVAT baseline performance and near-wake measurements
 
 This repository contains the processing and plotting code, as well as the 
 derived data set from the UNH-RVAT tow tank measurements performed in Spring 2013.
