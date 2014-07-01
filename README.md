@@ -41,7 +41,7 @@ Please cite
 
 Publications
 ------------
-These data were used in the following publications. See the `git log` for specific commits used for each.
+These data were used in the following publications:
 
 ### Commit `f8cc166`
 ```bibtex
