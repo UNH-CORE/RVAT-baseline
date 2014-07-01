@@ -7,19 +7,9 @@ Created on Fri May 30 00:34:48 2014
 from __future__ import division, print_function 
 from processing import *
 from collections import namedtuple
-
-def setpltparams():
-    font = {"family" : "serif", 
-            "serif" : "cmr10",
-            "sans-serif" : "cmr10",
-            "size" : 23}
-    lines = {"markersize" : 9, "markeredgewidth" : 0.9}
-    legend = {"numpoints" : 1, "fontsize" : "small"}
-    matplotlib.rc("text", usetex=True)
-    matplotlib.rc("font", **font)
-    matplotlib.rc("lines", **lines)
-    matplotlib.rc("legend", **legend)
-    matplotlib.rc("xtick", **{"major.pad":12})
+from pxl.styleplot import setpltparams
+    
+setpltparams()
 
 def styleplot():
     plt.grid(True)
@@ -1163,7 +1153,6 @@ def plotperf_periodic():
     plt.plot(d.tsr[i], d.phase_cd[i])
         
 def main():
-    setpltparams()
     plt.close("all")
     p = "Google Drive/Research/Papers/JOT CFT near-wake/Figures"
     if "linux" in sys.platform:
