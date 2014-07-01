@@ -16,13 +16,14 @@ To generate plots, use functions in the `plotting` module. See the
 To contribute back to the main repository, use GitHub's fork/pull mechanism.
 
 ### Dependencies
-Note: There are some dependencies that are unavailable. These will be resolved shortly.
+Python packages:
 
-  * Python (2 or 3)
   * NumPy
+  * SciPy
   * matplotlib
-  * [pytdms](https://github.com/petebachant/pytdms) (for processing raw data)
   * pandas
+  * [pytdms](https://github.com/petebachant/pytdms) (for processing raw data)
+  * [PXL](https://github.com/petebachant/PXL)
 
 ## How to cite
 Please cite 
