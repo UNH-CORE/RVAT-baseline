@@ -16,7 +16,6 @@ To generate plots, use functions in the `plotting` module. See the
 To contribute back to the main repository, use GitHub's fork/pull mechanism.
 
 ### Dependencies
-Python packages:
 
   * NumPy
   * SciPy
@@ -24,6 +23,7 @@ Python packages:
   * pandas
   * [pytdms](https://github.com/petebachant/pytdms) (for processing raw data)
   * [PXL](https://github.com/petebachant/PXL)
+  * LaTeX
 
 ## How to cite
 Please cite 
