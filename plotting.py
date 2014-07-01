@@ -352,12 +352,12 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.figure()
         runs = getruns(0.25, 1.9)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, stdu[ind], "-ok", markerfacecolor="none", 
+        plt.plot(y_R, df.stdu[ind], "-ok", markerfacecolor="none", 
                  label=r"$\lambda = 1.9$")
         plt.hold(True)
         runs = getruns(0.25, 1.4)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, stdu[ind], "--^k", markerfacecolor="none",
+        plt.plot(y_R, df.stdu[ind], "--^k", markerfacecolor="none",
                  label=r"$\lambda=1.4$")
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$\sigma_u/U_\infty$")
@@ -482,12 +482,12 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.figure()
         runs = getruns(0.25, 1.9)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, stdv[ind], "-ok", markerfacecolor="none", 
+        plt.plot(y_R, df.stdv[ind], "-ok", markerfacecolor="none", 
                  label=r"$\lambda = 1.9$")
         plt.hold(True)
         runs = getruns(0.25, 1.4)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, stdv[ind], "--^k", markerfacecolor="none",
+        plt.plot(y_R, df.stdv[ind], "--^k", markerfacecolor="none",
                  label=r"$\lambda=1.4$")
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$\sigma_v/U_\infty$")
@@ -500,12 +500,12 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.figure()
         runs = getruns(0.25, 1.9)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, stdw[ind], "-ok", markerfacecolor="none", 
+        plt.plot(y_R, df.stdw[ind], "-ok", markerfacecolor="none", 
                  label=r"$\lambda = 1.9$")
         plt.hold(True)
         runs = getruns(0.25, 1.4)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, stdw[ind], "--^k", markerfacecolor="none",
+        plt.plot(y_R, df.stdw[ind], "--^k", markerfacecolor="none",
                  label=r"$\lambda=1.4$")
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$\sigma_w/U_\infty$")
@@ -1047,7 +1047,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
                   2*np.sum(quantities)/(0.5*U**2)/D*100)
         if save:
             plt.savefig(savepath+"/Kbargraph"+savetype)
-    plt.show(block=False)
+    plt.show()
     
 def plot_torque_ripple():
     i = range(31)
