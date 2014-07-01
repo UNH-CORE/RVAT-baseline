@@ -1,15 +1,14 @@
-2013 UNH-RVAT baseline experiment
-=================================
+# 2013 UNH-RVAT baseline performance and near-wake measurements
 
 This repository contains the processing and plotting code, as well as the 
-derived data set from the UNH-RVAT tow tank experiment performed in Spring 2013.
+derived data set from the UNH-RVAT tow tank measurements performed in Spring 2013.
 
 Download/usage
 --------------
 
 To download, use the git clone URL to the right. For example, in a terminal
 
-    git clone https://github.com/UNH-CORE/2013-Spring-RVAT-tow-tank.git
+    git clone https://github.com/UNH-CORE/UNH-RVAT-baseline.git
 
 To generate plots, use functions in the `plotting` module. See the 
 [IPython notebook](http://nbviewer.ipython.org/github/UNH-CORE/2013-Spring-RVAT-tow-tank/blob/master/notebook.ipynb "View on nbviewer.ipython.org") for examples.
@@ -23,13 +22,14 @@ Note: There are some dependencies that are unavailable. These will be resolved s
   * NumPy
   * matplotlib
   * [pytdms](https://github.com/petebachant/pytdms) (for processing raw data)
+  * pandas
 
 ## How to cite
 Please cite 
 
 ```bibtex
 @Misc{Bachant2014_data,
-  Title                    = {2013 UNH-RVAT baseline experiment dataset},
+  Title                    = {2013 UNH-RVAT baseline performance and near-wake measurements: Reduced dataset and processing code},
   Author                   = {Peter Bachant and Martin Wosnik},
   HowPublished             = {fig\textbf{share}. http://dx.doi.org/10.6084/m9.figshare.1080781},
   Month                    = {June},
