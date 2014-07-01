@@ -11,7 +11,7 @@ To download, use the git clone URL to the right. For example, in a terminal
     git clone https://github.com/UNH-CORE/UNH-RVAT-baseline.git
 
 To generate plots, use functions in the `plotting` module. See the 
-[IPython notebook](http://nbviewer.ipython.org/github/UNH-CORE/2013-Spring-RVAT-tow-tank/blob/master/notebook.ipynb "View on nbviewer.ipython.org") for examples.
+[IPython notebook](http://nbviewer.ipython.org/github/UNH-CORE/UNH-RVAT-baseline/blob/master/notebook.ipynb "View on nbviewer.ipython.org") for examples.
 
 To contribute back to the main repository, use GitHub's fork/pull mechanism.
 
