@@ -8,8 +8,7 @@ from __future__ import division, print_function
 from processing import *
 from collections import namedtuple
 from pxl.styleplot import setpltparams
-    
-setpltparams()
+
 
 def styleplot():
     plt.grid(True)
@@ -1153,6 +1152,7 @@ def plotperf_periodic():
     plt.plot(d.tsr[i], d.phase_cd[i])
         
 def main():
+    setpltparams()
     plt.close("all")
     p = "Google Drive/Research/Papers/JOT CFT near-wake/Figures"
     if "linux" in sys.platform:
