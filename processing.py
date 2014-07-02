@@ -61,14 +61,12 @@ def download_vecdata(run):
         urls = json.load(f)
     if not os.path.isdir("Raw/Vectrino"):
         os.mkdir("Raw/Vectrino")
-    print("Downloading Vectrino data file from run {}...".format(run))
     urllib.urlretrieve(urls["vec{}.dat".format(run)], 
-                            filename="Raw/Vectrino/vec{}.dat".format(run))
-    print("Done")
-    print("Downloading Vectrino header file from run {}...".format(run))
+                            filename="Raw/Vectrino/vec{}.dat".format(run),
+                            reporthook=download_vecdata_progress)
     urllib.urlretrieve(urls["vec{}.hdr".format(run)], 
-                       filename="Raw/Vectrino/vec{}.hdr".format(run))
-    print("Done")
+                       filename="Raw/Vectrino/vec{}.hdr".format(run),
+                       reporthook=download_vecheader_progress)
                           
 def loadtdms(run):
     filename = "Raw/TDMS/run{}.tdms".format(run)
@@ -100,12 +98,32 @@ def download_tdms(run):
     """This function downloads a TDMS file from figshare"""
     with open("Raw/urls.json") as f:
         urls = json.load(f)
-    print("Downloading TDMS file from run {}...".format(run))
     if not os.path.isdir("Raw/TDMS"):
         os.mkdir("Raw/TDMS")
     urllib.urlretrieve(urls["run{}.tdms".format(run)], 
-                       filename="Raw/TDMS/run{}.tdms".format(run))
-    print("Done")
+                       filename="Raw/TDMS/run{}.tdms".format(run),
+                       reporthook=download_tdms_progress)
+    
+def download_tdms_progress(blocks_transferred, block_size, total_size):
+    percent = int(blocks_transferred*block_size*100/total_size)
+    if percent < 100:
+        print("\rDownloading TDMS file... {:d}%".format(percent), end="")
+    else:
+        print("\rDownloading TDMS file... Done")
+        
+def download_vecdata_progress(blocks_transferred, block_size, total_size):
+    percent = int(blocks_transferred*block_size*100/total_size)
+    if percent < 100:
+        print("\rDownloading Vectrino data file... {:d}%".format(percent), end="")
+    else:
+        print("\rDownloading Vectrino data file... Done")
+        
+def download_vecheader_progress(blocks_transferred, block_size, total_size):
+    percent = int(blocks_transferred*block_size*100/total_size)
+    if percent < 100:
+        print("\rDownloading Vectrino header file... {:d}%".format(percent), end="")
+    else:
+        print("\rDownloading Vectrino header file... Done")
     
 def find_t2(t, angle, t1, t2):
     angle1 = angle[2000*t1]
