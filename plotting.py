@@ -53,10 +53,8 @@ def plotsinglerun(run, perf=True, wake=False, autocorr=False, save=False,
             plot_vertical_lines([t1, t2t], color="black")
             plot_vertical_lines([t2], color="gray")
         styleplot()
-        print("TSR =", meantsr, "; C_P =", meancp)
-        print("Number of revolutions:", nrevs)
-        print("(1/2)(max_cd-min_cd)/cd:", np.abs(max_cd-min_cd)*0.5/cd)
-        print("(1/2)(Tmax-Tmin)/Tmean:", np.abs(max_torque-min_torque)*0.5/meanT)
+        print("TSR =", meantsr, "\nC_P =", meancp)
+        print("Number of revolutions: {:d}".format(int(nrevs)))
     if wake:
         tv, u, v, w = loadvec(run)
         vecloaded = True
