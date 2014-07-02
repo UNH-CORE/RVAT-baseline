@@ -23,7 +23,6 @@ To contribute back to the main repository, use GitHub's fork/pull mechanism.
   * pandas
   * [pytdms](https://github.com/petebachant/pytdms) (for processing raw data)
   * [PXL](https://github.com/petebachant/PXL)
-  * LaTeX
 
 ## How to cite
 Please cite 
