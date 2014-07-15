@@ -180,41 +180,6 @@ def find_amp_and_phase(angle, data, npeaks=3):
     phase = angle[np.where(data == data.max())[0][0]] % (360/npeaks)
     return amp, phase
 
-def ens_ave():
-    run = 359
-    t1 = 13
-    t2 = 30
-    t, angle, Ttrans, Tarm, drag, rpm, tsr = loadtdms(run)
-    angle1 = angle[t1*2000]
-    undershoot = 360-np.mod(angle1,360)
-    angle1 = angle1 + undershoot
-    angle2 = angle[t2*2000]
-    overshoot = np.mod(angle2,360)
-    angle2 = angle2 - overshoot
-    nrevs = (angle2-angle1)/360
-    def findIndex(angle, ta):
-        i = np.where(np.round(angle, decimals=0)==ta)
-        i = i[0]
-        if len(i) > 1: i = i[0]
-        return i
-    i1 = findIndex(angle, angle1)
-    i2 = findIndex(angle, angle1+360)
-    npoints = i2-i1
-    Tens = Ttrans[i1:i2]
-    print(nrevs)
-    for n in range(1,int(nrevs)):
-            ta1 = angle1+n*360
-            i1 = findIndex(angle, ta1)
-            i2 = i1+npoints
-            Tens = Tens + Ttrans[i1:i2]
-    Tens = Tens/nrevs
-    angleb = np.linspace(0, 360, num=npoints)
-    plt.close("all")
-    plt.plot(angleb, Tens, "k")
-    plt.xlabel(r"$\theta$ (deg)")
-    plt.ylabel(r"Torque (Nm)")
-    styleplot()
-
 def getruns(z_H, tsr):
     if z_H == 0:
         runs = range(122,167)
