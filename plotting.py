@@ -1151,8 +1151,7 @@ def plotperf_periodic():
     plt.figure()
     plt.plot(d.tsr[i], d.phase_cd[i])
     
-def plot_phase_average():
-    run = 359
+def plot_phase_average(run=13):
     t1 = 13
     t2 = 30
     t, angle, Ttrans, Tarm, drag, rpm, tsr = loadtdms(run)
@@ -1196,7 +1195,7 @@ def main():
         p = "C:/Users/Pete/" + p
         
 #    plotsinglerun(41, perf=True, wake=False, autocorr=False, xaxis="angle")
-    plot_phase_average()
+    plot_phase_average(220)
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperf(subplots=True, save=False, savepath=p)
