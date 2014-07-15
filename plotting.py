@@ -1169,16 +1169,20 @@ def plot_phase_average(run=13):
     i2 = findIndex(angle, angle1+360)
     npoints = i2-i1
     Tens = Ttrans[i1:i2]
+    drag_phave = drag[i1:i2]
     print(nrevs)
     for n in range(1,int(nrevs)):
             ta1 = angle1+n*360
             i1 = findIndex(angle, ta1)
             i2 = i1+npoints
             Tens = Tens + Ttrans[i1:i2]
+            drag_phave += drag[i1:i2]
     Tens = Tens/nrevs
+    drag_phave = drag_phave/nrevs
     angleb = np.linspace(0, 360, num=npoints)
     plt.close("all")
     plt.plot(angleb, Tens, "k")
+    plt.plot(angleb, drag_phave)
     plt.xlabel(r"$\theta$ (deg)")
     plt.ylabel(r"Torque (Nm)")
     styleplot()
