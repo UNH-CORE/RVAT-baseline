@@ -6,9 +6,20 @@ Created on Fri May 30 00:34:48 2014
 """
 from __future__ import division, print_function 
 from processing import *
-from collections import namedtuple
-from pxl.styleplot import setpltparams
 
+def setpltparams(fontsize=18, latex=True):
+    if latex:
+        font = {"family" : "serif", "serif" : "cmr10", "size" : fontsize}
+    else:
+        font = {"size" : fontsize}
+    lines = {"markersize" : 9, "markeredgewidth" : 1,
+             "linewidth" : 1.2}
+    legend = {"numpoints" : 1, "fontsize" : "small"}
+    matplotlib.rc("text", usetex=latex)
+    matplotlib.rc("font", **font)
+    matplotlib.rc("lines", **lines)
+    matplotlib.rc("legend", **legend)
+    matplotlib.rc("xtick", **{"major.pad":6})
 
 def styleplot():
     plt.grid(True)
@@ -1180,12 +1191,12 @@ def plot_phase_average(run=13):
     Tens = Tens/nrevs
     drag_phave = drag_phave/nrevs
     angleb = np.linspace(0, 360, num=npoints)
-    plt.close("all")
     plt.plot(angleb, Tens, "k")
     plt.plot(angleb, drag_phave)
     plt.xlabel(r"$\theta$ (deg)")
     plt.ylabel(r"Torque (Nm)")
     styleplot()
+    plt.show()
         
 def main():
     setpltparams()
