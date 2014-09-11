@@ -102,7 +102,8 @@ def plotsinglerun(run, perf=True, wake=False, autocorr=False, save=False,
         styleplot()
     plt.show()
 
-def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
+def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False, 
+                n_band_average=1):
     """Plots the velocity spectrum for a single run."""
     # Find index for the desired parameters
     i = find_run_ind(y_R, z_H, tsr)
@@ -111,7 +112,7 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
     t2 = pd.read_csv("Processed/processed.csv")["t2"][i]
     t, u, v, w = loadvec(i+1) # Run name is index + 1
     v_seg = v[200*t1:200*t2] - np.mean(v[200*t1:200*t2])
-    f, spec = psd(t, v_seg, window="Hanning")
+    f, spec = psd(t, v_seg, window="Hanning", n_band_average=n_band_average)
     f_turbine = tsr*U/R/(2*np.pi)
     # Find maximum frequency and its relative strength
     f_max = f[np.where(spec==np.max(spec))[0][0]]
@@ -139,7 +140,8 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
     if show:
         plt.show()
         
-def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
+def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False,
+                 n_band_average=1):
     """Plots the performance spectra for a single run."""
     # Find index for the desired parameters
     i = find_run_ind(y_R, z_H, tsr)
@@ -149,7 +151,8 @@ def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
     t, angle, Ttrans, Tarm, drag, rpm, tsr_ts = loadtdms(i+1) # Run name is index + 1
     torque = Tarm/(0.5*rho*A_t*R*U**2)
     torque_seg = torque[2000*t1:2000*t2] - np.mean(torque[2000*t1:2000*t2])
-    f, spec = psd(t, torque_seg, window="Hanning")
+    f, spec = psd(t, torque_seg, window="Hanning", 
+                  n_band_average=n_band_average)
     f_turbine = tsr*U/R/(2*np.pi)
     # Find maximum frequency and its relative strength
     f_max = f[np.where(spec==np.max(spec))[0][0]]
@@ -169,19 +172,22 @@ def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False):
     if show:
         plt.show()
         
-def plotmultispec(save=False, savepath="", savetype=".pdf"):
+def plotmultispec(save=False, savepath="", savetype=".pdf", n_band_average=4):
     """Creates a 1x3 plot for spectra of torque coefficient and cross-stream
     velocity spectra at two locations."""
     plt.figure(figsize=(12, 5))
     plt.subplot(1, 3, 1)
-    plotperfspec(y_R=-1, z_H=0.25, tsr=1.9, newfig=False)
+    plotperfspec(y_R=-1, z_H=0.25, tsr=1.9, newfig=False, 
+                 n_band_average=n_band_average)
     plt.title("(a)", fontsize=20)
     plt.subplot(1, 3, 2)
-    plotvelspec(y_R=-1, z_H=0.25, tsr=1.9, newfig=False)
+    plotvelspec(y_R=-1, z_H=0.25, tsr=1.9, newfig=False,
+                n_band_average=n_band_average)
     plt.title("(b)", fontsize=20)
     plt.ylabel("")
     plt.subplot(1, 3, 3)
-    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, newfig=False)
+    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, newfig=False,
+                n_band_average=n_band_average)
     plt.title("(c)", fontsize=20)
     plt.ylabel("")
     plt.annotate(r"$f^{-5/3}$", xy=(12, 0.5e-2), fontsize=16)
@@ -1199,7 +1205,7 @@ def plot_phase_average(run=13):
     plt.show()
         
 def main():
-    setpltparams()
+    setpltparams(latex=False)
     plt.close("all")
     p = "Google Drive/Research/Papers/JOT CFT near-wake/Figures"
     if "linux" in sys.platform:
@@ -1208,12 +1214,12 @@ def main():
         p = "C:/Users/Pete/" + p
         
 #    plotsinglerun(41, perf=True, wake=False, autocorr=False, xaxis="angle")
-    plot_phase_average(220)
+#    plot_phase_average(220)
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperf(subplots=True, save=False, savepath=p)
 #    plotwake("meanucont", save=False, savepath=p)
-#    plotmultispec(save=False, savepath=p)
+    plotmultispec(save=False, savepath=p)
 #    plotperf_periodic()
 #    plotvelhist(5)
         
