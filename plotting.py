@@ -242,6 +242,8 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
     grdata = grdata.pivot(index="z/H", columns="y/R")
     y_R = grdata.meanu.columns.values
     z_H = grdata.index.values
+    z = H*z_H
+    y = R*y_R
     grdims = (len(z_H), len(y_R))
     # Create some global variables from the grid data for cleaner syntax
     meanu, meanv, meanw = grdata["meanu"], grdata["meanv"], grdata["meanw"]
@@ -252,8 +254,6 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.vlines(-1, 0, 0.5, linestyles="solid", linewidth=2)
         plt.vlines(1, 0, 0.5, linestyles="solid", linewidth=2)
     def calc_meankturbtrans():
-        z = H*z_H
-        y = R*y_R
         ddy_uvU = np.zeros(grdims)
         ddz_uwU = np.zeros(grdims)
         ddy_vvV = np.zeros(grdims)
@@ -273,8 +273,6 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         ttz = -0.5*(ddz_uwU + ddz_vwV + ddz_wwW) # Only ddz terms
         return tt, tty, ttz
     def calc_kprod_meandiss():
-        z = H*z_H
-        y = R*y_R
         dUdy = np.zeros(grdims)
         dUdz = np.zeros(grdims)
         dVdy = np.zeros(grdims)
@@ -303,6 +301,23 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         for n in range(len(y)):
             dKdz[:,n] = fdiff.second_order_diff(grdata.meank.iloc[:,n], z)
         return dKdy, dKdz
+    def calc_mom_transport():
+        ddy_upvp = np.zeros(grdims)
+        ddz_upwp = np.zeros(grdims)
+        d2Udy2 = np.zeros(grdims)
+        d2Udz2 = np.zeros(grdims)
+        dUdy = np.zeros(grdims)
+        dUdz = np.zeros(grdims)
+        for n in range(len(z)):
+            ddy_upvp[n,:] = fdiff.second_order_diff(grdata.meanupvp.iloc[n,:], y)
+            dUdy[n,:] = fdiff.second_order_diff(grdata.meanu.iloc[n,:], y)
+            d2Udy2[n,:] = fdiff.second_order_diff(dUdy[n,:], y)
+        for n in range(len(y)):
+            ddz_upwp[:,n] = fdiff.second_order_diff(grdata.meanupwp.iloc[:,n], z)
+            dUdz[:,n] = fdiff.second_order_diff(grdata.meanu.iloc[:,n], z)
+            d2Udz2[:,n] = fdiff.second_order_diff(dUdz[:,n], z)
+        return {"dUdy" : dUdy, "ddy_upvp" : ddy_upvp, "d2Udy2" : d2Udy2,
+                "dUdz" : dUdz, "ddz_upwp" : ddz_upwp, "d2Udz2" : d2Udz2}
     if "meanucont" in plotlist or "all" in plotlist:
         # Plot contours of mean streamwise velocity
         plt.figure(figsize=(10,5))
@@ -1061,6 +1076,46 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
                   2*np.sum(quantities)/(0.5*U**2)/D*100)
         if save:
             plt.savefig(savepath+"/Kbargraph"+savetype)
+    if "mombargraph" in plotlist or "all" in plotlist:
+        """Make a bar graph of terms contributing to dU/dx:
+          * Cross-stream advection
+          * Vertical advection
+          * Cross-stream Re stress gradient
+          * Vertical Re stress gradient
+          * Cross-steam diffusion
+          * Vertical diffusion
+        """
+        data = calc_mom_transport()
+        dUdy = data["dUdy"]
+        dUdz = data["dUdz"]
+        tty = data["ddy_upvp"]
+        ttz = data["ddz_upwp"]
+        d2Udy2 = data["d2Udy2"]
+        d2Udz2 = data["d2Udz2"]
+        plt.figure(figsize=(10,5))
+        names = [r"$y$-adv.", r"$z$-adv.", 
+                 r"$y$-turb.", 
+                 r"$z$-turb.",
+                 r"$y$-visc.", "$z$-visc."]
+        quantities = [average_over_area(-2*meanv*dUdy/meanu/D, y_R, z_H), 
+                      average_over_area(-2*meanw*dUdz/meanu/D, y_R, z_H),
+                      average_over_area(-2*tty/meanu/D, y_R, z_H),
+                      average_over_area(-2*ttz/meanu/D, y_R, z_H),
+                      average_over_area(2*nu*d2Udy2/meanu/D, y_R, z_H),
+                      average_over_area(2*nu*d2Udz2/meanu/D, y_R, z_H)]
+        ax = plt.gca()
+        ax.bar(range(len(names)), quantities, color="k", width=0.5)
+        ax.set_xticks(np.arange(len(names))+0.25)
+        ax.set_xticklabels(names)
+        plt.hlines(0, 0, len(names), color="gray")
+        plt.ylabel(r"$\frac{U \, \mathrm{ transport}}{UDU_\infty}$")
+        styleplot()
+        plt.grid(False)
+        if print_analysis:
+            print("U recovery rate (%/D) =", 
+                  2*np.sum(quantities)/U/D*100)
+        if save:
+            plt.savefig(savepath+"/mombargraph"+savetype)
     plt.show()
     
 def plot_torque_ripple():
@@ -1205,9 +1260,9 @@ def plot_phase_average(run=13):
     plt.show()
         
 def main():
-    setpltparams(latex=False)
+    setpltparams(latex=True)
     plt.close("all")
-    p = "Google Drive/Research/Papers/JOT CFT near-wake/Figures"
+    p = "Google Drive/Research/Papers/JoT CFT near-wake/Figures"
     if "linux" in sys.platform:
         p = "/home/pete/" + p
     elif "win" in sys.platform:
@@ -1218,8 +1273,8 @@ def main():
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperf(subplots=True, save=False, savepath=p)
-#    plotwake("meanucont", save=False, savepath=p)
-    plotmultispec(save=False, savepath=p)
+    plotwake(["mombargraph"], save=False, savepath=p)
+#    plotmultispec(n_band_average=5, save=True, savepath=p)
 #    plotperf_periodic()
 #    plotvelhist(5)
         
