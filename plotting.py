@@ -1093,10 +1093,12 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         d2Udy2 = data["d2Udy2"]
         d2Udz2 = data["d2Udz2"]
         plt.figure(figsize=(10,5))
-        names = [r"$y$-adv.", r"$z$-adv.", 
-                 r"$y$-turb.", 
-                 r"$z$-turb.",
-                 r"$y$-visc.", "$z$-visc."]
+        names = [r"$-V \frac{\partial U}{\partial y}$", 
+                 r"$-W \frac{\partial U}{\partial z}$", 
+                 r"$-\frac{\partial}{\partial y} \overline{u'v'}$", 
+                 r"$-\frac{\partial}{\partial z} \overline{u'w'}$",
+                 r"$\nu \frac{\partial^2 U}{\partial y^2}$", 
+                 r"$\nu \frac{\partial^2 U}{\partial z^2}$"]
         quantities = [average_over_area(-2*meanv*dUdy/meanu/D, y_R, z_H), 
                       average_over_area(-2*meanw*dUdz/meanu/D, y_R, z_H),
                       average_over_area(-2*tty/meanu/D, y_R, z_H),
@@ -1273,7 +1275,7 @@ def main():
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperf(subplots=True, save=False, savepath=p)
-    plotwake(["mombargraph"], save=False, savepath=p)
+    plotwake(["Kbargraph", "mombargraph"], save=False, savepath=p)
 #    plotmultispec(n_band_average=5, save=True, savepath=p)
 #    plotperf_periodic()
 #    plotvelhist(5)
