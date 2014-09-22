@@ -29,7 +29,7 @@ Please cite
 
 ```bibtex
 @Misc{Bachant2014_data,
-  Title                    = {2013 UNH-RVAT baseline performance and near-wake measurements: Reduced dataset and processing code},
+  Title                    = {UNH-RVAT baseline performance and near-wake measurements: Reduced dataset and processing code},
   Author                   = {Peter Bachant and Martin Wosnik},
   HowPublished             = {fig\textbf{share}. http://dx.doi.org/10.6084/m9.figshare.1080781},
   Month                    = {June},
