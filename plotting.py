@@ -1223,41 +1223,46 @@ def plotperf_periodic():
     plt.figure()
     plt.plot(d.tsr[i], d.phase_cd[i])
     
-def plot_phase_average(run=13):
+def plot_phase_average(run=13, plot_cp=True, plot_cd=False):
     t1 = 13
     t2 = 30
     t, angle, Ttrans, Tarm, drag, rpm, tsr = loadtdms(run)
+    omega = rpm*2*np.pi/60
+    cp = Ttrans*omega/(1/2*rho*A_t*U**3)
+    cd = drag/(1/2*rho*A_t*U**2)
     angle1 = angle[t1*2000]
     undershoot = 360-np.mod(angle1,360)
     angle1 = angle1 + undershoot
     angle2 = angle[t2*2000]
     overshoot = np.mod(angle2,360)
     angle2 = angle2 - overshoot
-    nrevs = (angle2-angle1)/360
-    def findIndex(angle, ta):
+    nrevs = (angle2 - angle1)/360
+    def find_index(angle, ta):
         i = np.where(np.round(angle, decimals=0)==ta)
         i = i[0]
         if len(i) > 1: i = i[0]
         return i
-    i1 = findIndex(angle, angle1)
-    i2 = findIndex(angle, angle1+360)
+    i1 = find_index(angle, angle1)
+    i2 = find_index(angle, angle1+360)
     npoints = i2-i1
-    Tens = Ttrans[i1:i2]
-    drag_phave = drag[i1:i2]
+    cp_phave = cp[i1:i2]
+    cd_phave = cd[i1:i2]
     print(nrevs)
     for n in range(1,int(nrevs)):
             ta1 = angle1+n*360
-            i1 = findIndex(angle, ta1)
+            i1 = find_index(angle, ta1)
             i2 = i1+npoints
-            Tens = Tens + Ttrans[i1:i2]
-            drag_phave += drag[i1:i2]
-    Tens = Tens/nrevs
-    drag_phave = drag_phave/nrevs
+            cp_phave += cp[i1:i2]
+            cd_phave += cd[i1:i2]
+    cp_phave /= nrevs
+    cd_phave /= nrevs
     angleb = np.linspace(0, 360, num=npoints)
-    plt.plot(angleb, Tens, "k")
-    plt.plot(angleb, drag_phave)
+    if plot_cp:
+        plt.plot(angleb, cp_phave, "k")
+    if plot_cd:
+        plt.plot(angleb, cd_phave)
     plt.xlabel(r"$\theta$ (deg)")
-    plt.ylabel(r"Torque (Nm)")
+    plt.ylabel(r"$C_P$")
     styleplot()
     plt.show()
         
@@ -1275,11 +1280,11 @@ def main():
                 "mombargraph"]
         
 #    plotsinglerun(41, perf=True, wake=False, autocorr=False, xaxis="angle")
-#    plot_phase_average(220)
+    plot_phase_average(112)
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperf(subplots=True, save=True, savepath=p)
-    plotwake(jotplots, save=False, savepath=p, print_analysis=True)
+#    plotwake(jotplots, save=False, savepath=p, print_analysis=True)
 #    plotmultispec(n_band_average=5, save=True, savepath=p)
 #    plotperf_periodic()
 #    plotvelhist(5)
