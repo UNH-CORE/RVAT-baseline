@@ -459,7 +459,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$z/H$")
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
-                           orientation="horizontal", pad=0.26)
+                           orientation="horizontal", pad=0.18)
         cb2.set_label(r"$\overline{u'v'}/U_\infty^2$")
         cb2.set_ticks(np.arange(-0.02, 0.025, 0.005), update_ticks=True)
         turb_lines()
@@ -568,7 +568,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$z/H$")
         cb = plt.colorbar(cs, shrink=1, extend="both", 
-                          orientation="horizontal", pad=0.26)
+                          orientation="horizontal", pad=0.18)
         cb.set_label(r"$k/\frac{1}{2}U_\infty^2$")
         turb_lines()
         ax = plt.axes()
@@ -585,7 +585,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$z/H$")
         cb = plt.colorbar(cs, shrink=1, extend="both", 
-                          orientation="horizontal", pad=0.26)
+                          orientation="horizontal", pad=0.18)
         cb.set_label(r"$K/\frac{1}{2}U_\infty^2$")
         turb_lines()
         ax = plt.axes()
@@ -602,7 +602,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.ylabel(r"$z/H$")
         styleplot()
         cbmv = plt.colorbar(cmv, shrink=1, extend="both", 
-                          orientation="horizontal", pad=0.2)
+                          orientation="horizontal", pad=0.18)
         cbmv.set_label(r"$\overline{v}/U_{\infty}$")
         turb_lines()
         ax = plt.axes()
@@ -618,7 +618,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.ylabel(r"$z/H$")
         styleplot()
         cb = plt.colorbar(cs, shrink=1, extend="both", 
-                          orientation="horizontal", pad=0.2)
+                          orientation="horizontal", pad=0.18)
         cb.set_label(r"$\sigma_v/U_{\infty}$")
         turb_lines()
         ax = plt.axes()
@@ -634,7 +634,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.ylabel(r"$z/H$")
         styleplot()
         cbmv = plt.colorbar(cmv, shrink=1, extend="both", 
-                          orientation="horizontal", pad=0.2)
+                          orientation="horizontal", pad=0.18)
         cbmv.set_label(r"$\overline{w}/U_{\infty}$")
         turb_lines()
         if save:
@@ -647,7 +647,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.ylabel(r"$z/H$")
         styleplot()
         cbmv = plt.colorbar(cmv, shrink=1, extend="both", 
-                          orientation="horizontal", pad=0.2)
+                          orientation="horizontal", pad=0.18)
         cbmv.set_label(r"$\sigma_w/U_{\infty}$")
         turb_lines()
         ax = plt.axes()
@@ -697,7 +697,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$z/H$")
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
-                           orientation="horizontal", pad=0.26)
+                           orientation="horizontal", pad=0.18)
         cb2.set_label(r"$\overline{u'w'}/U_\infty^2$")
 #        cb2.set_ticks(np.linspace(-.015,.013,6), update_ticks=True)
         turb_lines()
@@ -715,7 +715,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.ylabel(r"$z/H$")
         styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
-                          orientation="horizontal", pad=0.2)
+                          orientation="horizontal", pad=0.18)
         cb2.set_label(r"$\overline{v'v'}$")
 #        cb2.set_ticks(np.linspace(-.015,.013,6), update_ticks=True)
         turb_lines()
@@ -732,7 +732,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.ylabel(r"$z/H$")
         styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
-                          orientation="horizontal", pad=0.2)
+                          orientation="horizontal", pad=0.18)
         cb2.set_label(r"$\overline{w'w'}$")
 #        cb2.set_ticks(np.linspace(-.015,.013,6), update_ticks=True)
         turb_lines()
@@ -749,7 +749,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.ylabel(r"$z/H$")
         styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
-                           orientation="horizontal", pad=0.2)
+                           orientation="horizontal", pad=0.18)
         cb2.set_label(r"$\overline{u"u"}$")
         cb2.set_ticks(np.linspace(0,.108,6), update_ticks=True)
         turb_lines()
@@ -783,7 +783,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$z/H$")
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
-                           orientation="horizontal", pad=0.26)
+                           orientation="horizontal", pad=0.18)
         cb2.set_label(r"$f_{\mathrm{peak}}/f_{\mathrm{turbine}}$")
         cb2.set_ticks(np.linspace(0,10,11), update_ticks=True)
         turb_lines()
@@ -801,7 +801,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.ylabel(r"$z/H$")
         styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
-                           orientation="horizontal", pad=0.26)
+                           orientation="horizontal", pad=0.18)
         cb2.set_label(r"$S_{\max}/\sigma^2_u$")
         turb_lines()
         ax = plt.axes()
@@ -817,7 +817,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$z/H$")
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
-                           orientation="horizontal", pad=0.26)
+                           orientation="horizontal", pad=0.18)
         cb2.set_label(r"$f_{\mathrm{peak}}/f_{\mathrm{turbine}}$")
         cb2.set_ticks(np.linspace(0,10,11), update_ticks=True)
         turb_lines()
@@ -835,7 +835,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.ylabel(r"$z/H$")
         styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
-                           orientation="horizontal", pad=0.26)
+                           orientation="horizontal", pad=0.18)
         cb2.set_label(r"$\Psi$")
         turb_lines()
         ax = plt.axes()
@@ -851,7 +851,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$z/H$")
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
-                           orientation="horizontal", pad=0.26)
+                           orientation="horizontal", pad=0.18)
         cb2.set_label(r"$f_{\mathrm{peak}}/f_{\mathrm{turbine}}$")
         cb2.set_ticks(np.linspace(0,10,11), update_ticks=True)
         turb_lines()
@@ -869,7 +869,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.ylabel(r"$z/H$")
         styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
-                           orientation="horizontal", pad=0.26)
+                           orientation="horizontal", pad=0.18)
         cb2.set_label(r"$S_{\max}/\sigma^2_w$")
         turb_lines()
         ax = plt.axes()
@@ -886,7 +886,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$z/H$")
         cb = plt.colorbar(cs, shrink=1, extend="both", 
-                          orientation="horizontal", pad=0.26)
+                          orientation="horizontal", pad=0.18)
         cb.set_label(r"$-\overline{u_i' u_j'}\frac{\partial U_i}{\partial x_j}$")
         turb_lines()
         ax = plt.axes()
@@ -931,7 +931,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.ylabel(r"$z/H$")
         styleplot()
         cb = plt.colorbar(cs, shrink=1, extend="both", 
-                          orientation="horizontal", pad=0.26)
+                          orientation="horizontal", pad=0.18)
         cb.set_label(r"$-\frac{1}{2}\frac{\partial}{\partial x_j}\overline{u_i' u_j'} U_i$")
         turb_lines()
         ax = plt.axes()
@@ -944,7 +944,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         # Add contours of mean velocity
         cs = plt.contourf(y_R, z_H, meanu, 20, cmap=plt.cm.coolwarm)
         cb = plt.colorbar(cs, shrink=1, extend="both", 
-                          orientation="horizontal", pad=0.2)
+                          orientation="horizontal", pad=0.16)
         cb.set_label(r"$U/U_{\infty}$")
         plt.hold(True)
         # Make quiver plot of v and w velocities
@@ -953,10 +953,10 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.ylabel(r"$z/H$")
         plt.ylim(-0.2, 0.78)
         plt.xlim(-3.2, 3.2)
-        plt.quiverkey(q, 0.75, 0.3, 0.1, r"$0.1 U_\infty$",
-                   labelpos="E",
-                   coordinates="figure",
-                   fontproperties={"size": "small"})
+        plt.quiverkey(q, 0.75, 0.28, 0.1, r"$0.1 U_\infty$",
+                      labelpos="E",
+                      coordinates="figure",
+                      fontproperties={"size": "small"})
         plt.hlines(0.5, -1, 1, linestyles="solid", colors="gray",
                    linewidth=3)
         plt.vlines(-1, -0.2, 0.5, linestyles="solid", colors="gray",
@@ -984,7 +984,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$z/H$")
         cb = plt.colorbar(cs, shrink=1, extend="both", 
-                          orientation="horizontal", pad=0.26)
+                          orientation="horizontal", pad=0.18)
         cb.set_label(r"$\Omega_x$")
         turb_lines()
         ax = plt.axes()
@@ -1270,12 +1270,16 @@ def main():
     elif "win" in sys.platform:
         p = "C:/Users/Pete/" + p
         
+    jotplots = ["meancomboquiv", "xvorticity", "fpeak_v", "fstrength_v",
+                "uvcont", "uwcont", "Kturbtrans", "kcont", "Kbargraph",
+                "mombargraph"]
+        
 #    plotsinglerun(41, perf=True, wake=False, autocorr=False, xaxis="angle")
 #    plot_phase_average(220)
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
-#    plotperf(subplots=True, save=False, savepath=p)
-    plotwake(["Kbargraph", "mombargraph"], save=False, savepath=p)
+#    plotperf(subplots=True, save=True, savepath=p)
+    plotwake(jotplots, save=False, savepath=p, print_analysis=True)
 #    plotmultispec(n_band_average=5, save=True, savepath=p)
 #    plotperf_periodic()
 #    plotvelhist(5)
