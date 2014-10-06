@@ -284,15 +284,16 @@ def batchwake(t1=13):
         w_seg = w[200*t1:200*t2[n]] - np.mean(w[200*t1:200*t2[n]])
         f_turbine = tsr[n]*U/R/(2*np.pi)
         # Find maximum frequency and its relative strength
-        f, spec = psd(tv, u_seg, window=None)
+        n_band_average = 5
+        f, spec = psd(tv, u_seg, window="Hanning", n_band_average=n_band_average)
         f_max = f[np.where(spec==np.max(spec))[0][0]]
         df.fstrength_u[n] = np.max(spec)/np.var(u_seg)*(f[1] - f[0])
         df.fpeak_u[n] = f_max/f_turbine
-        f, spec = psd(tv, v_seg, window=None)
+        f, spec = psd(tv, v_seg, window="Hanning", n_band_average=n_band_average)
         f_max = f[np.where(spec==np.max(spec))[0][0]]
         df.fstrength_v[n] = np.max(spec)/np.var(v_seg)*(f[1] - f[0])
         df.fpeak_v[n] = f_max/f_turbine
-        f, spec = psd(tv, w_seg, window=None)
+        f, spec = psd(tv, w_seg, window="Hanning", n_band_average=n_band_average)
         f_max = f[np.where(spec==np.max(spec))[0][0]]
         df.fstrength_w[n] = np.max(spec)/np.var(w_seg)*(f[1] - f[0])
         df.fpeak_w[n] = f_max/f_turbine
@@ -365,10 +366,7 @@ def export_perf_csv(rev=0):
 def main():
     """Main function."""
 #    batchperf()
-#    batchwake()
-#    export_perf_csv(rev=1)
-    loadtdms(1)
-#    convert_npy_to_csv()
+    batchwake()
     
 if __name__ == "__main__":
     main()
