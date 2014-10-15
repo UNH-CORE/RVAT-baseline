@@ -4,7 +4,6 @@ March 2013 experiments with the VAT
 
 """
 from __future__ import division, print_function
-import xlrd
 from pxl import timeseries, fdiff
 from pxl.timeseries import *
 import numpy as np
