@@ -1,3 +1,6 @@
 matplotlib>=1.4.0
 pxl>=0.0.2
 numpy
+pandas
+scipy
+pytdms
