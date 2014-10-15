@@ -86,7 +86,7 @@ def plotsinglerun(run, perf=True, wake=False, autocorr=False, save=False,
         u = u[t1*200:t2*200]
         t = tv[t1*200:t2*200]
         # Compute autocorrelation
-        tau, rho = timeseries.autocorr(u, t, 0, 6.0)
+        tau, rho = timeseries.calc_autocorr_coeff(u, t, 0, 6.0)
         print("Blade passage period =", blade_period, "s")
         # Compute integral timescale for velocity
         # Find first zero crossing
@@ -1280,7 +1280,7 @@ def main():
                 "mombargraph"]
         
 #    plotsinglerun(41, perf=True, wake=False, autocorr=False, xaxis="angle")
-    plot_phase_average(112)
+    plot_phase_average(124)
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperf(subplots=True, save=True, savepath=p)
