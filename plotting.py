@@ -1247,7 +1247,7 @@ def plot_phase_average(run=13, plot_cp=True, plot_cd=False):
     npoints = i2-i1
     cp_phave = cp[i1:i2]
     cd_phave = cd[i1:i2]
-    print(nrevs)
+    print("Averaging over {} revolutions".format(nrevs))
     for n in range(1,int(nrevs)):
             ta1 = angle1+n*360
             i1 = find_index(angle, ta1)
