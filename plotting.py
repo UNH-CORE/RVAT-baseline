@@ -1060,7 +1060,8 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
                       average_over_area(2*kprod/meanu/(0.5*U**2)/D, y_R, z_H),
                       average_over_area(2*meandiss/meanu/(0.5*U**2)/D, y_R, z_H)]
         ax = plt.gca()
-        ax.bar(range(len(names)), quantities, color="k", width=0.5)
+        ax.bar(range(len(names)), quantities, color="gray", 
+               edgecolor="black", hatch="//", width=0.5)
         ax.set_xticks(np.arange(len(names))+0.25)
         ax.set_xticklabels(names)
         plt.hlines(0, 0, len(names), color="gray")
@@ -1106,7 +1107,8 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
                       average_over_area(2*nu*d2Udy2/meanu/D, y_R, z_H),
                       average_over_area(2*nu*d2Udz2/meanu/D, y_R, z_H)]
         ax = plt.gca()
-        ax.bar(range(len(names)), quantities, color="k", width=0.5)
+        ax.bar(range(len(names)), quantities, color="gray", width=0.5,
+               edgecolor="black", hatch="//")
         ax.set_xticks(np.arange(len(names))+0.25)
         ax.set_xticklabels(names)
         plt.hlines(0, 0, len(names), color="gray")
@@ -1280,11 +1282,11 @@ def main():
                 "mombargraph"]
         
 #    plotsinglerun(41, perf=True, wake=False, autocorr=False, xaxis="angle")
-    plot_phase_average(124)
+#    plot_phase_average(124)
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperf(subplots=True, save=True, savepath=p)
-#    plotwake(jotplots, save=False, savepath=p, print_analysis=True)
+    plotwake(["Kbargraph", "mombargraph"], save=False, savepath=p, print_analysis=True)
 #    plotmultispec(n_band_average=5, save=True, savepath=p)
 #    plotperf_periodic()
 #    plotvelhist(5)
