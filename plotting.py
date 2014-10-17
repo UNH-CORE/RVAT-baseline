@@ -1065,7 +1065,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         ax.set_xticks(np.arange(len(names))+0.25)
         ax.set_xticklabels(names)
         plt.hlines(0, 0, len(names), color="gray")
-        plt.ylabel(r"$\frac{K \, \mathrm{ transport}}{UDK_\infty}$")
+        plt.ylabel(r"$\frac{K \, \mathrm{ transport}}{UK_\infty D^{-1}}$")
 #        ax.annotate(r"$\mathrm{Total} = " \
 #                    + str(np.round(np.sum(quantities), decimals=4)) + "$", 
 #                    xy=(0, 0), xytext=(0.75, 0.82), 
@@ -1112,7 +1112,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         ax.set_xticks(np.arange(len(names))+0.25)
         ax.set_xticklabels(names)
         plt.hlines(0, 0, len(names), color="gray")
-        plt.ylabel(r"$\frac{U \, \mathrm{ transport}}{UDU_\infty}$")
+        plt.ylabel(r"$\frac{U \, \mathrm{ transport}}{UU_\infty D^{-1}}$")
         styleplot()
         plt.grid(False)
         if print_analysis:
@@ -1286,7 +1286,7 @@ def main():
 #    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperf(subplots=True, save=True, savepath=p)
-    plotwake(["Kbargraph", "mombargraph"], save=False, savepath=p, print_analysis=True)
+    plotwake(["Kbargraph", "mombargraph"], save=True, savepath=p, print_analysis=True)
 #    plotmultispec(n_band_average=5, save=True, savepath=p)
 #    plotperf_periodic()
 #    plotvelhist(5)
