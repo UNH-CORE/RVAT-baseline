@@ -131,9 +131,9 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False,
     plt.ylabel(r"Spectral density")
     # Should the spectrum be normalized?
     f_line = np.linspace(10,40)
-    spec_line = f_line**(-5./3)*0.1
+    spec_line = f_line**(-5./3)*0.5
     plt.hold(True)
-    plt.loglog(f_line, spec_line)
+    plt.loglog(f_line, spec_line, "gray")
     plt.ylim((10**-9, 1))
     plot_vertical_lines([1, 3, 6, 9])
     if plot_conf_int:
@@ -204,7 +204,7 @@ def plotmultispec(save=False, savepath="", savetype=".pdf", n_band_average=5,
                 n_band_average=n_band_average, plot_conf_int=plot_conf_int)
     plt.title("(c)", fontsize=20)
     plt.ylabel("")
-    plt.annotate(r"$f^{-5/3}$", xy=(12, 0.5e-2), fontsize=16)
+    plt.annotate(r"$f^{-5/3}$", xy=(12, 1.5e-2), fontsize=16)
     plt.tight_layout()
     if save:
         plt.savefig(savepath + "/multispec" + savetype)
