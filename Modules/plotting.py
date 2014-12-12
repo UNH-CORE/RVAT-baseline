@@ -139,16 +139,9 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False,
     if plot_conf_int:
         dof = n_band_average*2
         chi2 = scipy.stats.chi2.interval(alpha=0.95, df=dof)
-        x = 2
-        y = spec[np.logical_and(f/f_turbine>2.9, f/f_turbine<3.3)][0]
-        y1 = dof*y/chi2[1]
-        y2 = dof*y/chi2[0]
-        yerr1 = y1 - y
-        yerr2 = y2 - y
-        yerr1 = y1
-        yerr2 = y2
-        plt.errorbar([x], [y], yerr=[[yerr1], [yerr2]], linewidth=2, capthick=2,
-                     color="gray", zorder=1)
+        y1 = dof*spec/chi2[1]
+        y2 = dof*spec/chi2[0]
+        plt.fill_between(f/f_turbine, y1, y2, facecolor="lightgray", alpha=0.2)
     styleplot()
     plt.grid()
     if show:
@@ -183,16 +176,9 @@ def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False,
     if plot_conf_int:
         dof = n_band_average*2
         chi2 = scipy.stats.chi2.interval(alpha=0.95, df=dof)
-        x = 2
-        y = spec[np.logical_and(f/f_turbine>2.9, f/f_turbine<3.3)][0]
-        y1 = dof*y/chi2[1]
-        y2 = dof*y/chi2[0]
-        yerr1 = y1 - y
-        yerr2 = y2 - y
-        yerr1 = y1
-        yerr2 = y2
-        plt.errorbar([x], [y], yerr=[[yerr1], [yerr2]], linewidth=2, capthick=2,
-                     color="gray", zorder=1)
+        y1 = dof*spec/chi2[1]
+        y2 = dof*spec/chi2[0]
+        plt.fill_between(f/f_turbine, y1, y2, facecolor="lightgray", alpha=0.2)
     plot_vertical_lines([1, 3, 6, 9])
     styleplot()
     plt.grid()
