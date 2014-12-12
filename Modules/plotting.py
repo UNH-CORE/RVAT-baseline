@@ -6,6 +6,7 @@ Created on Fri May 30 00:34:48 2014
 """
 from __future__ import division, print_function 
 from Modules.processing import *
+import scipy.stats
 
 def setpltparams(fontsize=18, latex=True):
     if latex:
@@ -103,11 +104,11 @@ def plotsinglerun(run, perf=True, wake=False, autocorr=False, save=False,
     plt.show()
 
 def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False, 
-                n_band_average=1):
+                n_band_average=1, plot_conf_int=False):
     """Plots the velocity spectrum for a single run."""
     # Find index for the desired parameters
     i = find_run_ind(y_R, z_H, tsr)
-    print("Plotting spectra from run", str(i+1)+"...")
+    print("Plotting spectra from run {}".format(i+1))
     t1 = 13
     t2 = pd.read_csv("Processed/processed.csv")["t2"][i]
     t, u, v, w = loadvec(i+1) # Run name is index + 1
@@ -135,17 +136,32 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False,
     plt.loglog(f_line, spec_line)
     plt.ylim((10**-9, 1))
     plot_vertical_lines([1, 3, 6, 9])
+    if plot_conf_int:
+        dof = n_band_average*2
+        chi2 = scipy.stats.chi2.interval(alpha=0.95, df=dof)
+        x = 2
+        y = spec[np.logical_and(f/f_turbine>2.9, f/f_turbine<3.3)][0]
+        y1 = dof*y/chi2[1]
+        y2 = dof*y/chi2[0]
+        yerr1 = y1 - y
+        yerr2 = y2 - y
+        yerr1 = y1
+        yerr2 = y2
+        plt.errorbar([x], [y], yerr=[[yerr1], [yerr2]], linewidth=2, capthick=2,
+                     color="gray", zorder=1)
+        print("Chi squared values: ({:.2f}, {:.2f})".format(chi2[0], chi2[1]))
+        print("95% confidence interval (at f/f_turbine = 3): ({:.1e}, {:.1e})".format(y1, y2))
     styleplot()
     plt.grid()
     if show:
         plt.show()
         
 def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False,
-                 n_band_average=1):
+                 n_band_average=1, plot_conf_int=False):
     """Plots the performance spectra for a single run."""
     # Find index for the desired parameters
     i = find_run_ind(y_R, z_H, tsr)
-    print("Plotting spectra from run", str(i+1)+"...")
+    print("Plotting spectra from run {}".format(i+1))
     t1 = 13
     t2 = pd.read_csv("Processed/processed.csv")["t2"][i]
     t, angle, Ttrans, Tarm, drag, rpm, tsr_ts = loadtdms(i+1) # Run name is index + 1
@@ -166,28 +182,44 @@ def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False,
     plt.xlabel(r"$f/f_{\mathrm{turbine}}$")
     plt.ylabel(r"Spectral density")
     # Should the spectrum be normalized?
+    if plot_conf_int:
+        dof = n_band_average*2
+        chi2 = scipy.stats.chi2.interval(alpha=0.95, df=dof)
+        x = 2
+        y = spec[np.logical_and(f/f_turbine>2.9, f/f_turbine<3.3)][0]
+        y1 = dof*y/chi2[1]
+        y2 = dof*y/chi2[0]
+        yerr1 = y1 - y
+        yerr2 = y2 - y
+        yerr1 = y1
+        yerr2 = y2
+        plt.errorbar([x], [y], yerr=[[yerr1], [yerr2]], linewidth=2, capthick=2,
+                     color="gray", zorder=1)
+        print("Chi squared values: ({:.2f}, {:.2f})".format(chi2[0], chi2[1]))
+        print("95% confidence interval (at f/f_turbine = 3): ({:.1e}, {:.1e})".format(y1, y2))
     plot_vertical_lines([1, 3, 6, 9])
     styleplot()
     plt.grid()
     if show:
         plt.show()
         
-def plotmultispec(save=False, savepath="", savetype=".pdf", n_band_average=4):
+def plotmultispec(save=False, savepath="", savetype=".pdf", n_band_average=5,
+                  plot_conf_int=False):
     """Creates a 1x3 plot for spectra of torque coefficient and cross-stream
     velocity spectra at two locations."""
     plt.figure(figsize=(12, 5))
     plt.subplot(1, 3, 1)
     plotperfspec(y_R=-1, z_H=0.25, tsr=1.9, newfig=False, 
-                 n_band_average=n_band_average)
+                 n_band_average=n_band_average, plot_conf_int=plot_conf_int)
     plt.title("(a)", fontsize=20)
     plt.subplot(1, 3, 2)
     plotvelspec(y_R=-1, z_H=0.25, tsr=1.9, newfig=False,
-                n_band_average=n_band_average)
+                n_band_average=n_band_average, plot_conf_int=plot_conf_int)
     plt.title("(b)", fontsize=20)
     plt.ylabel("")
     plt.subplot(1, 3, 3)
     plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, newfig=False,
-                n_band_average=n_band_average)
+                n_band_average=n_band_average, plot_conf_int=plot_conf_int)
     plt.title("(c)", fontsize=20)
     plt.ylabel("")
     plt.annotate(r"$f^{-5/3}$", xy=(12, 0.5e-2), fontsize=16)

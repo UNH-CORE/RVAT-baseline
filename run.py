@@ -22,11 +22,12 @@ def main():
         
 #    plotsinglerun(41, perf=True, wake=False, autocorr=False, xaxis="angle")
 #    plot_phase_average(124)
-#    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
+#    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True, n_band_average=5,
+#                plot_conf_int=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperf(subplots=True, save=True, savepath=p)
-    plotwake(["Kbargraph", "mombargraph"], save=False, savepath=p, print_analysis=True)
-#    plotmultispec(n_band_average=5, save=True, savepath=p)
+#    plotwake(["Kbargraph", "mombargraph"], save=False, savepath=p, print_analysis=True)
+    plotmultispec(n_band_average=5, save=False, savepath=p, plot_conf_int=True)
 #    plotperf_periodic()
 #    plotvelhist(5)
 
