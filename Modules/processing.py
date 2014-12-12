@@ -362,10 +362,5 @@ def export_perf_csv(rev=0):
                              ("%.3f" %cp[run]).center(s), 
                              ("%.3f" %cd[run]).center(s)])
     
-def main():
-    """Main function."""
-#    batchperf()
-    batchwake()
-    
 if __name__ == "__main__":
-    main()
+    pass
