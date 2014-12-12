@@ -1,16 +1,18 @@
-*
-!.gitignore
-!processing.py
-!plotting.py
-!README.md
-!Processed
-!Processed/processed.csv
-!notebook.ipynb
-!Test plan
-!Test plan/Test plan.csv
-!Raw/
-!Raw/urls.json
-!requirements.txt
-!src
-!run.py
-!Modules
+Raw
+*.pyc
+__pycache__
+Shakedown
+Tare torque
+Figures
+Config
+*.npy
+*.swp
+Processed/txt
+Processed/csv
+Documents/Lab notebook
+*.pdf
+*.xls
+*.xlsx
+Trash
+.ipynb_checkpoints
+
