@@ -5,7 +5,7 @@ Created on Fri May 30 00:34:48 2014
 @author: Pete
 """
 from __future__ import division, print_function 
-from processing import *
+from Modules.processing import *
 
 def setpltparams(fontsize=18, latex=True):
     if latex:
@@ -86,7 +86,7 @@ def plotsinglerun(run, perf=True, wake=False, autocorr=False, save=False,
         u = u[t1*200:t2*200]
         t = tv[t1*200:t2*200]
         # Compute autocorrelation
-        tau, rho = timeseries.calc_autocorr_coeff(u, t, 0, 6.0)
+        tau, rho = timeseries.autocorr_coeff(u, t, 0, 6.0)
         print("Blade passage period =", blade_period, "s")
         # Compute integral timescale for velocity
         # Find first zero crossing
@@ -1268,28 +1268,5 @@ def plot_phase_average(run=13, plot_cp=True, plot_cd=False):
     styleplot()
     plt.show()
         
-def main():
-    setpltparams(latex=True)
-    plt.close("all")
-    p = "Google Drive/Research/Papers/JoT CFT near-wake/Figures"
-    if "linux" in sys.platform:
-        p = "/home/pete/" + p
-    elif "win" in sys.platform:
-        p = "C:/Users/Pete/" + p
-        
-    jotplots = ["meancomboquiv", "xvorticity", "fpeak_v", "fstrength_v",
-                "uvcont", "uwcont", "Kturbtrans", "kcont", "Kbargraph",
-                "mombargraph"]
-        
-#    plotsinglerun(41, perf=True, wake=False, autocorr=False, xaxis="angle")
-#    plot_phase_average(124)
-#    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
-#    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
-#    plotperf(subplots=True, save=True, savepath=p)
-    plotwake(["Kbargraph", "mombargraph"], save=True, savepath=p, print_analysis=True)
-#    plotmultispec(n_band_average=5, save=True, savepath=p)
-#    plotperf_periodic()
-#    plotvelhist(5)
-        
 if __name__ == "__main__":
-    main()
+    pass
