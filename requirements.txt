@@ -1,5 +1,5 @@
 matplotlib
-pxl>=0.0.2
+pxl>=0.0.3
 numpy
 pandas
 scipy
