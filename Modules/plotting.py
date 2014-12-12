@@ -199,6 +199,7 @@ def plotmultispec(save=False, savepath="", savetype=".pdf", n_band_average=5,
                 n_band_average=n_band_average, plot_conf_int=plot_conf_int)
     plt.title("(b)", fontsize=20)
     plt.ylabel("")
+    plt.annotate(r"$f^{-5/3}$", xy=(12, 1.5e-2), fontsize=16)
     plt.subplot(1, 3, 3)
     plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, newfig=False,
                 n_band_average=n_band_average, plot_conf_int=plot_conf_int)
