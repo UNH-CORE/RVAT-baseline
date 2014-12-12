@@ -27,7 +27,7 @@ def main():
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True)
 #    plotperf(subplots=True, save=True, savepath=p)
 #    plotwake(["Kbargraph", "mombargraph"], save=False, savepath=p, print_analysis=True)
-    plotmultispec(n_band_average=5, save=False, savepath=p, plot_conf_int=True)
+    plotmultispec(n_band_average=4, save=False, savepath=p, plot_conf_int=True)
 #    plotperf_periodic()
 #    plotvelhist(5)
 

@@ -118,8 +118,8 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False,
     # Find maximum frequency and its relative strength
     f_max = f[np.where(spec==np.max(spec))[0][0]]
     strength = np.max(spec)/np.var(v_seg)*(f[1] - f[0])
-    print("Strongest frequency f/f_turbine:", f_max/f_turbine)
-    print("Spectral concentration:", strength)
+    print("Strongest frequency f/f_turbine: {:.3f}".format(f_max/f_turbine))
+    print("Spectral concentration: {:.3f}".format(strength))
     # Calculate shaft shedding frequency
     St = 0.19 # Approximate for Re_d = 1e5
     f_cyl = St*U/d_shaft
@@ -149,8 +149,6 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False,
         yerr2 = y2
         plt.errorbar([x], [y], yerr=[[yerr1], [yerr2]], linewidth=2, capthick=2,
                      color="gray", zorder=1)
-        print("Chi squared values: ({:.2f}, {:.2f})".format(chi2[0], chi2[1]))
-        print("95% confidence interval (at f/f_turbine = 3): ({:.1e}, {:.1e})".format(y1, y2))
     styleplot()
     plt.grid()
     if show:
@@ -173,8 +171,8 @@ def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False,
     # Find maximum frequency and its relative strength
     f_max = f[np.where(spec==np.max(spec))[0][0]]
     strength = np.max(spec)/np.var(torque_seg)*(f[1] - f[0])
-    print("Strongest frequency f/f_turbine:", f_max/f_turbine)
-    print("Spectral concentration:", strength)
+    print("Strongest frequency f/f_turbine: {:.3f}".format(f_max/f_turbine))
+    print("Spectral concentration: {:.3f}".format(strength))
     if newfig:
         plt.figure()
     plt.loglog(f/f_turbine, spec, "k")
@@ -195,8 +193,6 @@ def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False,
         yerr2 = y2
         plt.errorbar([x], [y], yerr=[[yerr1], [yerr2]], linewidth=2, capthick=2,
                      color="gray", zorder=1)
-        print("Chi squared values: ({:.2f}, {:.2f})".format(chi2[0], chi2[1]))
-        print("95% confidence interval (at f/f_turbine = 3): ({:.1e}, {:.1e})".format(y1, y2))
     plot_vertical_lines([1, 3, 6, 9])
     styleplot()
     plt.grid()
