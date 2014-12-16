@@ -19,7 +19,7 @@ def main():
         
     """Batch processing functions"""
 #    batchperf()
-#    batchwake()
+#    batchwake(n_band_average=4)
         
     """List of plots for JoT paper"""
     jotplots = ["meancomboquiv", "xvorticity", "fpeak_v", "fstrength_v",
@@ -33,8 +33,8 @@ def main():
 #                plot_conf_int=True)
 #    plotperfspec(y_R=1.5, z_H=0.25, tsr=1.9, show=True, n_band_average=4,
 #                 plot_conf_int=True)
-#    plotperf(subplots=True, save=True, savepath=p)
-#    plotwake(["Kbargraph", "mombargraph"], save=False, savepath=p, print_analysis=True)
+#    plotperf(subplots=True, save=False, savepath=p)
+#    plotwake(["fpeak_v", "fstrength_v"], save=True, savepath=p, print_analysis=True)
     plotmultispec(n_band_average=4, save=False, savepath=p, plot_conf_int=True)
 #    plotperf_periodic()
 #    plotvelhist(5)

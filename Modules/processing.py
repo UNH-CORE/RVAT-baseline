@@ -222,7 +222,7 @@ def find_run_ind(y_R, z_H, tsr):
                                 tp["TSR"].values==tsr))[0][0]
     return i
 
-def batchwake(t1=13):
+def batchwake(t1=13, n_band_average=4):
     try:
         df = pd.read_csv("Processed/processed.csv")
         for key in df.keys():
@@ -283,7 +283,6 @@ def batchwake(t1=13):
         w_seg = w[200*t1:200*t2[n]] - np.mean(w[200*t1:200*t2[n]])
         f_turbine = tsr[n]*U/R/(2*np.pi)
         # Find maximum frequency and its relative strength
-        n_band_average = 5
         f, spec = psd(tv, u_seg, window="Hanning", n_band_average=n_band_average)
         f_max = f[np.where(spec==np.max(spec))[0][0]]
         df.fstrength_u[n] = np.max(spec)/np.var(u_seg)*(f[1] - f[0])
