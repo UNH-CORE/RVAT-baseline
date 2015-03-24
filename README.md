@@ -53,7 +53,7 @@ These data were used in the following publications:
 
 Bachant, P. and Wosnik, M. (2015) 
 [Characterising the near-wake of a cross-flow turbine]
-(http://doi.org/10.1080/14685248.2014.1001852) _Journal of Turbulence_
+(http://doi.org/10.1080/14685248.2014.1001852). _Journal of Turbulence_
 
 ```bibtex
 @Article{Bachant2015-JoT,
@@ -73,7 +73,7 @@ Bachant, P. and Wosnik, M. (2015)
 
 Bachant, P. and Wosnik, M. (2013) [Performance and near-wake measurements
 for a vertical-axis turbine at moderate Reynolds number]
-(http://doi.org/10.1115/FEDSM2013-16575)
+(http://doi.org/10.1115/FEDSM2013-16575).
 
 ```bibtex
 @InProceedings{Bachant2013,
