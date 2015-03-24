@@ -72,7 +72,7 @@ Bachant, P. and Wosnik, M. (2015)
 ### Commit `f8cc166`
 
 Bachant, P. and Wosnik, M. (2013) [Performance and near-wake measurements
-for a vertical-axis turbine at moderate Reynolds number]
+for a vertical axis turbine at moderate Reynolds number]
 (http://doi.org/10.1115/FEDSM2013-16575).
 
 ```bibtex
