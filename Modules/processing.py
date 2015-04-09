@@ -35,7 +35,7 @@ rho = 1000.0
 nu = 1e-6
     
 def import_testplan():
-    return pd.read_csv("Test plan/Test plan.csv")
+    return pd.read_csv("Config/Test plan/Test plan.csv")
     
 def loadvec(run):
     if not os.path.isfile("Raw/Vectrino/vec{}.dat".format(run)):
@@ -147,7 +147,7 @@ def calc_eta2(cp, cd):
     
 
 def batchperf(t1=13, t2_guess=30):
-    testplan = pd.read_csv("Test plan/Test plan.csv")
+    testplan = pd.read_csv("Config/Test plan/Test plan.csv")
     try:
         df = pd.read_csv("Processed/processed.csv")
     except IOError:
@@ -237,7 +237,7 @@ def batchwake(t1=13, n_band_average=4):
     except KeyError:
         t2 = np.load("Processed/t2.npy")
         tsr = np.load("Processed/tsr.npy")
-    testplan = pd.read_csv("Test plan/Test plan.csv")
+    testplan = pd.read_csv("Config/Test plan/Test plan.csv")
     df["run"] = testplan["Run"]
     df["y/R"] = testplan["y/R"]
     df["z/H"] = testplan["z/H"]
