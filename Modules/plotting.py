@@ -109,7 +109,6 @@ def plotsinglerun(run, perf=True, wake=False, autocorr=False, save=False,
         plt.xlabel("Lag (s)")
         plt.ylabel("Autocorrelation coefficient")
         styleplot()
-    plt.show()
 
 def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False, 
                 n_band_average=1, plot_conf_int=False):
@@ -217,7 +216,6 @@ def plotmultispec(save=False, savepath="Figures", savetype=".pdf",
     plt.tight_layout()
     if save:
         plt.savefig(savepath + "/multispec" + savetype)
-    plt.show()
     
 def plot_vertical_lines(xlist, ymaxscale=1, color="gray"):
     if not isinstance(xlist, list):
@@ -242,7 +240,6 @@ def plotvelhist(run):
     plt.ylabel("Samples (normalized)")
     styleplot()
     plt.grid(False)
-    plt.show()
     
 def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
              print_analysis=False):
@@ -1143,7 +1140,6 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
                   2*np.sum(quantities)/U/D*100)
         if save:
             plt.savefig(savepath+"/mombargraph"+savetype)
-    plt.show()
     
 def plot_torque_ripple():
     i = range(31)
@@ -1153,7 +1149,6 @@ def plot_torque_ripple():
     plt.xlabel(r"$\lambda$", labelpad=20)
     plt.ylabel(r"Torque ripple")
     styleplot()  
-    plt.show()
     print("Torque ripple at TSR =", str(tsr[12])+":", torque_ripple[12])
     
 def plot_Re_c():
@@ -1237,7 +1232,6 @@ def plotperf(plotlist=["cp", "cd"],
             plt.savefig(savepath+"/perf"+savetype)
     print("At tsr = 1.9, C_P =", cp[np.where(np.round(tsr, decimals=2)==1.9)[0][0]],
           "; C_D =", cd[np.where(np.round(tsr, decimals=2)==1.9)[0][0]])
-    plt.show()
         
 def plotperf_periodic():
     i = range(31)
@@ -1289,7 +1283,6 @@ def plot_phase_average(run=13, plot_cp=True, plot_cd=False):
     plt.xlabel(r"$\theta$ (deg)")
     plt.ylabel(r"$C_P$")
     styleplot()
-    plt.show()
         
 if __name__ == "__main__":
     pass
