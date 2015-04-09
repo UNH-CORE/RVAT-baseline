@@ -16,6 +16,7 @@ def main():
                 "uvcont", "uwcont", "Kturbtrans", "kcont", "Kbargraph",
                 "mombargraph"]
     
+    plotperf(subplots=False, save=save)
     plotperf(subplots=True, save=save)
     plotwake(jotplots, save=save, print_analysis=True)
     plotmultispec(n_band_average=4, save=save, plot_conf_int=True)
