@@ -484,7 +484,7 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
         plt.ylabel(r"$z/H$")
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
                            orientation="horizontal", pad=0.18)
-        cb2.set_label(r"$\overline{u'v'}/U_\infty^2$")
+        cb2.set_label(r"$\overline{u^\prime v^\prime}/U_\infty^2$")
         cb2.set_ticks(np.arange(-0.02, 0.025, 0.005), update_ticks=True)
         turb_lines()
         ax = plt.axes()
@@ -705,7 +705,7 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
         plt.ylabel(r"$z/H$")
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
                            orientation="horizontal", pad=0.3)
-        cb2.set_label(r"$\overline{v'w'}/U_\infty^2$")
+        cb2.set_label(r"$\overline{v^\prime w^\prime}/U_\infty^2$")
         cb2.set_ticks(np.linspace(-.008,.006,6), update_ticks=True)
         turb_lines()
         ax = plt.axes()
@@ -722,7 +722,7 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
         plt.ylabel(r"$z/H$")
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
                            orientation="horizontal", pad=0.18)
-        cb2.set_label(r"$\overline{u'w'}/U_\infty^2$")
+        cb2.set_label(r"$\overline{u^\prime w^\prime}/U_\infty^2$")
 #        cb2.set_ticks(np.linspace(-.015,.013,6), update_ticks=True)
         turb_lines()
         ax = plt.axes()
@@ -740,7 +740,7 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
         styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
                           orientation="horizontal", pad=0.18)
-        cb2.set_label(r"$\overline{v'v'}$")
+        cb2.set_label(r"$\overline{v^\prime v^\prime}$")
 #        cb2.set_ticks(np.linspace(-.015,.013,6), update_ticks=True)
         turb_lines()
         ax = plt.axes()
@@ -757,7 +757,7 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
         styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
                           orientation="horizontal", pad=0.18)
-        cb2.set_label(r"$\overline{w'w'}$")
+        cb2.set_label(r"$\overline{w^\prime w^\prime}$")
 #        cb2.set_ticks(np.linspace(-.015,.013,6), update_ticks=True)
         turb_lines()
         ax = plt.axes()
@@ -774,7 +774,7 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
         styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
                            orientation="horizontal", pad=0.18)
-        cb2.set_label(r"$\overline{u"u"}$")
+        cb2.set_label(r"$\overline{u^\prime u^\prime}$")
         cb2.set_ticks(np.linspace(0,.108,6), update_ticks=True)
         turb_lines()
         ax = plt.axes()
@@ -795,7 +795,7 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
         plt.plot(y_R, df.meanvpvp[ind], "--^k", markerfacecolor="none",
                  label=r"$\lambda=1.4$")
         plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$\overline{v'v'}$")
+        plt.ylabel(r"$\overline{v^\prime v^\prime}$")
         plt.legend()
         styleplot()
         if save:
