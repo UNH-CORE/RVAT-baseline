@@ -12,7 +12,7 @@ show = True
 
 def main():    
     # List of plots for JoT paper
-    jotplots = ["meancomboquiv", "xvorticity", "fpeak_v", "fstrength_v",
+    jotplots = ["meancontquiv", "xvorticity", "fpeak_v", "fstrength_v",
                 "uvcont", "uwcont", "Kturbtrans", "kcont", "Kbargraph",
                 "mombargraph"]
     

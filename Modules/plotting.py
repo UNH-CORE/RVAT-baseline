@@ -962,7 +962,7 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+"/Kturbtrans"+savetype)
-    if "meancomboquiv" in plotlist or "all" in plotlist:
+    if "meancontquiv" in plotlist or "all" in plotlist:
         plt.figure(figsize=(10,6))
         # Add contours of mean velocity
         cs = plt.contourf(y_R, z_H, meanu, 20, cmap=plt.cm.coolwarm)
@@ -991,7 +991,7 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         styleplot()
         if save:
-            plt.savefig(savepath+"/meancomboquiv"+savetype)
+            plt.savefig(savepath+"/meancontquiv"+savetype)
     if "xvorticity" in plotlist or "all" in plotlist:
         z = 1.0*z_H
         y = R*y_R
