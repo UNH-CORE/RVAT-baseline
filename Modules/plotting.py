@@ -971,7 +971,7 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
         cb.set_label(r"$U/U_{\infty}$")
         plt.hold(True)
         # Make quiver plot of v and w velocities
-        q = plt.quiver(y_R, z_H, meanv, meanw, width=0.0022)
+        q = plt.quiver(y_R, z_H, meanv, meanw, scale=3, width=0.0022)
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$z/H$")
         plt.ylim(-0.2, 0.78)
