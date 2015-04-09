@@ -119,7 +119,7 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False,
     i = find_run_ind(y_R, z_H, tsr)
     print("Plotting spectra from run {}".format(i+1))
     t1 = 13
-    t2 = pd.read_csv("Processed/processed.csv")["t2"][i]
+    t2 = pd.read_csv("Data/Processed/processed.csv")["t2"][i]
     t, u, v, w = loadvec(i+1) # Run name is index + 1
     v_seg = v[200*t1:200*t2] - np.mean(v[200*t1:200*t2])
     f, spec = psd(t, v_seg, window="Hanning", n_band_average=n_band_average)
@@ -163,7 +163,7 @@ def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False,
     i = find_run_ind(y_R, z_H, tsr)
     print("Plotting spectra from run {}".format(i+1))
     t1 = 13
-    t2 = pd.read_csv("Processed/processed.csv")["t2"][i]
+    t2 = pd.read_csv("Data/Processed/processed.csv")["t2"][i]
     t, angle, Ttrans, Tarm, drag, rpm, tsr_ts = loadtdms(i+1) # Run name is index + 1
     torque = Tarm/(0.5*rho*A_t*R*U**2)
     torque_seg = torque[2000*t1:2000*t2] - np.mean(torque[2000*t1:2000*t2])
@@ -234,7 +234,7 @@ def plotvelhist(run):
     """Plots the velocity histogram for a given run."""
     i = run - 1 # Run indexing starts from 1!
     t1 = 13
-    t2 = pd.read_csv("Processed/processed.csv")["t2"][i]
+    t2 = pd.read_csv("Data/Processed/processed.csv")["t2"][i]
     t, u, v, w = loadvec(run)
     u = u[t1*200:t2*200]
     plt.figure()
@@ -250,7 +250,7 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
     if not isinstance(plotlist, list):
         plotlist = [plotlist]
     # Load processed data
-    df = pd.read_csv("Processed/processed.csv")
+    df = pd.read_csv("Data/Processed/processed.csv")
     df["k"] = 0.5*(df.stdu**2 + df.stdv**2 + df.stdw**2)
     df["meank"] = 0.5*(df.meanu**2 + df.meanv**2 + df.meanw**2)
     df["kbar"] = df.meank + df.k
@@ -438,7 +438,7 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
             plt.savefig(savepath+"/uw_2tsrs"+savetype)
     if "meanuvstsr" in plotlist or "all" in plotlist:
         # Plot mean velocity components vs TSR
-        tsr = np.load("Processed/tsr.npy")
+        tsr = np.load("Data/Processed/tsr.npy")
         runs = range(1,32)
         ind = [run-1 for run in runs]
         plt.figure()
@@ -1148,8 +1148,8 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
     
 def plot_torque_ripple():
     i = range(31)
-    torque_ripple = np.load("Processed/torque_ripple.npy")
-    tsr = np.load("Processed/tsr.npy")
+    torque_ripple = np.load("Data/Processed/torque_ripple.npy")
+    tsr = np.load("Data/Processed/tsr.npy")
     plt.plot(tsr[i], torque_ripple[i], "-ok", markerfacecolor = "none")
     plt.xlabel(r"$\lambda$", labelpad=20)
     plt.ylabel(r"Torque ripple")
@@ -1158,7 +1158,7 @@ def plot_torque_ripple():
     print("Torque ripple at TSR =", str(tsr[12])+":", torque_ripple[12])
     
 def plot_Re_c():
-    a = np.load("Processed/a.npy")    
+    a = np.load("Data/Processed/a.npy")    
     U = 1.0
     tsr = np.arange(0.1, 3.2, 0.1)
     a = a[0:len(tsr)]
@@ -1181,7 +1181,7 @@ def plot_Re_c():
 def plotperf(plotlist=["cp", "cd"],
              subplots=True, save=False, savepath="Figures", savetype=".pdf"):
     i = np.arange(31)
-    data = pd.read_csv("Processed/processed.csv")
+    data = pd.read_csv("Data/Processed/processed.csv")
     cp = data.cp
     cd = data.cd
     tsr = data.tsr
@@ -1242,7 +1242,7 @@ def plotperf(plotlist=["cp", "cd"],
         
 def plotperf_periodic():
     i = range(31)
-    d = pd.read_csv("Processed/processed.csv")
+    d = pd.read_csv("Data/Processed/processed.csv")
     plt.figure()
     plt.plot(d.tsr[i], d.amp_cd[i])
     styleplot()

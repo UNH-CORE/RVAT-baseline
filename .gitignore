@@ -7,12 +7,12 @@ Figures
 Config/Max backup
 *.npy
 *.swp
-Processed/txt
-Processed/csv
+Data/Processed/txt
+Data/Processed/csv
 Documents/Lab notebook
 *.pdf
 *.xls
 *.xlsx
 Trash
 .ipynb_checkpoints
-
+Data/Raw

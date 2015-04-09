@@ -38,9 +38,9 @@ def import_testplan():
     return pd.read_csv("Config/Test plan/Test plan.csv")
     
 def loadvec(run):
-    if not os.path.isfile("Raw/Vectrino/vec{}.dat".format(run)):
+    if not os.path.isfile("Data/Raw/Vectrino/vec{}.dat".format(run)):
         download_vecdata(run)
-    data = np.loadtxt("Raw/Vectrino/vec{}.dat".format(run))
+    data = np.loadtxt("Data/Raw/Vectrino/vec{}.dat".format(run))
     t = data[:,0]
     u = data[:,3]
     v = data[:,4]
@@ -48,27 +48,27 @@ def loadvec(run):
     return t, u, v, w
 
 def loadvectemp(run):
-    if not os.path.isfile("Raw/Vectrino/vec{}.hdr".format(run)):
+    if not os.path.isfile("Data/Raw/Vectrino/vec{}.hdr".format(run)):
         download_vecdata(run)
-    with open("Raw/Vectrino/vec" + str(run) + ".hdr") as f:
+    with open("Data/Raw/Vectrino/vec" + str(run) + ".hdr") as f:
         temp = f.readlines()[117].split()[1]
     return float(temp)
     
 def download_vecdata(run):
     """Downloads Vectrino header and data files for a given run."""
-    with open("Raw/urls.json") as f:
+    with open("Config/raw_data_urls.json") as f:
         urls = json.load(f)
-    if not os.path.isdir("Raw/Vectrino"):
-        os.mkdir("Raw/Vectrino")
+    if not os.path.isdir("Data/Raw/Vectrino"):
+        os.makedirs("Data/Raw/Vectrino")
     urllib.urlretrieve(urls["vec{}.dat".format(run)], 
-                            filename="Raw/Vectrino/vec{}.dat".format(run),
+                            filename="Data/Raw/Vectrino/vec{}.dat".format(run),
                             reporthook=download_vecdata_progress)
     urllib.urlretrieve(urls["vec{}.hdr".format(run)], 
-                       filename="Raw/Vectrino/vec{}.hdr".format(run),
+                       filename="Data/Raw/Vectrino/vec{}.hdr".format(run),
                        reporthook=download_vecheader_progress)
                           
 def loadtdms(run):
-    filename = "Raw/TDMS/run{}.tdms".format(run)
+    filename = "Data/Raw/TDMS/run{}.tdms".format(run)
     if not os.path.isfile(filename):
         download_tdms(run)
     objects, rawdata = pytdms.read(filename)
@@ -95,12 +95,12 @@ def loadtdms(run):
     
 def download_tdms(run):
     """This function downloads a TDMS file from figshare"""
-    with open("Raw/urls.json") as f:
+    with open("Config/raw_data_urls.json") as f:
         urls = json.load(f)
-    if not os.path.isdir("Raw/TDMS"):
-        os.mkdir("Raw/TDMS")
+    if not os.path.isdir("Data/Raw/TDMS"):
+        os.makedirs("Data/Raw/TDMS")
     urllib.urlretrieve(urls["run{}.tdms".format(run)], 
-                       filename="Raw/TDMS/run{}.tdms".format(run),
+                       filename="Data/Raw/TDMS/run{}.tdms".format(run),
                        reporthook=download_tdms_progress)
     
 def download_tdms_progress(blocks_transferred, block_size, total_size):
@@ -149,7 +149,7 @@ def calc_eta2(cp, cd):
 def batchperf(t1=13, t2_guess=30):
     testplan = pd.read_csv("Config/Test plan/Test plan.csv")
     try:
-        df = pd.read_csv("Processed/processed.csv")
+        df = pd.read_csv("Data/Processed/processed.csv")
     except IOError:
         df = pd.DataFrame()
     runs = testplan["Run"]
@@ -189,7 +189,7 @@ def batchperf(t1=13, t2_guess=30):
         df.amp_cd[n], df.phase_cd[n] = find_amp_and_phase(angle_seg, cd_seg)
         df.amp_ct[n], df.phase_ct[n] = find_amp_and_phase(angle_seg, ct_seg)
     # Save to CSV
-    df.to_csv("Processed/processed.csv", index=False)
+    df.to_csv("Data/Processed/processed.csv", index=False)
 
     
 def find_amp_and_phase(angle, data, npeaks=3):
@@ -224,7 +224,7 @@ def find_run_ind(y_R, z_H, tsr):
 
 def batchwake(t1=13, n_band_average=4):
     try:
-        df = pd.read_csv("Processed/processed.csv")
+        df = pd.read_csv("Data/Processed/processed.csv")
         for key in df.keys():
             if "Unnamed" in key:
                 del df[key]
@@ -232,11 +232,11 @@ def batchwake(t1=13, n_band_average=4):
         t2 = df["t2"]
     except IOError:
         df = pd.DataFrame()
-        t2 = np.load("Processed/t2.npy")
-        tsr = np.load("Processed/tsr.npy")
+        t2 = np.load("Data/Processed/t2.npy")
+        tsr = np.load("Data/Processed/tsr.npy")
     except KeyError:
-        t2 = np.load("Processed/t2.npy")
-        tsr = np.load("Processed/tsr.npy")
+        t2 = np.load("Data/Processed/t2.npy")
+        tsr = np.load("Data/Processed/tsr.npy")
     testplan = pd.read_csv("Config/Test plan/Test plan.csv")
     df["run"] = testplan["Run"]
     df["y/R"] = testplan["y/R"]
@@ -296,32 +296,32 @@ def batchwake(t1=13, n_band_average=4):
         df.fstrength_w[n] = np.max(spec)/np.var(w_seg)*(f[1] - f[0])
         df.fpeak_w[n] = f_max/f_turbine
     # Save to CSV
-    df.to_csv("Processed/processed.csv", index=False)
+    df.to_csv("Data/Processed/processed.csv", index=False)
     
 def convert_npy_to_csv():
-    files = os.listdir("Processed")
+    files = os.listdir("Data/Processed")
     df = pd.DataFrame()
     for f in files:
         if (".npy") in f:
-            df[f.replace(".npy", "")] = np.load("Processed/" + f)
-    df.to_csv("Processed/processed.csv")
+            df[f.replace(".npy", "")] = np.load("Data/Processed/" + f)
+    df.to_csv("Data/Processed/processed.csv")
     
 def export_perf_csv(rev=0):
     """Export processed data to csv file."""
-    if not os.path.isdir("Processed/csv"):
-        os.mkdir("Processed/csv")
+    if not os.path.isdir("Data/Processed/csv"):
+        os.makedirs("Data/Processed/csv")
     import datetime
     datestring = datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")
     sep = "----------------------------------------------------"
     runs = range(31)
-    tsr = np.load("Processed/tsr.npy")[runs]
+    tsr = np.load("Data/Processed/tsr.npy")[runs]
     tsr = np.round(tsr, decimals=2)
-    cp = np.load("Processed/cp.npy")[runs]
+    cp = np.load("Data/Processed/cp.npy")[runs]
     cp = np.round(cp, decimals=3)
-    cd = np.load("Processed/cd.npy")[runs]
+    cd = np.load("Data/Processed/cd.npy")[runs]
     cd = np.round(cd, decimals=3)
     u = np.ones(len(runs))
-    vectemp = np.mean(np.load("Processed/vectemp.npy")[runs])
+    vectemp = np.mean(np.load("Data/Processed/vectemp.npy")[runs])
     vectemp = np.round(vectemp, decimals=2)
     runnumber = range(1, 32)
     metadata = ["Processed performance data from UNH-RVAT tow tank experiments",
@@ -348,7 +348,7 @@ def export_perf_csv(rev=0):
     s = 6
     clabels = ["Run".center(s), "U".center(s), "TSR".center(s),
                "C_P".center(s), "C_D".center(s)]
-    with open("Processed/csv/unh-rvat-perf-2013-03-rev"+str(rev)+".csv","wb") \
+    with open("Data/Processed/csv/unh-rvat-perf-2013-03-rev"+str(rev)+".csv","wb") \
     as csvfile:
         fwriter = csv.writer(csvfile)
         for i in range(len(metadata)):
