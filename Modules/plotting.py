@@ -1,26 +1,35 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri May 30 00:34:48 2014
+This module includes functions for plotting data.
 
-@author: Pete
 """
 from __future__ import division, print_function 
 from Modules.processing import *
 import scipy.stats
 
-def setpltparams(fontsize=18, latex=True):
-    if latex:
-        font = {"family" : "serif", "serif" : "cmr10", "size" : fontsize}
+def setpltparams(seaborn=True, fontsize=18, latex=True):
+    if seaborn:
+        set_sns()
     else:
-        font = {"size" : fontsize}
-    lines = {"markersize" : 9, "markeredgewidth" : 1,
-             "linewidth" : 1.2}
-    legend = {"numpoints" : 1, "fontsize" : "small"}
-    matplotlib.rc("text", usetex=latex)
-    matplotlib.rc("font", **font)
-    matplotlib.rc("lines", **lines)
-    matplotlib.rc("legend", **legend)
-    matplotlib.rc("xtick", **{"major.pad":6})
+        if latex:
+            font = {"family" : "serif", "serif" : "cmr10", "size" : fontsize}
+        else:
+            font = {"size" : fontsize}
+        lines = {"markersize" : 9, "markeredgewidth" : 1,
+                 "linewidth" : 1.2}
+        legend = {"numpoints" : 1, "fontsize" : "small"}
+        matplotlib.rc("text", usetex=latex)
+        matplotlib.rc("font", **font)
+        matplotlib.rc("lines", **lines)
+        matplotlib.rc("legend", **legend)
+        matplotlib.rc("xtick", **{"major.pad":6})
+    
+def set_sns():
+    """Sets plot style using Seaborn."""
+    import seaborn as sns
+    sns.set(style="white", context="paper", font_scale=1.75,
+            rc={"lines.markersize": 9, "lines.markeredgewidth": 1.25,
+            "legend.fontsize": "small", "font.size": 14})
 
 def styleplot():
     plt.grid(True)
@@ -185,8 +194,8 @@ def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False,
     if show:
         plt.show()
         
-def plotmultispec(save=False, savepath="", savetype=".pdf", n_band_average=5,
-                  plot_conf_int=False):
+def plotmultispec(save=False, savepath="Figures", savetype=".pdf", 
+                  n_band_average=5, plot_conf_int=False):
     """Creates a 1x3 plot for spectra of torque coefficient and cross-stream
     velocity spectra at two locations."""
     plt.figure(figsize=(12, 5))
@@ -236,7 +245,7 @@ def plotvelhist(run):
     plt.grid(False)
     plt.show()
     
-def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
+def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
              print_analysis=False):
     if not isinstance(plotlist, list):
         plotlist = [plotlist]
@@ -947,7 +956,7 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         styleplot()
         cb = plt.colorbar(cs, shrink=1, extend="both", 
                           orientation="horizontal", pad=0.18)
-        cb.set_label(r"$-\frac{1}{2}\frac{\partial}{\partial x_j}\overline{u_i' u_j'} U_i$")
+        cb.set_label(r"$-\frac{1}{2}\frac{\partial}{\partial x_j}\overline{u_i^\prime u_j^\prime} U_i$")
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
@@ -1111,8 +1120,8 @@ def plotwake(plotlist, save=False, savepath=None, savetype=".pdf",
         plt.figure(figsize=(10,5))
         names = [r"$-V \frac{\partial U}{\partial y}$", 
                  r"$-W \frac{\partial U}{\partial z}$", 
-                 r"$-\frac{\partial}{\partial y} \overline{u'v'}$", 
-                 r"$-\frac{\partial}{\partial z} \overline{u'w'}$",
+                 r"$-\frac{\partial}{\partial y} \overline{u^\prime v^\prime}$", 
+                 r"$-\frac{\partial}{\partial z} \overline{u^\prime w^\prime}$",
                  r"$\nu \frac{\partial^2 U}{\partial y^2}$", 
                  r"$\nu \frac{\partial^2 U}{\partial z^2}$"]
         quantities = [average_over_area(-2*meanv*dUdy/meanu/D, y_R, z_H), 
@@ -1170,7 +1179,7 @@ def plot_Re_c():
     styleplot()
 
 def plotperf(plotlist=["cp", "cd"],
-             subplots=True, save=False, savepath="", savetype=".pdf"):
+             subplots=True, save=False, savepath="Figures", savetype=".pdf"):
     i = np.arange(31)
     data = pd.read_csv("Processed/processed.csv")
     cp = data.cp
