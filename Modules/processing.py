@@ -1,7 +1,5 @@
 """
-This script imports and processes turbine performance and wake data from
-March 2013 experiments with the VAT
-
+This module contains data processing functions
 """
 from __future__ import division, print_function
 from pxl import timeseries, fdiff

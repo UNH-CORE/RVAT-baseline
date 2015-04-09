@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 """
-This script is used to generate figures from the RVAT baseline experiment.
-
+This script generates figures from the RVAT baseline experiment.
 """
 
 from Modules.plotting import *

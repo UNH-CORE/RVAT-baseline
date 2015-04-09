@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-This module includes functions for plotting data.
-
+This module contains plotting functions.
 """
 from __future__ import division, print_function 
 from Modules.processing import *
