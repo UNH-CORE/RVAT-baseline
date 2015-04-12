@@ -196,7 +196,7 @@ def plotmultispec(save=False, savepath="Figures", savetype=".pdf",
                   n_band_average=5, plot_conf_int=False):
     """Creates a 1x3 plot for spectra of torque coefficient and cross-stream
     velocity spectra at two locations."""
-    plt.figure(figsize=(12, 5))
+    plt.figure(figsize=(10, 3.75))
     plt.subplot(1, 3, 1)
     plotperfspec(y_R=-1, z_H=0.25, tsr=1.9, newfig=False, 
                  n_band_average=n_band_average, plot_conf_int=plot_conf_int)
@@ -1081,10 +1081,10 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
                       average_over_area(2*meandiss/meanu/(0.5*U**2)/D, y_R, z_H)]
         ax = plt.gca()
         ax.bar(range(len(names)), quantities, color="gray", 
-               edgecolor="black", hatch="//", width=0.5)
+               edgecolor="black", width=0.5)
         ax.set_xticks(np.arange(len(names))+0.25)
         ax.set_xticklabels(names)
-        plt.hlines(0, 0, len(names), color="gray")
+        plt.hlines(0, 0, len(names), color="black")
         plt.ylabel(r"$\frac{K \, \mathrm{ transport}}{UK_\infty D^{-1}}$")
 #        ax.annotate(r"$\mathrm{Total} = " \
 #                    + str(np.round(np.sum(quantities), decimals=4)) + "$", 
@@ -1128,10 +1128,10 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
                       average_over_area(2*nu*d2Udz2/meanu/D, y_R, z_H)]
         ax = plt.gca()
         ax.bar(range(len(names)), quantities, color="gray", width=0.5,
-               edgecolor="black", hatch="//")
+               edgecolor="black")
         ax.set_xticks(np.arange(len(names))+0.25)
         ax.set_xticklabels(names)
-        plt.hlines(0, 0, len(names), color="gray")
+        plt.hlines(0, 0, len(names), color="black")
         plt.ylabel(r"$\frac{U \, \mathrm{ transport}}{UU_\infty D^{-1}}$")
         styleplot()
         plt.grid(False)
@@ -1216,7 +1216,7 @@ def plotperf(plotlist=["cp", "cd"],
         if save:
             plt.savefig(savepath+"/ctvstsr"+savetype)
     else:
-        plt.figure(figsize=(12,5))
+        plt.figure(figsize=(10, 3.75))
         plt.subplot(121)
         plt.plot(tsr[i], cp[i], "-ok", markerfacecolor = "none")
         plt.xlabel(r"$\lambda$", labelpad=20)

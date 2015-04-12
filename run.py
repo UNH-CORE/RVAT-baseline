@@ -15,7 +15,6 @@ def main():
     jotplots = ["meancontquiv", "xvorticity", "fpeak_v", "fstrength_v",
                 "uvcont", "uwcont", "Kturbtrans", "kcont", "Kbargraph",
                 "mombargraph"]
-    
     plotperf(subplots=False, save=save)
     plotperf(subplots=True, save=save)
     plotwake(jotplots, save=save, print_analysis=True)
