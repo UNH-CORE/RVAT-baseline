@@ -5,6 +5,7 @@ This module contains plotting functions.
 from __future__ import division, print_function 
 from Modules.processing import *
 import scipy.stats
+from pxl.styleplot import set_sns
 
 def setpltparams(seaborn=True, fontsize=18, latex=True):
     if seaborn:
@@ -22,13 +23,6 @@ def setpltparams(seaborn=True, fontsize=18, latex=True):
         matplotlib.rc("lines", **lines)
         matplotlib.rc("legend", **legend)
         matplotlib.rc("xtick", **{"major.pad":6})
-    
-def set_sns():
-    """Sets plot style using Seaborn."""
-    import seaborn as sns
-    sns.set(style="white", context="paper", font_scale=1.75,
-            rc={"lines.markersize": 9, "lines.markeredgewidth": 1.25,
-            "legend.fontsize": "small", "font.size": 14})
 
 def styleplot():
     plt.grid(True)
