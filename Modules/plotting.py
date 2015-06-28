@@ -240,7 +240,11 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
     if not isinstance(plotlist, list):
         plotlist = [plotlist]
     figsize_horiz_contour = (7.5, 4.5)
+    figsize_vertical_contour = (7.5, 1.81)
+    figsize_vertical_quiver = (7.5, 2.5)
     horiz_cbar_pad = 0.17
+    vertical_cbar_pad = 0.02
+    vertical_cbar_shrink = 0.9
     # Load processed data
     df = pd.read_csv("Data/Processed/processed.csv")
     df["k"] = 0.5*(df.stdu**2 + df.stdv**2 + df.stdw**2)
@@ -578,14 +582,14 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
             plt.savefig(savepath+"/uv_2tsrs"+savetype)
     if "kcont" in plotlist or "all" in plotlist:
         # Plot contours of k
-        plt.figure(figsize=(10,5))
-        cs = plt.contourf(y_R, z_H, grdata["k"]/(0.5*1.0**2), 20, 
+        plt.figure(figsize=figsize_vertical_contour)
+        cs = plt.contourf(y_R, z_H, grdata["k"]/(1.0**2), 20, 
                           cmap=plt.cm.coolwarm)
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$z/H$")
-        cb = plt.colorbar(cs, shrink=1, extend="both", 
-                          orientation="horizontal", pad=0.18)
-        cb.set_label(r"$k/\frac{1}{2}U_\infty^2$")
+        cb = plt.colorbar(cs, shrink=1.0, extend="both", 
+                          orientation="vertical", pad=vertical_cbar_pad)
+        cb.set_label(r"$k/U_\infty^2$")
         turb_lines()
         ax = plt.axes()
         ax.set_aspect(2)
@@ -956,11 +960,11 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
         if save:
             plt.savefig(savepath+"/Kturbtrans"+savetype)
     if "meancontquiv" in plotlist or "all" in plotlist:
-        plt.figure(figsize=(7.5, 2.5))
+        plt.figure(figsize=figsize_vertical_quiver)
         # Add contours of mean velocity
         cs = plt.contourf(y_R, z_H, meanu, 20, cmap=plt.cm.coolwarm)
-        cb = plt.colorbar(cs, shrink=0.9, extend="both", 
-                          orientation="vertical", pad=0.02)
+        cb = plt.colorbar(cs, shrink=vertical_cbar_shrink, extend="both", 
+                          orientation="vertical", pad=vertical_cbar_pad)
         cb.set_label(r"$U/U_{\infty}$")
         # Make quiver plot of v and w velocities
         q = plt.quiver(y_R, z_H, meanv, meanw, scale=3, width=0.0022,
