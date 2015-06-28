@@ -190,23 +190,23 @@ def plotmultispec(save=False, savepath="Figures", savetype=".pdf",
                   n_band_average=5, plot_conf_int=False):
     """Creates a 1x3 plot for spectra of torque coefficient and cross-stream
     velocity spectra at two locations."""
-    plt.figure(figsize=(10, 3.75))
+    plt.figure(figsize=(7.5, 3.75/10*7.5))
     plt.subplot(1, 3, 1)
     plotperfspec(y_R=-1, z_H=0.25, tsr=1.9, newfig=False, 
                  n_band_average=n_band_average, plot_conf_int=plot_conf_int)
-    plt.title("(a)", fontsize=20)
+    plt.title("(a)")
     plt.subplot(1, 3, 2)
     plotvelspec(y_R=-1, z_H=0.25, tsr=1.9, newfig=False,
                 n_band_average=n_band_average, plot_conf_int=plot_conf_int)
-    plt.title("(b)", fontsize=20)
+    plt.title("(b)")
     plt.ylabel("")
-    plt.annotate(r"$f^{-5/3}$", xy=(12, 1.5e-2), fontsize=16)
+    plt.annotate(r"$f^{-5/3}$", xy=(12, 1.5e-2), fontsize=12)
     plt.subplot(1, 3, 3)
     plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, newfig=False,
                 n_band_average=n_band_average, plot_conf_int=plot_conf_int)
-    plt.title("(c)", fontsize=20)
+    plt.title("(c)")
     plt.ylabel("")
-    plt.annotate(r"$f^{-5/3}$", xy=(12, 1.5e-2), fontsize=16)
+    plt.annotate(r"$f^{-5/3}$", xy=(12, 1.5e-2), fontsize=12)
     plt.tight_layout()
     if save:
         plt.savefig(savepath + "/multispec" + savetype)
