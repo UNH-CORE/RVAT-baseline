@@ -954,22 +954,21 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
         if save:
             plt.savefig(savepath+"/Kturbtrans"+savetype)
     if "meancontquiv" in plotlist or "all" in plotlist:
-        plt.figure(figsize=(10,6))
+        plt.figure(figsize=(7.5, 2.5))
         # Add contours of mean velocity
         cs = plt.contourf(y_R, z_H, meanu, 20, cmap=plt.cm.coolwarm)
-        cb = plt.colorbar(cs, shrink=1, extend="both", 
-                          orientation="horizontal", pad=0.16)
+        cb = plt.colorbar(cs, shrink=0.9, extend="both", 
+                          orientation="vertical", pad=0.02)
         cb.set_label(r"$U/U_{\infty}$")
-        plt.hold(True)
         # Make quiver plot of v and w velocities
-        q = plt.quiver(y_R, z_H, meanv, meanw, scale=3, width=0.0022)
+        q = plt.quiver(y_R, z_H, meanv, meanw, scale=3, width=0.0022,
+                       edgecolor="none")
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$z/H$")
         plt.ylim(-0.2, 0.78)
         plt.xlim(-3.2, 3.2)
-        plt.quiverkey(q, 0.75, 0.28, 0.1, r"$0.1 U_\infty$",
-                      labelpos="E",
-                      coordinates="figure",
+        plt.quiverkey(q, 0.75, 0.08, 0.1, r"$0.1 U_\infty$",
+                      labelpos="E", coordinates="figure",
                       fontproperties={"size": "small"})
         plt.hlines(0.5, -1, 1, linestyles="solid", colors="gray",
                    linewidth=3)
