@@ -239,6 +239,8 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
              print_analysis=False):
     if not isinstance(plotlist, list):
         plotlist = [plotlist]
+    figsize_horiz_contour = (7.5, 4.5)
+    horiz_cbar_pad = 0.17
     # Load processed data
     df = pd.read_csv("Data/Processed/processed.csv")
     df["k"] = 0.5*(df.stdu**2 + df.stdv**2 + df.stdw**2)
@@ -334,13 +336,13 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
                 "dUdz" : dUdz, "ddz_upwp" : ddz_upwp, "d2Udz2" : d2Udz2}
     if "meanucont" in plotlist or "all" in plotlist:
         # Plot contours of mean streamwise velocity
-        plt.figure(figsize=(10,5))
-        cs = plt.contourf(y_R, z_H, meanu, 20)
+        plt.figure(figsize=figsize_horiz_contour)
+        cs = plt.contourf(y_R, z_H, meanu, 20, cmap=plt.cm.coolwarm)
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$z/H$")
         styleplot()
         cb = plt.colorbar(cs, shrink=1, extend="both", 
-                          orientation="horizontal", pad=0.3)
+                          orientation="horizontal", pad=horiz_cbar_pad)
         cb.set_label(r"$U/U_{\infty}$")
         turb_lines()
         ax = plt.axes()
