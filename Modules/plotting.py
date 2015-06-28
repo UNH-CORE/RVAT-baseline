@@ -1209,7 +1209,7 @@ def plotperf(plotlist=["cp", "cd"],
         if save:
             plt.savefig(savepath+"/ctvstsr"+savetype)
     else:
-        plt.figure(figsize=(10, 3.75))
+        plt.figure(figsize=(7.5, 3.25))
         plt.subplot(121)
         plt.plot(tsr[i], cp[i], "-ok", markerfacecolor = "none")
         plt.xlabel(r"$\lambda$", labelpad=20)
