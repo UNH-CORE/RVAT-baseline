@@ -1067,7 +1067,7 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
         tt, tty, ttz = calc_meankturbtrans()
         kprod, meandiss = calc_kprod_meandiss()
         dKdy, dKdz = calc_meankgrad()
-        plt.figure(figsize=(10,5))
+        plt.figure(figsize=(7, 3))
         names = [r"$y$-adv.", r"$z$-adv.", 
                  r"$y$-turb.", 
                  r"$z$-turb.",
@@ -1085,10 +1085,6 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
         ax.set_xticklabels(names)
         plt.hlines(0, 0, len(names), color="black")
         plt.ylabel(r"$\frac{K \, \mathrm{ transport}}{UK_\infty D^{-1}}$")
-#        ax.annotate(r"$\mathrm{Total} = " \
-#                    + str(np.round(np.sum(quantities), decimals=4)) + "$", 
-#                    xy=(0, 0), xytext=(0.75, 0.82), 
-#                    xycoords="figure fraction", fontsize=18)
         styleplot()
         plt.grid(False)
         if print_analysis:
@@ -1112,7 +1108,7 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
         ttz = data["ddz_upwp"]
         d2Udy2 = data["d2Udy2"]
         d2Udz2 = data["d2Udz2"]
-        plt.figure(figsize=(10,5))
+        plt.figure(figsize=(7, 3))
         names = [r"$-V \frac{\partial U}{\partial y}$", 
                  r"$-W \frac{\partial U}{\partial z}$", 
                  r"$-\frac{\partial}{\partial y} \overline{u^\prime v^\prime}$", 
