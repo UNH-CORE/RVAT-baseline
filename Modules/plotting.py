@@ -994,12 +994,12 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
         for n in range(len(y)):
             dVdz[:,n] = fdiff.second_order_diff(meanv.iloc[:,n], z)
         # Make quiver plot of K advection
-        plt.figure(figsize=(10,5))
+        plt.figure(figsize=figsize_horiz_contour)
         cs = plt.contourf(y_R, z_H, dWdy-dVdz, 20, cmap=plt.cm.coolwarm)
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$z/H$")
         cb = plt.colorbar(cs, shrink=1, extend="both", 
-                          orientation="horizontal", pad=0.18)
+                          orientation="horizontal", pad=horiz_cbar_pad)
         cb.set_label(r"$\Omega_x$")
         turb_lines()
         ax = plt.axes()
