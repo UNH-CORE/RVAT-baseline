@@ -470,12 +470,12 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
             plt.savefig(savepath+"/stducont"+savetype)
     if "uvcont" in plotlist or "all" in plotlist:
         # Plot contours of uv Reynolds stress
-        plt.figure(figsize=(10,5))
+        plt.figure(figsize=figsize_horiz_contour)
         cs2 = plt.contourf(y_R, z_H, uv, 15, cmap=plt.cm.coolwarm)
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$z/H$")
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
-                           orientation="horizontal", pad=0.18)
+                           orientation="horizontal", pad=horiz_cbar_pad)
         cb2.set_label(r"$\overline{u^\prime v^\prime}/U_\infty^2$")
         cb2.set_ticks(np.arange(-0.02, 0.025, 0.005), update_ticks=True)
         turb_lines()
@@ -708,12 +708,12 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
             plt.savefig(savepath+"/vwcont"+savetype)
     if "uwcont" in plotlist or "all" in plotlist:
         # Plot contours of vw Reynolds stress
-        plt.figure(figsize=(10,5))
+        plt.figure(figsize=figsize_horiz_contour)
         cs2 = plt.contourf(y_R, z_H, uw, 20, cmap=plt.cm.coolwarm)
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$z/H$")
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
-                           orientation="horizontal", pad=0.18)
+                           orientation="horizontal", pad=horiz_cbar_pad)
         cb2.set_label(r"$\overline{u^\prime w^\prime}/U_\infty^2$")
 #        cb2.set_ticks(np.linspace(-.015,.013,6), update_ticks=True)
         turb_lines()
@@ -827,13 +827,13 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
         if save:
             plt.savefig(savepath+"/fstrength_u"+savetype)
     if "fpeak_v" in plotlist or "all" in plotlist:
-        plt.figure(figsize=(10,5))
+        plt.figure(figsize=figsize_horiz_contour)
         cs2 = plt.contourf(y_R, z_H, grdata["fpeak_v"], cmap=plt.cm.coolwarm,
                            levels=np.linspace(0,10,21))
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$z/H$")
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
-                           orientation="horizontal", pad=0.18)
+                           orientation="horizontal", pad=horiz_cbar_pad)
         cb2.set_label(r"$f_{\mathrm{peak}}/f_{\mathrm{turbine}}$")
         cb2.set_ticks(np.linspace(0,10,11), update_ticks=True)
         turb_lines()
@@ -844,14 +844,14 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
         if save:
             plt.savefig(savepath+"/fpeak_v"+savetype)
     if "fstrength_v" in plotlist or "all" in plotlist:
-        plt.figure(figsize=(10,5))
+        plt.figure(figsize=figsize_horiz_contour)
         cs2 = plt.contourf(y_R, z_H, grdata["fstrength_v"], 20, 
                            cmap=plt.cm.coolwarm)
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$z/H$")
         styleplot()
         cb2 = plt.colorbar(cs2, shrink=1, extend="both", 
-                           orientation="horizontal", pad=0.18)
+                           orientation="horizontal", pad=horiz_cbar_pad)
         cb2.set_label(r"$\Psi$")
         turb_lines()
         ax = plt.axes()
@@ -940,14 +940,14 @@ def plotwake(plotlist, save=False, savepath="Figures", savetype=".pdf",
             plt.savefig(savepath+"/meankadv"+savetype)
     if "Kturbtrans" in plotlist or "all" in plotlist:
         tt, tty, ttz = calc_meankturbtrans()
-        plt.figure(figsize=(10,5))
+        plt.figure(figsize=figsize_horiz_contour)
         cs = plt.contourf(y_R, z_H, tty, 20, cmap=plt.cm.coolwarm,
                           levels=np.linspace(-0.08, 0.08, 21))
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$z/H$")
         styleplot()
         cb = plt.colorbar(cs, shrink=1, extend="both", 
-                          orientation="horizontal", pad=0.18)
+                          orientation="horizontal", pad=horiz_cbar_pad)
         cb.set_label(r"$-\frac{1}{2}\frac{\partial}{\partial x_j}\overline{u_i^\prime u_j^\prime} U_i$")
         turb_lines()
         ax = plt.axes()
