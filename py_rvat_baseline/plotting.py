@@ -236,7 +236,7 @@ def plotvelhist(run):
     plt.grid(False)
 
 def plotwake(plotlist, scale=1, save=False, savepath="Figures", savetype=".pdf",
-             print_analysis=False):
+             print_analysis=False, barcolor="gray"):
     if not isinstance(plotlist, list):
         plotlist = [plotlist]
     figsize_horiz_contour = np.array((7.5, 4.5))*scale
@@ -959,6 +959,7 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures", savetype=".pdf",
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+"/Kturbtrans"+savetype)
+
     if "meancontquiv" in plotlist or "all" in plotlist:
         plt.figure(figsize=figsize_vertical_quiver)
         # Add contours of mean velocity
@@ -988,6 +989,7 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures", savetype=".pdf",
         styleplot()
         if save:
             plt.savefig(savepath+"/meancontquiv"+savetype)
+
     if "xvorticity" in plotlist or "all" in plotlist:
         z = 1.0*z_H
         y = R*y_R
@@ -1012,6 +1014,7 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures", savetype=".pdf",
         styleplot()
         if save:
             plt.savefig(savepath+"/xvorticity"+savetype)
+
     if "Kbargraphs" in plotlist or "all" in plotlist:
         """Make a bar graph of terms contributing to dK/dx:
           * Cross-stream advection
@@ -1056,6 +1059,7 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures", savetype=".pdf",
             plt.ylim((-0.2, 0.2))
         styleplot()
         plt.grid(False)
+
     if "Kbargraph" in plotlist or "all" in plotlist:
         """Make a bar graph of terms contributing to dK/dx:
           * Cross-stream advection
@@ -1067,7 +1071,7 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures", savetype=".pdf",
         tt, tty, ttz = calc_meankturbtrans()
         kprod, meandiss = calc_kprod_meandiss()
         dKdy, dKdz = calc_meankgrad()
-        plt.figure(figsize=(7, 3))
+        plt.figure(figsize=np.array((7, 3))*scale)
         names = [r"$y$-adv.", r"$z$-adv.",
                  r"$y$-turb.",
                  r"$z$-turb.",
@@ -1079,19 +1083,20 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures", savetype=".pdf",
                       average_over_area(2*kprod/meanu/(0.5*U**2)/D, y_R, z_H),
                       average_over_area(2*meandiss/meanu/(0.5*U**2)/D, y_R, z_H)]
         ax = plt.gca()
-        ax.bar(range(len(names)), quantities, color="gray",
+        ax.bar(range(len(names)), quantities, color=barcolor,
                edgecolor="black", width=0.5)
         ax.set_xticks(np.arange(len(names))+0.25)
         ax.set_xticklabels(names)
         plt.hlines(0, 0, len(names), color="black")
         plt.ylabel(r"$\frac{K \, \mathrm{ transport}}{UK_\infty D^{-1}}$")
-        styleplot()
         plt.grid(False)
+        plt.tight_layout()
         if print_analysis:
             print("K recovery rate (%/D) =",
                   2*np.sum(quantities)/(0.5*U**2)/D*100)
         if save:
             plt.savefig(savepath+"/Kbargraph"+savetype)
+
     if "mombargraph" in plotlist or "all" in plotlist:
         """Make a bar graph of terms contributing to dU/dx:
           * Cross-stream advection
@@ -1108,7 +1113,7 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures", savetype=".pdf",
         ttz = data["ddz_upwp"]
         d2Udy2 = data["d2Udy2"]
         d2Udz2 = data["d2Udz2"]
-        plt.figure(figsize=(7, 3))
+        plt.figure(figsize=np.array((7, 3))*scale)
         names = [r"$-V \frac{\partial U}{\partial y}$",
                  r"$-W \frac{\partial U}{\partial z}$",
                  r"$-\frac{\partial}{\partial y} \overline{u^\prime v^\prime}$",
@@ -1122,14 +1127,14 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures", savetype=".pdf",
                       average_over_area(2*nu*d2Udy2/meanu/D, y_R, z_H),
                       average_over_area(2*nu*d2Udz2/meanu/D, y_R, z_H)]
         ax = plt.gca()
-        ax.bar(range(len(names)), quantities, color="gray", width=0.5,
+        ax.bar(range(len(names)), quantities, color=barcolor, width=0.5,
                edgecolor="black")
         ax.set_xticks(np.arange(len(names))+0.25)
         ax.set_xticklabels(names)
         plt.hlines(0, 0, len(names), color="black")
         plt.ylabel(r"$\frac{U \, \mathrm{ transport}}{UU_\infty D^{-1}}$")
-        styleplot()
         plt.grid(False)
+        plt.tight_layout()
         if print_analysis:
             print("U recovery rate (%/D) =",
                   2*np.sum(quantities)/U/D*100)
