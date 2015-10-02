@@ -10,8 +10,10 @@ To download, use the git clone URL to the right. For example, in a terminal
 
     git clone https://github.com/UNH-CORE/UNH-RVAT-baseline.git
 
-To generate plots, execute `plot.py` with Python or IPython. Also see this
+To generate plots, run `plot.py` with Python or IPython. Also see this
 [IPython notebook](http://nbviewer.ipython.org/github/UNH-CORE/RVAT-baseline/blob/master/Documents/examples.ipynb "View on nbviewer.ipython.org") for examples.
+
+To reprocess all data, execute `python process.py`.
 
 To contribute back to the main repository, use GitHub's fork/pull mechanism.
 
