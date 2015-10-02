@@ -1,6 +1,6 @@
 # UNH-RVAT baseline performance and near-wake measurements
 
-This repository contains the processing and plotting code, as well as the 
+This repository contains the processing and plotting code, as well as the
 derived data set from the UNH-RVAT tow tank measurements performed in Spring 2013.
 
 Download/usage
@@ -10,7 +10,7 @@ To download, use the git clone URL to the right. For example, in a terminal
 
     git clone https://github.com/UNH-CORE/UNH-RVAT-baseline.git
 
-To generate plots, execute `run.py` with Python or IPython. Also see this
+To generate plots, execute `plot.py` with Python or IPython. Also see this
 [IPython notebook](http://nbviewer.ipython.org/github/UNH-CORE/RVAT-baseline/blob/master/Documents/examples.ipynb "View on nbviewer.ipython.org") for examples.
 
 To contribute back to the main repository, use GitHub's fork/pull mechanism.
@@ -31,7 +31,7 @@ pip install -r requirements.txt
 ```
 
 ## How to cite
-Please cite 
+Please cite
 
 ```bibtex
 @Misc{Bachant2014-RVAT-baseline,
@@ -51,7 +51,7 @@ These data were used in the following publications:
 
 ### Commit `478fdd5`
 
-Bachant, P. and Wosnik, M. (2015) 
+Bachant, P. and Wosnik, M. (2015)
 [Characterising the near-wake of a cross-flow turbine]
 (http://doi.org/10.1080/14685248.2014.1001852). _Journal of Turbulence_
 
