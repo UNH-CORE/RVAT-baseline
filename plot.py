@@ -15,8 +15,8 @@ if __name__ == "__main__":
     parser.add_argument("figures", nargs="?", help="Which figures to create",
                         choices=jotfigs + ["multispec", "perf"],
                         default=[])
-    parser.add_argument("--subplots", nargs="?", default=True,
-                        help="Use subplots on performance figure")
+    parser.add_argument("--no-subplots", action="store_true",
+                        help="Don't use subplots for performance plots")
     parser.add_argument("--all", "-A", help="Plot all figures",
                         action="store_true", default=False)
     parser.add_argument("--no-errorbars", "-e", help="Do not plot error bars",
@@ -38,6 +38,7 @@ if __name__ == "__main__":
     savetype = args.savetype
     save = args.save
     errorbars = not args.no_errorbars
+    subplots = not args.no_subplots
     if save:
         if not os.path.isdir("Figures"):
             os.makedirs("Figures")
@@ -46,8 +47,9 @@ if __name__ == "__main__":
         args.figures = [args.figures]
     wakefigs = [f for f in args.figures if f in jotfigs]
 
+
     if "perf" in args.figures or args.all:
-        plotperf(subplots=args.subplots, save=save, savetype=savetype)
+        plotperf(subplots=subplots, save=save, savetype=savetype)
     if wakefigs or args.all:
         if args.all:
             wakefigs = jotfigs
