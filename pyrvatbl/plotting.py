@@ -1271,7 +1271,7 @@ def plotperf(plotlist=["cp", "cd"],
         plt.plot(tsr[i], cp[i], "-ok", markerfacecolor = "none")
         plt.xlabel(r"$\lambda$", labelpad=20)
         plt.ylabel(r"$C_P$")
-        plt.grid()
+        plt.grid(True)
         plt.subplot(122)
         plt.plot(tsr[i], cd[i], "-ok", markerfacecolor = "none")
         plt.xlabel(r"$\lambda$", labelpad=20)
