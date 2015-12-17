@@ -1,6 +1,5 @@
-"""
-This module contains data processing functions
-"""
+"""This module contains data processing functions."""
+
 from __future__ import division, print_function
 from pxl import timeseries, fdiff
 from pxl.timeseries import *
@@ -22,6 +21,7 @@ try:
 except ImportError:
     pytdms = False
 
+
 # Some constants
 R = 0.5
 D = 2*R
@@ -31,10 +31,12 @@ d_shaft = 0.095
 A_t = 1.0
 rho = 1000.0
 nu = 1e-6
-    
+
+
 def import_testplan():
     return pd.read_csv("Config/Test plan/Test plan.csv")
-    
+
+
 def loadvec(run):
     if not os.path.isfile("Data/Raw/Vectrino/vec{}.dat".format(run)):
         download_vecdata(run)
@@ -45,26 +47,29 @@ def loadvec(run):
     w = data[:,6]
     return t, u, v, w
 
+
 def loadvectemp(run):
     if not os.path.isfile("Data/Raw/Vectrino/vec{}.hdr".format(run)):
         download_vecdata(run)
     with open("Data/Raw/Vectrino/vec" + str(run) + ".hdr") as f:
         temp = f.readlines()[117].split()[1]
     return float(temp)
-    
+
+
 def download_vecdata(run):
     """Downloads Vectrino header and data files for a given run."""
     with open("Config/raw_data_urls.json") as f:
         urls = json.load(f)
     if not os.path.isdir("Data/Raw/Vectrino"):
         os.makedirs("Data/Raw/Vectrino")
-    urllib.urlretrieve(urls["vec{}.dat".format(run)], 
+    urllib.urlretrieve(urls["vec{}.dat".format(run)],
                             filename="Data/Raw/Vectrino/vec{}.dat".format(run),
                             reporthook=download_vecdata_progress)
-    urllib.urlretrieve(urls["vec{}.hdr".format(run)], 
+    urllib.urlretrieve(urls["vec{}.hdr".format(run)],
                        filename="Data/Raw/Vectrino/vec{}.hdr".format(run),
                        reporthook=download_vecheader_progress)
-                          
+
+
 def loadtdms(run):
     filename = "Data/Raw/TDMS/run{}.tdms".format(run)
     if not os.path.isfile(filename):
@@ -86,42 +91,47 @@ def loadtdms(run):
     rpm[0:len(angle)-1] = np.diff(angle)/0.0005/6
     rpm = smooth(rpm, 50)
     tsr = rpm*2*np.pi/60*0.5
-    Ttare = 0.0332496307998*tsr + 0.465846267394 
+    Ttare = 0.0332496307998*tsr + 0.465846267394
     Ttrans = Ttrans + Ttare
     Tarm = Tarm + Ttare
     return t, angle, Ttrans, Tarm, drag, rpm, tsr
-    
+
+
 def download_tdms(run):
     """This function downloads a TDMS file from figshare"""
     with open("Config/raw_data_urls.json") as f:
         urls = json.load(f)
     if not os.path.isdir("Data/Raw/TDMS"):
         os.makedirs("Data/Raw/TDMS")
-    urllib.urlretrieve(urls["run{}.tdms".format(run)], 
+    urllib.urlretrieve(urls["run{}.tdms".format(run)],
                        filename="Data/Raw/TDMS/run{}.tdms".format(run),
                        reporthook=download_tdms_progress)
-    
+
+
 def download_tdms_progress(blocks_transferred, block_size, total_size):
     percent = int(blocks_transferred*block_size*100/total_size)
     if percent < 100:
         print("\rDownloading TDMS file... {:d}%".format(percent), end="")
     else:
         print("\rDownloading TDMS file... Done")
-        
+
+
 def download_vecdata_progress(blocks_transferred, block_size, total_size):
     percent = int(blocks_transferred*block_size*100/total_size)
     if percent < 100:
         print("\rDownloading Vectrino data file... {:d}%".format(percent), end="")
     else:
         print("\rDownloading Vectrino data file... Done")
-        
+
+
 def download_vecheader_progress(blocks_transferred, block_size, total_size):
     percent = int(blocks_transferred*block_size*100/total_size)
     if percent < 100:
         print("\rDownloading Vectrino header file... {:d}%".format(percent), end="")
     else:
         print("\rDownloading Vectrino header file... Done")
-    
+
+
 def find_t2(t, angle, t1, t2):
     angle1 = angle[2000*t1]
     angle2 = angle[2000*t2]
@@ -133,16 +143,17 @@ def find_t2(t, angle, t1, t2):
     t2 = t[t2i]
     t2 = np.round(t2[0], decimals=2)
     return t2, nrevs, nbladepass
-    
+
+
 def calc_eta2(cp, cd):
     if cd < 0.8889:
         a = (-1+np.sqrt(1-cd))/(-2)
-    elif cd >= 0.8889:  
+    elif cd >= 0.8889:
         F = 1
         a = (18*F - 20 - 3*np.sqrt(cd*(50-36*F)+12*F*(3*F-4)))/(36*F - 50)
     eta2 = cp/((1-a)*cd)
     return a, eta2
-    
+
 
 def batchperf(t1=13, t2_guess=30):
     testplan = pd.read_csv("Config/Test plan/Test plan.csv")
@@ -153,7 +164,7 @@ def batchperf(t1=13, t2_guess=30):
     runs = testplan["Run"]
     df["run"] = runs
     df["t1_perf"] = t1
-    quantities = ["t2", "nbladepass", "tsr", "cp", "cd", "ct", "std_tsr", 
+    quantities = ["t2", "nbladepass", "tsr", "cp", "cd", "ct", "std_tsr",
                   "std_cp", "std_cd", "std_ct", "eta2", "a", "torque_ripple",
                   "amp_tsr", "phase_tsr", "amp_cp", "phase_cp", "amp_cd",
                   "phase_cd", "amp_ct", "phase_ct"]
@@ -189,11 +200,12 @@ def batchperf(t1=13, t2_guess=30):
     # Save to CSV
     df.to_csv("Data/Processed/processed.csv", index=False)
 
-    
+
 def find_amp_and_phase(angle, data, npeaks=3):
     amp = (np.max(data) - np.min(data))/2
     phase = angle[np.where(data == data.max())[0][0]] % (360/npeaks)
     return amp, phase
+
 
 def getruns(z_H, tsr):
     if z_H == 0:
@@ -211,14 +223,16 @@ def getruns(z_H, tsr):
     if z_H == 0.5:
         runs = range(77,122)
     return runs
-    
+
+
 def find_run_ind(y_R, z_H, tsr):
     """Finds the run index corresponding to the inputs."""
     tp = import_testplan()
-    i = np.where(np.logical_and(tp["y/R"].values==y_R, 
+    i = np.where(np.logical_and(tp["y/R"].values==y_R,
                                 tp["z/H"].values==z_H,
                                 tp["TSR"].values==tsr))[0][0]
     return i
+
 
 def batchwake(t1=13, n_band_average=4):
     try:
@@ -243,13 +257,13 @@ def batchwake(t1=13, n_band_average=4):
     df["t2"] = t2
     runs = testplan["Run"]
     quantities = ["meanu", "meanv", "meanw", "stdu", "stdv", "stdw",
-                  "meanupvp", "meanupwp", "meanvpwp", "meanupup", "meanvpvp", 
-                  "meanwpwp", "meanuu", "vectemp", "fpeak_u", "fstrength_u", 
+                  "meanupvp", "meanupwp", "meanvpwp", "meanupup", "meanvpvp",
+                  "meanwpwp", "meanuu", "vectemp", "fpeak_u", "fstrength_u",
                   "fpeak_v", "fstrength_v", "fpeak_w", "fstrength_w"]
     for q in quantities:
         if not q in df:
             df[q] = np.zeros(len(runs))
-    
+
     for n in range(len(runs)):
         print("Processing velocity data from run", str(runs[n]) + "...")
         tv,u,v,w = loadvec(runs[n])
@@ -295,7 +309,8 @@ def batchwake(t1=13, n_band_average=4):
         df.fpeak_w[n] = f_max/f_turbine
     # Save to CSV
     df.to_csv("Data/Processed/processed.csv", index=False)
-    
+
+
 def convert_npy_to_csv():
     files = os.listdir("Data/Processed")
     df = pd.DataFrame()
@@ -303,7 +318,8 @@ def convert_npy_to_csv():
         if (".npy") in f:
             df[f.replace(".npy", "")] = np.load("Data/Processed/" + f)
     df.to_csv("Data/Processed/processed.csv")
-    
+
+
 def export_perf_csv(rev=0):
     """Export processed data to csv file."""
     if not os.path.isdir("Data/Processed/csv"):
@@ -333,7 +349,7 @@ def export_perf_csv(rev=0):
                 "Mean ADV temperature: " + str(vectemp) + " degrees C",
                 sep,
                 "For more experimental details refer to:",
-                'Bachant and Wosnik (2013) "Performance and Wake Measurements for a Vertical Axis Turbine at Moderate Reynolds Number"', 
+                'Bachant and Wosnik (2013) "Performance and Wake Measurements for a Vertical Axis Turbine at Moderate Reynolds Number"',
                 "Proceedings of ASME Fluids Engineering Division Summer Meeting 2013, Paper FED2013-16575",
                 sep,
                 "Columns:",
@@ -353,11 +369,12 @@ def export_perf_csv(rev=0):
             fwriter.writerow([metadata[i]])
         fwriter.writerow(clabels)
         for run in runs:
-            fwriter.writerow([str(runnumber[run]).center(s), 
-                             str(u[run]).center(s), 
-                             ("%.2f" %tsr[run]).center(s), 
-                             ("%.3f" %cp[run]).center(s), 
+            fwriter.writerow([str(runnumber[run]).center(s),
+                             str(u[run]).center(s),
+                             ("%.2f" %tsr[run]).center(s),
+                             ("%.3f" %cp[run]).center(s),
                              ("%.3f" %cd[run]).center(s)])
-    
+
+
 if __name__ == "__main__":
     pass
