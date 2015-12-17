@@ -1,9 +1,7 @@
 #!/usr/bin/env python
-"""
-This script processes data from the RVAT baseline experiment.
-"""
+"""This script processes data from the RVAT baseline experiment."""
 
-import py_rvat_baseline.processing as pr
+import prvatbl.processing as pr
 
 if __name__ == "__main__":
     pr.batchperf()

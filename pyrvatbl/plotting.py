@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-"""
-This module contains plotting functions.
-"""
+"""This module contains plotting functions."""
+
 from __future__ import division, print_function
 from .processing import *
 import scipy.stats
 from pxl.styleplot import set_sns
+
 
 def setpltparams(seaborn=True, fontsize=18, latex=True):
     if seaborn:
@@ -24,9 +24,11 @@ def setpltparams(seaborn=True, fontsize=18, latex=True):
         matplotlib.rc("legend", **legend)
         matplotlib.rc("xtick", **{"major.pad":6})
 
+
 def styleplot():
     plt.grid(True)
     plt.tight_layout()
+
 
 def plotsinglerun(run, perf=True, wake=False, autocorr=False, save=False,
                   xaxis="time"):
@@ -104,6 +106,7 @@ def plotsinglerun(run, perf=True, wake=False, autocorr=False, save=False,
         plt.ylabel("Autocorrelation coefficient")
         styleplot()
 
+
 def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False,
                 n_band_average=1, plot_conf_int=False):
     """Plots the velocity spectrum for a single run."""
@@ -148,6 +151,7 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False,
     if show:
         plt.show()
 
+
 def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False,
                  n_band_average=1, plot_conf_int=False):
     """Plots the performance spectra for a single run."""
@@ -186,6 +190,7 @@ def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False,
     if show:
         plt.show()
 
+
 def plotmultispec(save=False, savepath="Figures", savetype=".pdf",
                   n_band_average=5, plot_conf_int=False):
     """Creates a 1x3 plot for spectra of torque coefficient and cross-stream
@@ -211,6 +216,7 @@ def plotmultispec(save=False, savepath="Figures", savetype=".pdf",
     if save:
         plt.savefig(savepath + "/multispec" + savetype)
 
+
 def plot_vertical_lines(xlist, ymaxscale=1, color="gray"):
     if not isinstance(xlist, list):
         x = [x]
@@ -220,6 +226,7 @@ def plot_vertical_lines(xlist, ymaxscale=1, color="gray"):
         plt.vlines(x, ymin, ymax,
                    color=color, linestyles="dashed")
     plt.ylim((ymin, ymax))
+
 
 def plotvelhist(run):
     """Plots the velocity histogram for a given run."""
@@ -235,8 +242,9 @@ def plotvelhist(run):
     styleplot()
     plt.grid(False)
 
-def plotwake(plotlist, scale=1, save=False, savepath="Figures", savetype=".pdf",
-             print_analysis=False, barcolor="gray"):
+
+def plotwake(plotlist, scale=1, save=False, savepath="Figures",
+             savetype=".pdf", print_analysis=False, barcolor="gray"):
     if not isinstance(plotlist, list):
         plotlist = [plotlist]
     figsize_horiz_contour = np.array((7.5, 4.5))*scale
@@ -1141,6 +1149,7 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures", savetype=".pdf",
         if save:
             plt.savefig(savepath+"/mombargraph"+savetype)
 
+
 def plot_torque_ripple():
     i = range(31)
     torque_ripple = np.load("Data/Processed/torque_ripple.npy")
@@ -1150,6 +1159,7 @@ def plot_torque_ripple():
     plt.ylabel(r"Torque ripple")
     styleplot()
     print("Torque ripple at TSR =", str(tsr[12])+":", torque_ripple[12])
+
 
 def plot_Re_c():
     a = np.load("Data/Processed/a.npy")
@@ -1273,6 +1283,7 @@ def plotperf(plotlist=["cp", "cd"],
     print("At tsr = 1.9, C_P =", cp[np.where(np.round(tsr, decimals=2)==1.9)[0][0]],
           "; C_D =", cd[np.where(np.round(tsr, decimals=2)==1.9)[0][0]])
 
+
 def plotperf_periodic():
     i = range(31)
     d = pd.read_csv("Data/Processed/processed.csv")
@@ -1281,6 +1292,7 @@ def plotperf_periodic():
     styleplot()
     plt.figure()
     plt.plot(d.tsr[i], d.phase_cd[i])
+
 
 def plot_phase_average(run=13, plot_cp=True, plot_cd=False):
     t1 = 13
@@ -1323,6 +1335,7 @@ def plot_phase_average(run=13, plot_cp=True, plot_cd=False):
     plt.xlabel(r"$\theta$ (deg)")
     plt.ylabel(r"$C_P$")
     styleplot()
+
 
 if __name__ == "__main__":
     pass

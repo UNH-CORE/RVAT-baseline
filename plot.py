@@ -1,9 +1,7 @@
 #!/usr/bin/env python
-"""
-This script generates figures from the RVAT baseline experiment.
-"""
+"""This script generates figures from the RVAT baseline experiment."""
 
-from py_rvat_baseline.plotting import *
+from pyrvatbl.plotting import *
 
 setpltparams(seaborn=True, latex=False)
 save = True
