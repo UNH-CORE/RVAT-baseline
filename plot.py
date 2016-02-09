@@ -3,6 +3,7 @@
 
 from pyrvatbl.plotting import *
 import argparse
+import sys
 
 
 jotfigs = ["meancontquiv", "xvorticity", "fpeak_v", "fstrength_v", "uvcont",
@@ -29,6 +30,9 @@ if __name__ == "__main__":
     parser.add_argument("--noshow", help="Do not show figures",
                         action="store_true", default=False)
     args = parser.parse_args()
+
+    if not args.figures and not args.all:
+        sys.exit("No figures chosen to plot")
 
     if args.style:
         plt.style.use(args.style)
