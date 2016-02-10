@@ -107,12 +107,13 @@ def plotsinglerun(run, perf=True, wake=False, autocorr=False, save=False,
         styleplot()
 
 
-def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False,
-                n_band_average=1, plot_conf_int=False):
+def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, n_band_average=1,
+                plot_conf_int=False, verbose=False):
     """Plots the velocity spectrum for a single run."""
     # Find index for the desired parameters
     i = find_run_ind(y_R, z_H, tsr)
-    print("Plotting spectra from run {}".format(i+1))
+    if verbose:
+        print("Plotting spectra from run {}".format(i+1))
     t1 = 13
     t2 = pd.read_csv("Data/Processed/processed.csv")["t2"][i]
     t, u, v, w = loadvec(i+1) # Run name is index + 1
@@ -122,8 +123,9 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False,
     # Find maximum frequency and its relative strength
     f_max = f[np.where(spec==np.max(spec))[0][0]]
     strength = np.max(spec)/np.var(v_seg)*(f[1] - f[0])
-    print("Strongest frequency f/f_turbine: {:.3f}".format(f_max/f_turbine))
-    print("Spectral concentration: {:.3f}".format(strength))
+    if verbose:
+        print("Strongest frequency f/f_turbine: {:.3f}".format(f_max/f_turbine))
+        print("Spectral concentration: {:.3f}".format(strength))
     # Calculate shaft shedding frequency
     St = 0.19 # Approximate for Re_d = 1e5
     f_cyl = St*U/d_shaft
@@ -146,21 +148,19 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False,
         y1 = dof*spec/chi2[1]
         y2 = dof*spec/chi2[0]
         plt.fill_between(f/f_turbine, y1, y2, facecolor="lightgray", alpha=0.2)
-    styleplot()
-    plt.grid()
-    if show:
-        plt.show()
+    plt.tight_layout()
 
 
-def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False,
+def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, verbose=False,
                  n_band_average=1, plot_conf_int=False):
     """Plots the performance spectra for a single run."""
     # Find index for the desired parameters
     i = find_run_ind(y_R, z_H, tsr)
-    print("Plotting spectra from run {}".format(i+1))
+    if verbose:
+        print("Plotting spectra from run {}".format(i+1))
     t1 = 13
     t2 = pd.read_csv("Data/Processed/processed.csv")["t2"][i]
-    t, angle, Ttrans, Tarm, drag, rpm, tsr_ts = loadtdms(i+1) # Run name is index + 1
+    t, angle, Ttrans, Tarm, drag, rpm, tsr_ts = loadtdms(i + 1)
     torque = Tarm/(0.5*rho*A_t*R*U**2)
     torque_seg = torque[2000*t1:2000*t2] - np.mean(torque[2000*t1:2000*t2])
     f, spec = psd(t, torque_seg, window="Hanning",
@@ -169,8 +169,9 @@ def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False,
     # Find maximum frequency and its relative strength
     f_max = f[np.where(spec==np.max(spec))[0][0]]
     strength = np.max(spec)/np.var(torque_seg)*(f[1] - f[0])
-    print("Strongest frequency f/f_turbine: {:.3f}".format(f_max/f_turbine))
-    print("Spectral concentration: {:.3f}".format(strength))
+    if verbose:
+        print("Strongest frequency f/f_turbine: {:.3f}".format(f_max/f_turbine))
+        print("Spectral concentration: {:.3f}".format(strength))
     if newfig:
         plt.figure()
     plt.loglog(f/f_turbine, spec, "k")
@@ -185,29 +186,26 @@ def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, show=False,
         y2 = dof*spec/chi2[0]
         plt.fill_between(f/f_turbine, y1, y2, facecolor="lightgray", alpha=0.2)
     plot_vertical_lines([1, 3, 6, 9])
-    styleplot()
-    plt.grid()
-    if show:
-        plt.show()
+    plt.tight_layout()
 
 
 def plotmultispec(save=False, savepath="Figures", savetype=".pdf",
-                  n_band_average=5, plot_conf_int=False):
+                  n_band_average=5, plot_conf_int=False, verbose=False):
     """Creates a 1x3 plot for spectra of torque coefficient and cross-stream
     velocity spectra at two locations."""
     plt.figure(figsize=(7.5, 3.75/10*7.5))
     plt.subplot(1, 3, 1)
-    plotperfspec(y_R=-1, z_H=0.25, tsr=1.9, newfig=False,
+    plotperfspec(y_R=-1, z_H=0.25, tsr=1.9, newfig=False, verbose=verbose,
                  n_band_average=n_band_average, plot_conf_int=plot_conf_int)
     plt.title("(a)")
     plt.subplot(1, 3, 2)
-    plotvelspec(y_R=-1, z_H=0.25, tsr=1.9, newfig=False,
+    plotvelspec(y_R=-1, z_H=0.25, tsr=1.9, newfig=False, verbose=verbose,
                 n_band_average=n_band_average, plot_conf_int=plot_conf_int)
     plt.title("(b)")
     plt.ylabel("")
     plt.annotate(r"$f^{-5/3}$", xy=(12, 1.5e-2), fontsize=12)
     plt.subplot(1, 3, 3)
-    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, newfig=False,
+    plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, newfig=False, verbose=verbose,
                 n_band_average=n_band_average, plot_conf_int=plot_conf_int)
     plt.title("(c)")
     plt.ylabel("")

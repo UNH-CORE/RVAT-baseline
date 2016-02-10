@@ -65,7 +65,8 @@ if __name__ == "__main__":
             wakefigs = wakefigs_all
         plotwake(wakefigs, save=save, print_analysis=args.verbose)
     if "multispec" in args.figures or args.all:
-        plotmultispec(n_band_average=4, save=save, plot_conf_int=errorbars)
+        plotmultispec(n_band_average=4, save=save, plot_conf_int=errorbars,
+                      verbose=args.verbose)
 
     if not args.no_show:
         plt.show()
