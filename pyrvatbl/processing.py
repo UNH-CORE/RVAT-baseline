@@ -205,7 +205,7 @@ def find_amp_and_phase(angle_deg, data, npeaks=3):
     """Compute amplitude and phase of a fluctuating quantity. Phase is defined
     as the angle at which the cosine curve fit reaches its first peak.
 
-        data_fit = mean_data + amp*np.cos(npeaks*(angle - phase));
+        data_fit = mean_data + amp*np.cos(npeaks*(angle - phase))
 
     Parameters
     ----------
