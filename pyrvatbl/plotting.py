@@ -148,6 +148,7 @@ def plotvelspec(y_R=0, z_H=0, tsr=1.9, newfig=True, n_band_average=1,
         y1 = dof*spec/chi2[1]
         y2 = dof*spec/chi2[0]
         plt.fill_between(f/f_turbine, y1, y2, facecolor="lightgray", alpha=0.2)
+    plt.grid(False) # No grid on spectra since we have vertical lines
     plt.tight_layout()
 
 
@@ -186,6 +187,7 @@ def plotperfspec(y_R=0, z_H=0, tsr=1.9, newfig=True, verbose=False,
         y2 = dof*spec/chi2[0]
         plt.fill_between(f/f_turbine, y1, y2, facecolor="lightgray", alpha=0.2)
     plot_vertical_lines([1, 3, 6, 9])
+    plt.grid(False) # No grid on spectra since we have vertical lines
     plt.tight_layout()
 
 
