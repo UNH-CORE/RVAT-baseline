@@ -225,8 +225,9 @@ def find_amp_and_phase(angle_deg, data, npeaks=3):
     """
     # First subtract the mean of the data
     data -= data.mean()
+    angle = np.deg2rad(angle_deg)
     amp = (np.max(data) - np.min(data))/2
-    phase = angle[np.where(data == data.max())[0][0]] % (360/npeaks)
+    phase = angle[np.where(data == data.max())[0][0]] % (np.pi*2/npeaks)
     return amp, phase
 
 
