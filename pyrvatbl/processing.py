@@ -10,6 +10,7 @@ import time
 import matplotlib
 from scipy.signal import decimate
 from scipy.interpolate import interp1d
+from scipy.optimize import curve_fit
 import sys
 import os
 import pandas as pd
@@ -193,19 +194,21 @@ def batchperf(t1=13, t2_guess=30):
         ct_seg = ct_s[2000*t1:2000*t2]
         tsr_seg = tsr_s[2000*t1:2000*t2]
         angle_seg = angle[2000*t1:2000*t2]
-        df.amp_tsr[n], df.phase_tsr[n] = find_amp_and_phase(angle_seg, tsr_seg)
-        df.amp_cp[n], df.phase_cp[n] = find_amp_and_phase(angle_seg, cp_seg)
-        df.amp_cd[n], df.phase_cd[n] = find_amp_and_phase(angle_seg, cd_seg)
-        df.amp_ct[n], df.phase_ct[n] = find_amp_and_phase(angle_seg, ct_seg)
+        df.amp_tsr[n], df.phase_tsr[n] = find_amp_phase(angle_seg, tsr_seg)
+        df.amp_cp[n], df.phase_cp[n] = find_amp_phase(angle_seg, cp_seg)
+        df.amp_cd[n], df.phase_cd[n] = find_amp_phase(angle_seg, cd_seg)
+        df.amp_ct[n], df.phase_ct[n] = find_amp_phase(angle_seg, ct_seg)
     # Save to CSV
     df.to_csv("Data/Processed/processed.csv", index=False)
 
 
-def find_amp_and_phase(angle_deg, data, npeaks=3):
-    """Compute amplitude and phase of a fluctuating quantity. Phase is defined
-    as the angle at which the cosine curve fit reaches its first peak.
+def find_amp_phase(angle_deg, data, npeaks=3):
+    """Compute amplitude and phase of an approximately sinusoidal quantity.
 
-        data_fit = mean_data + amp*np.cos(npeaks*(angle - phase))
+    Phase is defined as the angle at which the cosine curve fit reaches its
+    first peak. For example:
+
+        data_fit = amp*np.cos(npeaks*(angle - phase)) + mean_data
 
     Parameters
     ----------
@@ -224,10 +227,18 @@ def find_amp_and_phase(angle_deg, data, npeaks=3):
         Angle of the first peak in radians
     """
     # First subtract the mean of the data
-    data -= data.mean()
+    data = data - data.mean()
     angle = np.deg2rad(angle_deg)
-    amp = (np.max(data) - np.min(data))/2
-    phase = angle[np.where(data == data.max())[0][0]] % (np.pi*2/npeaks)
+    # Make some guesses for parameters
+    amp_guess = (np.max(data) - np.min(data))/2
+    phase_guess = angle[np.where(data == data.max())[0][0]] % (np.pi*2/npeaks)
+    # Define the function we will try to fit to
+    def func(angle, amp, phase, mean):
+        return amp*np.cos(npeaks*(angle - phase)) + mean
+    # Calculate fit
+    p0 = amp_guess, phase_guess, 0.0
+    popt, pcov = curve_fit(func, angle, data, p0=p0)
+    amp, phase, mean = popt
     return amp, phase
 
 
