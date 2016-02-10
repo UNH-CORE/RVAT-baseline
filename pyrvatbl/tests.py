@@ -10,11 +10,14 @@ def test_find_amp_phase():
     phase = 1.5
     mean = 0.0
     npeaks = 3
-    places = 3 # Decimal places the values should match
+    places = 2 # Decimal places the values should match
+    noise_std = 0.01
     # Angle will start at zero first
     angle = np.linspace(0, 4*np.pi, num=200)
     angle_deg = np.rad2deg(angle)
     data = mean + amp*np.cos(npeaks*(angle - phase))
+    noise = np.random.normal(0, noise_std, len(data))
+    data += noise
     amp_fit, phase_fit = processing.find_amp_and_phase(angle_deg, data, npeaks)
     assert_almost_equal(amp, amp_fit, places=places)
     assert_almost_equal(phase, phase_fit, places=places)
