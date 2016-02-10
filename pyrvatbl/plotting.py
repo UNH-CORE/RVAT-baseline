@@ -337,11 +337,13 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
         dUdy = np.zeros(grdims)
         dUdz = np.zeros(grdims)
         for n in range(len(z)):
-            ddy_upvp[n,:] = fdiff.second_order_diff(grdata.meanupvp.iloc[n,:], y)
+            ddy_upvp[n,:] \
+                    = fdiff.second_order_diff(grdata.meanupvp.iloc[n,:], y)
             dUdy[n,:] = fdiff.second_order_diff(grdata.meanu.iloc[n,:], y)
             d2Udy2[n,:] = fdiff.second_order_diff(dUdy[n,:], y)
         for n in range(len(y)):
-            ddz_upwp[:,n] = fdiff.second_order_diff(grdata.meanupwp.iloc[:,n], z)
+            ddz_upwp[:,n] \
+                    = fdiff.second_order_diff(grdata.meanupwp.iloc[:,n], z)
             dUdz[:,n] = fdiff.second_order_diff(grdata.meanu.iloc[:,n], z)
             d2Udz2[:,n] = fdiff.second_order_diff(dUdz[:,n], z)
         return {"dUdy" : dUdy, "ddy_upvp" : ddy_upvp, "d2Udy2" : d2Udy2,
@@ -391,19 +393,83 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
         plt.figure()
         runs = getruns(0.25, 1.9)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, df.meanu[ind], "-ok", markerfacecolor="none",
-                 label=r"$\lambda = 1.9$")
-        plt.hold(True)
+        plt.plot(y_R, df.meanu[ind], marker="o", label=r"$\lambda = 1.9$")
         runs = getruns(0.25, 1.4)
         ind = [run-1 for run in runs]
-        plt.plot(y_R, df.meanu[ind], "--^k", markerfacecolor="none",
-                 label=r"$\lambda=1.4$")
+        plt.plot(y_R, df.meanu[ind], marker="^", label=r"$\lambda=1.4$")
         plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$\overline{u}/U_\infty$")
+        plt.ylabel(r"$U/U_\infty$")
         plt.legend(loc=4)
         styleplot()
         if save:
-            plt.savefig(savepath+"/meanu_2tsrs"+savetype)
+            plt.savefig(savepath + "/meanu_2tsrs" + savetype)
+    if "meanv_2tsrs" in plotlist or "all" in plotlist:
+        # Plot mean cross stream velocity profiles at two TSRs
+        plt.figure()
+        runs = getruns(0.25, 1.9)
+        ind = [run-1 for run in runs]
+        plt.plot(y_R, df.meanv[ind], marker="o", label=r"$\lambda = 1.9$")
+        runs = getruns(0.25, 1.4)
+        ind = [run-1 for run in runs]
+        plt.plot(y_R, df.meanv[ind], marker="^", label=r"$\lambda=1.4$")
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$V/U_\infty$")
+        plt.ylim(-0.1501, 0.1001)
+        plt.legend(loc=4)
+        styleplot()
+        if save:
+            plt.savefig(savepath+"/meanv_2tsrs"+savetype)
+    if "meanw_2tsrs" in plotlist or "all" in plotlist:
+        # Plot mean vertical velocity profiles at two TSRs
+        plt.figure()
+        runs = getruns(0.25, 1.9)
+        ind = [run-1 for run in runs]
+        plt.plot(y_R, df.meanw[ind], marker="o", label=r"$\lambda = 1.9$")
+        runs = getruns(0.25, 1.4)
+        ind = [run-1 for run in runs]
+        plt.plot(y_R, df.meanw[ind], marker="^", label=r"$\lambda=1.4$")
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$W/U_\infty$")
+        plt.legend(loc=4)
+        styleplot()
+        if save:
+            plt.savefig(savepath + "/meanw_2tsrs" + savetype)
+    if "meanvel_vs_tsr" in plotlist or "all" in plotlist:
+        # Plot mean velocity components vs TSR
+        tsr = df.tsr.values
+        ind1 = [run-1 for run in range(1,32)]
+        ind2 = [run-1 for run in range(347,378)]
+        plt.figure()
+        cycler = plt.rcParams["axes.prop_cycle"]
+        markers = ["o", "s", "^"]
+        labels = ["$U$", "$V$", "$W$"]
+        quantities = [df.meanu, df.meanv, df.meanw]
+        for c, m, lab, q in zip(cycler, markers, labels, quantities):
+            c = c["color"]
+            plt.plot(tsr[ind1], q[ind1], marker=m, markerfacecolor="none",
+                     label="", markeredgecolor=c)
+            plt.plot(tsr[ind2], q[ind2], marker=m, label=lab, color=c)
+        plt.legend(ncol=3)
+        plt.xlabel(r"$\lambda$")
+        plt.ylabel("Normalized mean velocity")
+        styleplot()
+        if save:
+            plt.savefig(savepath + "/mean_vel_vs_tsr" + savetype)
+    if "k_2tsrs" in plotlist or "all" in plotlist:
+        # Plot mean velocities at two different TSRs
+        plt.figure()
+        runs = getruns(z_H=0.25, tsr=1.9)
+        ind = [run-1 for run in runs]
+        plt.plot(y_R, df.k[ind], marker="o", label=r"$\lambda = 1.9$")
+        runs = getruns(z_H=0.25, tsr=1.4)
+        ind = [run-1 for run in runs]
+        plt.plot(y_R, df.k[ind], marker="^", label=r"$\lambda=1.4$")
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$k/U_\infty^2$")
+        plt.legend(loc="upper right")
+        styleplot()
+        if save:
+            plt.savefig(savepath + "/k_2tsrs" + savetype)
     if "stdu_2tsrs" in plotlist or "all" in plotlist:
         # Plot stdu velocities at two different TSRs
         plt.figure()
@@ -440,30 +506,6 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
         styleplot()
         if save:
             plt.savefig(savepath+"/uw_2tsrs"+savetype)
-    if "meanuvstsr" in plotlist or "all" in plotlist:
-        # Plot mean velocity components vs TSR
-        tsr = np.load("Data/Processed/tsr.npy")
-        runs = range(1,32)
-        ind = [run-1 for run in runs]
-        plt.figure()
-        plt.plot(tsr[ind], df.meanu[ind], "-ok", markerfacecolor="none")
-        plt.xlabel(r"$\lambda$")
-        plt.ylabel(r"$\overline{u}/U_\infty$")
-        plt.hold(True)
-        plt.plot(tsr[ind], df.meanv[ind], "-sk", markerfacecolor="none")
-        plt.plot(tsr[ind], df.meanw[ind], "-^k", markerfacecolor="none")
-        runs = range(347,378)
-        ind = [run-1 for run in runs]
-        plt.plot(tsr[ind], df.meanu[ind], "-ok", markerfacecolor="k",
-             label=r"$\overline{u}$")
-        plt.plot(tsr[ind], df.meanv[ind], "-sk", markerfacecolor="k",
-             label=r"$\overline{v}$")
-        plt.plot(tsr[ind], df.meanw[ind], "-^k", markerfacecolor="k",
-             label=r"$\overline{w}$")
-        plt.legend(ncol=3)
-        styleplot()
-        if save:
-            plt.savefig(savepath+"/meanuvstsr"+savetype)
     if "stducont" in plotlist or "all" in plotlist:
         # Plot contours of streamwise turbulence intensity
         plt.figure(figsize=(10,5))
@@ -497,43 +539,6 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         if save:
             plt.savefig(savepath+"/uvcont"+savetype)
-    if "meanw_2tsrs" in plotlist or "all" in plotlist:
-        # Plot mean vertical velocity profiles at two TSRs
-        plt.figure()
-        runs = getruns(0.25, 1.9)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.meanw[ind], "-ok", markerfacecolor="none",
-                 label=r"$\lambda = 1.9$")
-        plt.hold(True)
-        runs = getruns(0.25, 1.4)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.meanw[ind], "--^k", markerfacecolor="none",
-                 label=r"$\lambda=1.4$")
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$\overline{w}/U_\infty$")
-        plt.legend(loc=4)
-        styleplot()
-        if save:
-            plt.savefig(savepath+"/meanw_2tsrs"+savetype)
-    if "meanv_2tsrs" in plotlist or "all" in plotlist:
-        # Plot mean cross stream velocity profiles at two TSRs
-        plt.figure()
-        runs = getruns(0.25, 1.9)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.meanv[ind], "-ok", markerfacecolor="none",
-                 label=r"$\lambda = 1.9$")
-        plt.hold(True)
-        runs = getruns(0.25, 1.4)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.meanv[ind], "--^k", markerfacecolor="none",
-                 label=r"$\lambda=1.4$")
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$\overline{v}/U_\infty$")
-        plt.ylim(-0.1501, 0.1001)
-        plt.legend(loc=4)
-        styleplot()
-        if save:
-            plt.savefig(savepath+"/meanv_2tsrs"+savetype)
     if "stdv_2tsrs" in plotlist or "all" in plotlist:
         # Plot stdv velocities at two different TSRs
         plt.figure()
@@ -1021,7 +1026,7 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
         styleplot()
         if save:
-            plt.savefig(savepath+"/xvorticity"+savetype)
+            plt.savefig(savepath + "/xvorticity" + savetype)
 
     if "Kbargraphs" in plotlist or "all" in plotlist:
         """Make a bar graph of terms contributing to dK/dx:
@@ -1095,9 +1100,8 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
                edgecolor="black", width=0.5)
         ax.set_xticks(np.arange(len(names))+0.25)
         ax.set_xticklabels(names)
-        plt.hlines(0, 0, len(names), color="black")
+        plt.hlines(0, 0, len(names), color="black", linewidth=1)
         plt.ylabel(r"$\frac{K \, \mathrm{ transport}}{UK_\infty D^{-1}}$")
-        plt.grid(False)
         plt.tight_layout()
         if print_analysis:
             print("K recovery rate (%/D) =",
@@ -1139,9 +1143,8 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
                edgecolor="black")
         ax.set_xticks(np.arange(len(names))+0.25)
         ax.set_xticklabels(names)
-        plt.hlines(0, 0, len(names), color="black")
+        plt.hlines(0, 0, len(names), color="black", linewidth=1)
         plt.ylabel(r"$\frac{U \, \mathrm{ transport}}{UU_\infty D^{-1}}$")
-        plt.grid(False)
         plt.tight_layout()
         if print_analysis:
             print("U recovery rate (%/D) =",
@@ -1222,8 +1225,8 @@ def plot_cd(ax=None, fig=None, save=False, savetype=".pdf", savedir="Figures",
         fig.savefig(os.path.join(savedir, "cd" + savetype))
 
 
-def plotperf(plotlist=["cp", "cd"],
-             subplots=True, save=False, savepath="Figures", savetype=".pdf"):
+def plotperf(plotlist=["cp", "cd"], subplots=True, save=False,
+             savepath="Figures", savetype=".pdf", print_perf=True, **kwargs):
     i = np.arange(31)
     data = pd.read_csv("Data/Processed/processed.csv")
     cp = data.cp
@@ -1233,34 +1236,34 @@ def plotperf(plotlist=["cp", "cd"],
     if not subplots:
         # Exergy efficiency plot
         plt.figure()
-        plt.plot(tsr[i], eta2[i], "-ok", markerfacecolor = "none")
-        plt.xlabel(r"$\lambda$", labelpad=20)
+        plt.plot(tsr[i], eta2[i], marker="o", **kwargs)
+        plt.xlabel(r"$\lambda$")
         plt.ylabel(r"$\eta_{II}$")
         styleplot()
         if save:
             plt.savefig(savepath+"/eta2"+savetype)
         # Power coefficient plot
         plt.figure()
-        plt.plot(tsr[i], cp[i], "-ok", markerfacecolor = "none")
-        plt.xlabel(r"$\lambda$", labelpad=20)
+        plt.plot(tsr[i], cp[i], marker="o", **kwargs)
+        plt.xlabel(r"$\lambda$")
         plt.ylabel(r"$C_P$")
         styleplot()
         if save:
-            plt.savefig(savepath+"/cpvstsr"+savetype)
+            plt.savefig(savepath + "/cpvstsr" + savetype)
         # Drag coefficient plot
         plt.figure()
-        plt.plot(tsr[i], cd[i], "-ok", markerfacecolor = "none")
-        plt.xlabel(r"$\lambda$", labelpad=20)
+        plt.plot(tsr[i], cd[i], marker="o", **kwargs)
+        plt.xlabel(r"$\lambda$")
         plt.ylabel(r"$C_D$")
         plt.ylim(0, 1.2001)
         styleplot()
         if save:
-            plt.savefig(savepath+"/cdvstsr"+savetype)
+            plt.savefig(savepath + "/cdvstsr" + savetype)
         # Torque coefficient plot
         ct = cp/tsr
         plt.figure()
-        plt.plot(tsr[i], ct[i], "-ok", markerfacecolor = "none")
-        plt.xlabel(r"$\lambda$", labelpad=20)
+        plt.plot(tsr[i], ct[i], "-ok", **kwargs)
+        plt.xlabel(r"$\lambda$")
         plt.ylabel(r"$C_T$")
         styleplot()
         if save:
@@ -1268,20 +1271,22 @@ def plotperf(plotlist=["cp", "cd"],
     else:
         plt.figure(figsize=(7.5, 3.25))
         plt.subplot(121)
-        plt.plot(tsr[i], cp[i], "-ok", markerfacecolor = "none")
-        plt.xlabel(r"$\lambda$", labelpad=20)
+        plt.plot(tsr[i], cp[i], marker="o", **kwargs)
+        plt.xlabel(r"$\lambda$")
         plt.ylabel(r"$C_P$")
         plt.grid(True)
         plt.subplot(122)
-        plt.plot(tsr[i], cd[i], "-ok", markerfacecolor = "none")
-        plt.xlabel(r"$\lambda$", labelpad=20)
+        plt.plot(tsr[i], cd[i], marker="o", **kwargs)
+        plt.xlabel(r"$\lambda$")
         plt.ylabel(r"$C_D$")
         plt.ylim(0, 1.2001)
         styleplot()
         if save:
-            plt.savefig(savepath+"/perf"+savetype)
-    print("At tsr = 1.9, C_P =", cp[np.where(np.round(tsr, decimals=2)==1.9)[0][0]],
-          "; C_D =", cd[np.where(np.round(tsr, decimals=2)==1.9)[0][0]])
+            plt.savefig(savepath + "/perf" + savetype)
+    if print_perf:
+        print("At tsr = 1.9, C_P =",
+              cp[np.where(np.round(tsr, decimals=2)==1.9)[0][0]],
+              "; C_D =", cd[np.where(np.round(tsr, decimals=2)==1.9)[0][0]])
 
 
 def plotperf_periodic():
