@@ -207,8 +207,8 @@ def find_amp_and_phase(angle, data, npeaks=3):
     return amp, phase
 
 
-def getruns(z_H, tsr):
-    if z_H == 0:
+def getruns(z_H=0.0, tsr=1.9):
+    if z_H == 0.0:
         runs = range(122,167)
     if z_H == 0.25 and tsr == 1.9:
         runs = range(32, 77)
