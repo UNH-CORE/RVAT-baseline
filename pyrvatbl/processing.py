@@ -201,7 +201,30 @@ def batchperf(t1=13, t2_guess=30):
     df.to_csv("Data/Processed/processed.csv", index=False)
 
 
-def find_amp_and_phase(angle, data, npeaks=3):
+def find_amp_and_phase(angle_deg, data, npeaks=3):
+    """Compute amplitude and phase of a fluctuating quantity. Phase is defined
+    as the angle at which the cosine curve fit reaches its first peak.
+
+        data_fit = mean_data + amp*np.cos(npeaks*(angle - phase));
+
+    Parameters
+    ----------
+    angle_deg : numpy array
+        Time series of angle values in degrees
+    data : numpy array
+        Time series of data to be fit
+    npeaks : int
+        Number of peaks per revolution, or normalized frequency
+
+    Returns
+    -------
+    amp : float
+        Amplitude of regressed cosine
+    phase : float
+        Angle of the first peak in radians
+    """
+    # First subtract the mean of the data
+    data -= data.mean()
     amp = (np.max(data) - np.min(data))/2
     phase = angle[np.where(data == data.max())[0][0]] % (360/npeaks)
     return amp, phase
