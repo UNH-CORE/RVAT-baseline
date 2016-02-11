@@ -7,7 +7,8 @@ import scipy.stats
 from pxl.styleplot import set_sns, label_subplot
 
 
-labels = {"k": r"$k/U_\infty^2$"}
+labels = {"k": r"$k/U_\infty^2$",
+          "xvorticity": r"$\Omega_x$"}
 
 
 def setpltparams(seaborn=True, fontsize=18, latex=True):
@@ -351,11 +352,12 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
             d2Udz2[:,n] = fdiff.second_order_diff(dUdz[:,n], z)
         return {"dUdy" : dUdy, "ddy_upvp" : ddy_upvp, "d2Udy2" : d2Udy2,
                 "dUdz" : dUdz, "ddz_upwp" : ddz_upwp, "d2Udz2" : d2Udz2}
-    def plot_contours(quantity):
+    def plot_contours(quantity, values=None):
         """Plot the contours of a specified quantity in a DataFrame."""
         global labels
         plt.figure(figsize=figsize_vertical_contour)
-        values = grdata[quantity].copy()
+        if values is None:
+            values = grdata[quantity].copy()
         # Normalize values (won't do much really)
         if quantity in ["uv", "uu", "uw", "k"]:
             values /= (1.0**2)
@@ -1016,6 +1018,7 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
             plt.savefig(savepath+"/meancontquiv"+savetype)
 
     if "xvorticity" in plotlist or "all" in plotlist:
+        # First calculate vorticity and add to grdata DataFrame
         z = 1.0*z_H
         y = R*y_R
         dWdy = np.zeros(np.shape(meanu))
@@ -1024,21 +1027,8 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
             dWdy[n,:] = fdiff.second_order_diff(meanw.iloc[n,:], y)
         for n in range(len(y)):
             dVdz[:,n] = fdiff.second_order_diff(meanv.iloc[:,n], z)
-        # Make quiver plot of K advection
-        plt.figure(figsize=figsize_horiz_contour)
-        cs = plt.contourf(y_R, z_H, dWdy-dVdz, 20, cmap=plt.cm.coolwarm)
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$z/H$")
-        cb = plt.colorbar(cs, shrink=1, extend="both",
-                          orientation="horizontal", pad=horiz_cbar_pad)
-        cb.set_label(r"$\Omega_x$")
-        turb_lines()
-        ax = plt.axes()
-        ax.set_aspect(2)
-        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        styleplot()
-        if save:
-            plt.savefig(savepath + "/xvorticity" + savetype)
+        xvorticity = dWdy - dVdz
+        plot_contours("xvorticity", values=xvorticity)
 
     if "Kbargraphs" in plotlist or "all" in plotlist:
         """Make a bar graph of terms contributing to dK/dx:
