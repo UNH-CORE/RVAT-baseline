@@ -1315,7 +1315,22 @@ def plotperf_periodic(save=False):
         fig.savefig("Figures/perf_periodicity.png", dpi=300)
 
 
-def plot_phase_average(run=13, plot_cp=True, plot_cd=False):
+def plot_perf_fit(run=13, quantity="cp", verbose=True):
+    """Plot one revolution of the cosine fit on turbine performance."""
+    df = pd.read_csv("Data/Processed/processed.csv")
+    df = df[df.run == run].iloc[0]
+    angle = np.linspace(0, 360, num=400)
+    amp = df["amp_" + quantity]
+    phase = df["phase_" + quantity]
+    mean = df[quantity]
+    nblades = 3
+    curve = amp*np.cos(nblades*(np.deg2rad(angle) - phase)) + mean
+    if verbose:
+        print("Curve fit phase (deg): {:.2f}".format(np.rad2deg(phase)))
+    plt.plot(angle, curve, label="Fit")
+
+
+def plot_phase_average(run=13, plot_cp=True, plot_cd=False, plot_fit=True):
     t1 = 13
     t2 = 30
     t, angle, Ttrans, Tarm, drag, rpm, tsr = loadtdms(run)
@@ -1354,9 +1369,11 @@ def plot_phase_average(run=13, plot_cp=True, plot_cd=False):
     angleb = np.linspace(0, 360, num=npoints)
     print("Mean TSR: {:.2f}".format(tsr_phave.mean()))
     if plot_cp:
-        plt.plot(angleb, cp_phave, "k")
+        plt.plot(angleb, cp_phave, label="Phase average")
+        plot_perf_fit(run=run, quantity="cp")
+        plt.legend(loc="lower right")
     if plot_cd:
-        plt.plot(angleb, cd_phave)
+        plt.plot(angleb, cd_phave, label="Phase average")
     plt.xlabel(r"$\theta$ (deg)")
     plt.ylabel(r"$C_P$")
-    styleplot()
+    plt.tight_layout()
