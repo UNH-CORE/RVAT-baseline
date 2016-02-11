@@ -1297,7 +1297,7 @@ def plotperf_periodic(save=False):
     """
     df = pd.read_csv("Data/Processed/processed.csv")
     df = df[df.run <= 31]
-    # df = df[df.tsr >= 0.7]
+    df = df[df.nbladepass > 5]
     fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(7.5, 3.25))
     ax1.plot(df.tsr, df.amp_cp, marker="o", label=r"$C_P$")
     ax1.plot(df.tsr, df.amp_tsr, marker="^", label=r"$\lambda$")
