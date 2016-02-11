@@ -4,7 +4,7 @@
 from __future__ import division, print_function
 from .processing import *
 import scipy.stats
-from pxl.styleplot import set_sns
+from pxl.styleplot import set_sns, label_subplot
 
 
 def setpltparams(seaborn=True, fontsize=18, latex=True):
@@ -1289,14 +1289,30 @@ def plotperf(plotlist=["cp", "cd"], subplots=True, save=False,
               "; C_D =", cd[np.where(np.round(tsr, decimals=2)==1.9)[0][0]])
 
 
-def plotperf_periodic():
-    i = range(31)
-    d = pd.read_csv("Data/Processed/processed.csv")
-    plt.figure()
-    plt.plot(d.tsr[i], d.amp_cd[i])
-    styleplot()
-    plt.figure()
-    plt.plot(d.tsr[i], d.phase_cd[i])
+def plotperf_periodic(save=False):
+    """Create plots to show the periodicity of TSR and C_P.
+
+    The left subplot will show the amplitude of these versus mean TSR. The
+    right will show the phase.
+    """
+    df = pd.read_csv("Data/Processed/processed.csv")
+    df = df[df.run <= 31]
+    # df = df[df.tsr >= 0.7]
+    fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(7.5, 3.25))
+    ax1.plot(df.tsr, df.amp_cp, marker="o", label=r"$C_P$")
+    ax1.plot(df.tsr, df.amp_tsr, marker="^", label=r"$\lambda$")
+    ax1.set_ylabel("Amplitude")
+    ax1.legend(loc="best")
+    ax2.plot(df.tsr, np.rad2deg(df.phase_cp), marker="o")
+    ax2.plot(df.tsr, np.rad2deg(df.phase_tsr), marker="^")
+    ax2.set_ylabel("Angle of first peak (degrees)")
+    [a.set_xlabel(r"$\lambda$") for a in [ax1, ax2]]
+    fig.tight_layout()
+    if save:
+        if not os.path.isdir("Figures"):
+            os.mkdir("Figures")
+        fig.savefig("Figures/perf_periodicity.pdf")
+        fig.savefig("Figures/perf_periodicity.png", dpi=300)
 
 
 def plot_phase_average(run=13, plot_cp=True, plot_cd=False):
@@ -1320,19 +1336,23 @@ def plot_phase_average(run=13, plot_cp=True, plot_cd=False):
         return i
     i1 = find_index(angle, angle1)
     i2 = find_index(angle, angle1+360)
-    npoints = i2-i1
+    npoints = i2 - i1
+    tsr_phave = tsr[i1:i2]
     cp_phave = cp[i1:i2]
     cd_phave = cd[i1:i2]
     print("Averaging over {} revolutions".format(nrevs))
-    for n in range(1,int(nrevs)):
+    for n in range(1, int(nrevs)):
             ta1 = angle1+n*360
             i1 = find_index(angle, ta1)
-            i2 = i1+npoints
+            i2 = i1 + npoints
+            tsr_phave += tsr[i1:i2]
             cp_phave += cp[i1:i2]
             cd_phave += cd[i1:i2]
+    tsr_phave /= nrevs
     cp_phave /= nrevs
     cd_phave /= nrevs
     angleb = np.linspace(0, 360, num=npoints)
+    print("Mean TSR: {:.2f}".format(tsr_phave.mean()))
     if plot_cp:
         plt.plot(angleb, cp_phave, "k")
     if plot_cd:
@@ -1340,7 +1360,3 @@ def plot_phase_average(run=13, plot_cp=True, plot_cd=False):
     plt.xlabel(r"$\theta$ (deg)")
     plt.ylabel(r"$C_P$")
     styleplot()
-
-
-if __name__ == "__main__":
-    pass
