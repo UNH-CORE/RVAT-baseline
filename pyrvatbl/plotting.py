@@ -7,6 +7,9 @@ import scipy.stats
 from pxl.styleplot import set_sns, label_subplot
 
 
+labels = {"k": r"$k/U_\infty^2$"}
+
+
 def setpltparams(seaborn=True, fontsize=18, latex=True):
     if seaborn:
         set_sns()
@@ -348,6 +351,29 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
             d2Udz2[:,n] = fdiff.second_order_diff(dUdz[:,n], z)
         return {"dUdy" : dUdy, "ddy_upvp" : ddy_upvp, "d2Udy2" : d2Udy2,
                 "dUdz" : dUdz, "ddz_upwp" : ddz_upwp, "d2Udz2" : d2Udz2}
+    def plot_contours(quantity):
+        """Plot the contours of a specified quantity in a DataFrame."""
+        global labels
+        plt.figure(figsize=figsize_vertical_contour)
+        values = grdata[quantity].copy()
+        # Normalize values (won't do much really)
+        if quantity in ["uv", "uu", "uw", "k"]:
+            values /= (1.0**2)
+        elif quantity in ["meanu", "meanv", "meanw"]:
+            values /= 1.0
+        cs = plt.contourf(y_R, z_H, values, 20, cmap=plt.cm.coolwarm)
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(r"$z/H$")
+        cb = plt.colorbar(cs, shrink=1.0, extend="both",
+                          orientation="vertical", pad=vertical_cbar_pad)
+        cb.set_label(labels[quantity])
+        turb_lines()
+        ax = plt.axes()
+        ax.set_aspect(2)
+        plt.yticks([0, 0.13, 0.25, 0.38, 0.5, 0.63])
+        plt.tight_layout()
+        if save:
+            plt.savefig(savepath + "/" + quantity + "cont" + savetype)
     if "meanucont" in plotlist or "all" in plotlist:
         # Plot contours of mean streamwise velocity
         plt.figure(figsize=figsize_horiz_contour)
@@ -595,21 +621,7 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
             plt.savefig(savepath+"/uv_2tsrs"+savetype)
     if "kcont" in plotlist or "all" in plotlist:
         # Plot contours of k
-        plt.figure(figsize=figsize_vertical_contour)
-        cs = plt.contourf(y_R, z_H, grdata["k"]/(1.0**2), 20,
-                          cmap=plt.cm.coolwarm)
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$z/H$")
-        cb = plt.colorbar(cs, shrink=1.0, extend="both",
-                          orientation="vertical", pad=vertical_cbar_pad)
-        cb.set_label(r"$k/U_\infty^2$")
-        turb_lines()
-        ax = plt.axes()
-        ax.set_aspect(2)
-        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        styleplot()
-        if save:
-            plt.savefig(savepath+"/kcont"+savetype)
+        plot_contours("k")
     if "meankcont" in plotlist or "all" in plotlist:
         # Plot contours of k
         plt.figure(figsize=(10,5))
