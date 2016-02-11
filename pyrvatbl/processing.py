@@ -193,53 +193,13 @@ def batchperf(t1=13, t2_guess=30):
         cd_seg = cd_s[2000*t1:2000*t2]
         ct_seg = ct_s[2000*t1:2000*t2]
         tsr_seg = tsr_s[2000*t1:2000*t2]
-        angle_seg = angle[2000*t1:2000*t2]
+        angle_seg = np.deg2rad(angle[2000*t1:2000*t2])
         df.amp_tsr[n], df.phase_tsr[n] = find_amp_phase(angle_seg, tsr_seg)
         df.amp_cp[n], df.phase_cp[n] = find_amp_phase(angle_seg, cp_seg)
         df.amp_cd[n], df.phase_cd[n] = find_amp_phase(angle_seg, cd_seg)
         df.amp_ct[n], df.phase_ct[n] = find_amp_phase(angle_seg, ct_seg)
     # Save to CSV
     df.to_csv("Data/Processed/processed.csv", index=False)
-
-
-def find_amp_phase(angle_deg, data, npeaks=3):
-    """Compute amplitude and phase of an approximately sinusoidal quantity.
-
-    Phase is defined as the angle at which the cosine curve fit reaches its
-    first peak. For example:
-
-        data_fit = amp*np.cos(npeaks*(angle - phase)) + mean_data
-
-    Parameters
-    ----------
-    angle_deg : numpy array
-        Time series of angle values in degrees
-    data : numpy array
-        Time series of data to be fit
-    npeaks : int
-        Number of peaks per revolution, or normalized frequency
-
-    Returns
-    -------
-    amp : float
-        Amplitude of regressed cosine
-    phase : float
-        Angle of the first peak in radians
-    """
-    # First subtract the mean of the data
-    data = data - data.mean()
-    angle = np.deg2rad(angle_deg)
-    # Make some guesses for parameters
-    amp_guess = (np.max(data) - np.min(data))/2
-    phase_guess = angle[np.where(data == data.max())[0][0]] % (np.pi*2/npeaks)
-    # Define the function we will try to fit to
-    def func(angle, amp, phase, mean):
-        return amp*np.cos(npeaks*(angle - phase)) + mean
-    # Calculate fit
-    p0 = amp_guess, phase_guess, 0.0
-    popt, pcov = curve_fit(func, angle, data, p0=p0)
-    amp, phase, mean = popt
-    return amp, phase
 
 
 def getruns(z_H=0.0, tsr=1.9):

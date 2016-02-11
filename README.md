@@ -17,22 +17,18 @@ To reprocess all data, execute `python process.py`.
 
 To contribute back to the main repository, use GitHub's fork/pull mechanism.
 
+
 ### Dependencies
 
-  * NumPy
-  * SciPy
-  * matplotlib
-  * pandas
-  * [pyTDMS](https://github.com/petebachant/pytdms) (for processing raw data)
-  * [PXL](https://github.com/petebachant/PXL)
+Most dependencies are present in the [Anaconda Python
+Distribution](http://continuum.io/downloads) (3.5). To install the rest
+automatically, run
 
-To install all:
+    pip install pytdms pxl>=0.0.9
 
-```
-pip install -r requirements.txt
-```
 
 ## How to cite
+
 Please cite
 
 ```bibtex
@@ -47,9 +43,11 @@ Please cite
 }
 ```
 
+
 Publications
 ------------
 These data were used in the following publications:
+
 
 ### Commit `478fdd5`
 
@@ -71,6 +69,7 @@ Bachant, P. and Wosnik, M. (2015)
 }
 ```
 
+
 ### Commit `f8cc166`
 
 Bachant, P. and Wosnik, M. (2013) [Performance and near-wake measurements
@@ -90,10 +89,12 @@ for a vertical axis turbine at moderate Reynolds number]
 }
 ```
 
+
 Other resources
 ---------------
 
 Turbine CAD (STEP) files are available at http://figshare.com/articles/UNH_RVAT_CAD_models/1062009
+
 
 License
 -------
