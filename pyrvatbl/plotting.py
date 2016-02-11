@@ -8,7 +8,20 @@ from pxl.styleplot import set_sns, label_subplot
 
 
 labels = {"k": r"$k/U_\infty^2$",
-          "xvorticity": r"$\Omega_x$"}
+          "xvorticity": r"$\Omega_x$",
+          "meanupvp": r"$\overline{u^\prime v^\prime}/U_\infty^2$",
+          "meanupwp": r"$\overline{u^\prime w^\prime}/U_\infty^2$",
+          "meanu": r"$U/U_\infty$",
+          "meanv": r"$V/U_\infty$",
+          "meanw": r"$W/U_\infty$",
+          "Kturbtrans": r"$-\frac{1}{2}\frac{\partial}{\partial "
+                        r"x_j}\overline{u_i^\prime u_j^\prime} U_i$",
+          "fpeak_u": r"$f_{\mathrm{peak},u}/f_{\mathrm{turbine}}$",
+          "fpeak_v": r"$f_{\mathrm{peak},v}/f_{\mathrm{turbine}}$",
+          "fpeak_w": r"$f_{\mathrm{peak},w}/f_{\mathrm{turbine}}$",
+          "fstrength_u": r"$\Psi_u$",
+          "fstrength_v": r"$\Psi_v$",
+          "fstrength_w": r"$\Psi_w$"}
 
 
 def setpltparams(seaborn=True, fontsize=18, latex=True):
@@ -252,7 +265,7 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
     if not isinstance(plotlist, list):
         plotlist = [plotlist]
     figsize_horiz_contour = np.array((7.5, 4.5))*scale
-    figsize_vertical_contour = np.array((7.5, 1.81))*scale
+    figsize_vertical_contour = np.array((7.5, 2.0))*scale
     figsize_vertical_quiver = np.array((7.5, 2.5))*scale
     horiz_cbar_pad = 0.17
     vertical_cbar_pad = 0.02
@@ -352,7 +365,7 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
             d2Udz2[:,n] = fdiff.second_order_diff(dUdz[:,n], z)
         return {"dUdy" : dUdy, "ddy_upvp" : ddy_upvp, "d2Udy2" : d2Udy2,
                 "dUdz" : dUdz, "ddz_upwp" : ddz_upwp, "d2Udz2" : d2Udz2}
-    def plot_contours(quantity, values=None):
+    def plot_contours(quantity, values=None, levels=None):
         """Plot the contours of a specified quantity in a DataFrame."""
         global labels
         plt.figure(figsize=figsize_vertical_contour)
@@ -363,10 +376,11 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
             values /= (1.0**2)
         elif quantity in ["meanu", "meanv", "meanw"]:
             values /= 1.0
-        cs = plt.contourf(y_R, z_H, values, 20, cmap=plt.cm.coolwarm)
+        cs = plt.contourf(y_R, z_H, values, 20, cmap=plt.cm.coolwarm,
+                          levels=levels)
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$z/H$")
-        cb = plt.colorbar(cs, shrink=1.0, extend="both",
+        cb = plt.colorbar(cs, shrink=1.0, #extend="both",
                           orientation="vertical", pad=vertical_cbar_pad)
         cb.set_label(labels[quantity])
         turb_lines()
@@ -376,22 +390,6 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
         plt.tight_layout()
         if save:
             plt.savefig(savepath + "/" + quantity + "cont" + savetype)
-    if "meanucont" in plotlist or "all" in plotlist:
-        # Plot contours of mean streamwise velocity
-        plt.figure(figsize=figsize_horiz_contour)
-        cs = plt.contourf(y_R, z_H, meanu, 20, cmap=plt.cm.coolwarm)
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$z/H$")
-        styleplot()
-        cb = plt.colorbar(cs, shrink=1, extend="both",
-                          orientation="horizontal", pad=horiz_cbar_pad)
-        cb.set_label(r"$U/U_{\infty}$")
-        turb_lines()
-        ax = plt.axes()
-        ax.set_aspect(2)
-        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if save:
-            plt.savefig(savepath+"/meanucont"+savetype)
     if "v-wquiver" in plotlist or "all" in plotlist:
         # Make quiver plot of v and w velocities
         plt.figure(figsize=(10,5))
@@ -534,39 +532,15 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
         styleplot()
         if save:
             plt.savefig(savepath+"/uw_2tsrs"+savetype)
+    if "meanucont" in plotlist or "all" in plotlist:
+        # Plot contours of mean streamwise velocity
+        plot_contours("meanu")
     if "stducont" in plotlist or "all" in plotlist:
         # Plot contours of streamwise turbulence intensity
-        plt.figure(figsize=(10,5))
-        cs2 = plt.contourf(y_R, z_H, grdata["stdu"], 20)
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$z/H$")
-        styleplot()
-        cb2 = plt.colorbar(cs2, shrink=1, extend="both",
-                          orientation="horizontal", pad=0.3)
-        cb2.set_label(r"$\sigma_u/U_{\infty}$")
-        turb_lines()
-        ax = plt.axes()
-        ax.set_aspect(2)
-        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if save:
-            plt.savefig(savepath+"/stducont"+savetype)
+        plot_contours("stdu")
     if "uvcont" in plotlist or "all" in plotlist:
         # Plot contours of uv Reynolds stress
-        plt.figure(figsize=figsize_horiz_contour)
-        cs2 = plt.contourf(y_R, z_H, uv, 15, cmap=plt.cm.coolwarm)
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$z/H$")
-        cb2 = plt.colorbar(cs2, shrink=1, extend="both",
-                           orientation="horizontal", pad=horiz_cbar_pad)
-        cb2.set_label(r"$\overline{u^\prime v^\prime}/U_\infty^2$")
-        cb2.set_ticks(np.arange(-0.02, 0.025, 0.005), update_ticks=True)
-        turb_lines()
-        ax = plt.axes()
-        ax.set_aspect(2)
-        styleplot()
-        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if save:
-            plt.savefig(savepath+"/uvcont"+savetype)
+        plot_contours("meanupvp")
     if "stdv_2tsrs" in plotlist or "all" in plotlist:
         # Plot stdv velocities at two different TSRs
         plt.figure()
@@ -739,21 +713,7 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
             plt.savefig(savepath+"/vwcont"+savetype)
     if "uwcont" in plotlist or "all" in plotlist:
         # Plot contours of vw Reynolds stress
-        plt.figure(figsize=figsize_horiz_contour)
-        cs2 = plt.contourf(y_R, z_H, uw, 20, cmap=plt.cm.coolwarm)
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$z/H$")
-        cb2 = plt.colorbar(cs2, shrink=1, extend="both",
-                           orientation="horizontal", pad=horiz_cbar_pad)
-        cb2.set_label(r"$\overline{u^\prime w^\prime}/U_\infty^2$")
-#        cb2.set_ticks(np.linspace(-.015,.013,6), update_ticks=True)
-        turb_lines()
-        ax = plt.axes()
-        ax.set_aspect(2)
-        styleplot()
-        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if save:
-            plt.savefig(savepath+"/uwcont"+savetype)
+        plot_contours("meanupwp")
     if "vvcont" in plotlist or "all" in plotlist:
         # Plot contours of vv Reynolds stress
         plt.figure(figsize=(10,5))
@@ -824,107 +784,17 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
         if save:
             plt.savefig(savepath+"/vv_2tsrs"+savetype)
     if "fpeak_u" in plotlist or "all" in plotlist:
-        plt.figure(figsize=(10,5))
-        cs2 = plt.contourf(y_R, z_H, grdata["fpeak_u"], cmap=plt.cm.coolwarm,
-                           levels=np.linspace(0,10,21))
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$z/H$")
-        cb2 = plt.colorbar(cs2, shrink=1, extend="both",
-                           orientation="horizontal", pad=0.18)
-        cb2.set_label(r"$f_{\mathrm{peak}}/f_{\mathrm{turbine}}$")
-        cb2.set_ticks(np.linspace(0,10,11), update_ticks=True)
-        turb_lines()
-        ax = plt.axes()
-        ax.set_aspect(2)
-        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        styleplot()
-        if save:
-            plt.savefig(savepath+"/fpeak_u"+savetype)
+        plot_contours("fpeak_u", levels=np.linspace(0, 10, 21))
     if "fstrength_u" in plotlist or "all" in plotlist:
-        plt.figure(figsize=(10,5))
-        cs2 = plt.contourf(y_R, z_H, grdata["fstrength_u"], 20,
-                           cmap=plt.cm.coolwarm)
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$z/H$")
-        styleplot()
-        cb2 = plt.colorbar(cs2, shrink=1, extend="both",
-                           orientation="horizontal", pad=0.18)
-        cb2.set_label(r"$S_{\max}/\sigma^2_u$")
-        turb_lines()
-        ax = plt.axes()
-        ax.set_aspect(2)
-        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        styleplot()
-        if save:
-            plt.savefig(savepath+"/fstrength_u"+savetype)
+        plot_contours("fstrength_u")
     if "fpeak_v" in plotlist or "all" in plotlist:
-        plt.figure(figsize=figsize_horiz_contour)
-        cs2 = plt.contourf(y_R, z_H, grdata["fpeak_v"], cmap=plt.cm.coolwarm,
-                           levels=np.linspace(0,10,21))
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$z/H$")
-        cb2 = plt.colorbar(cs2, shrink=1, extend="both",
-                           orientation="horizontal", pad=horiz_cbar_pad)
-        cb2.set_label(r"$f_{\mathrm{peak}}/f_{\mathrm{turbine}}$")
-        cb2.set_ticks(np.linspace(0,10,11), update_ticks=True)
-        turb_lines()
-        ax = plt.axes()
-        ax.set_aspect(2)
-        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        styleplot()
-        if save:
-            plt.savefig(savepath+"/fpeak_v"+savetype)
+        plot_contours("fpeak_v", levels=np.linspace(0, 10, 21))
     if "fstrength_v" in plotlist or "all" in plotlist:
-        plt.figure(figsize=figsize_horiz_contour)
-        cs2 = plt.contourf(y_R, z_H, grdata["fstrength_v"], 20,
-                           cmap=plt.cm.coolwarm)
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$z/H$")
-        styleplot()
-        cb2 = plt.colorbar(cs2, shrink=1, extend="both",
-                           orientation="horizontal", pad=horiz_cbar_pad)
-        cb2.set_label(r"$\Psi$")
-        turb_lines()
-        ax = plt.axes()
-        ax.set_aspect(2)
-        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        styleplot()
-        if save:
-            plt.savefig(savepath+"/fstrength_v"+savetype)
+        plot_contours("fstrength_v")
     if "fpeak_w" in plotlist or "all" in plotlist:
-        plt.figure(figsize=(10,5))
-        cs2 = plt.contourf(y_R, z_H, grdata["fpeak_w"], cmap=plt.cm.coolwarm,
-                           levels=np.linspace(0,10,21))
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$z/H$")
-        cb2 = plt.colorbar(cs2, shrink=1, extend="both",
-                           orientation="horizontal", pad=0.18)
-        cb2.set_label(r"$f_{\mathrm{peak}}/f_{\mathrm{turbine}}$")
-        cb2.set_ticks(np.linspace(0,10,11), update_ticks=True)
-        turb_lines()
-        ax = plt.axes()
-        ax.set_aspect(2)
-        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        styleplot()
-        if save:
-            plt.savefig(savepath+"/fpeak_w"+savetype)
+        plot_contours("fpeak_w", levels=np.linspace(0, 10, 21))
     if "fstrength_w" in plotlist or "all" in plotlist:
-        plt.figure(figsize=(10,5))
-        cs2 = plt.contourf(y_R, z_H, grdata["fstrength_w"], 20,
-                           cmap=plt.cm.coolwarm)
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$z/H$")
-        styleplot()
-        cb2 = plt.colorbar(cs2, shrink=1, extend="both",
-                           orientation="horizontal", pad=0.18)
-        cb2.set_label(r"$S_{\max}/\sigma^2_w$")
-        turb_lines()
-        ax = plt.axes()
-        ax.set_aspect(2)
-        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        styleplot()
-        if save:
-            plt.savefig(savepath+"fstrength_w"+savetype)
+        plot_contours("fstrength_w")
     # Plot estimate for production of turbulence kinetic energy
     if "kprod" in plotlist or "all" in plotlist:
         kprod, meandiss = calc_kprod_meandiss()
@@ -971,21 +841,8 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
             plt.savefig(savepath+"/meankadv"+savetype)
     if "Kturbtrans" in plotlist or "all" in plotlist:
         tt, tty, ttz = calc_meankturbtrans()
-        plt.figure(figsize=figsize_horiz_contour)
-        cs = plt.contourf(y_R, z_H, tty, 20, cmap=plt.cm.coolwarm,
-                          levels=np.linspace(-0.08, 0.08, 21))
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$z/H$")
-        styleplot()
-        cb = plt.colorbar(cs, shrink=1, extend="both",
-                          orientation="horizontal", pad=horiz_cbar_pad)
-        cb.set_label(r"$-\frac{1}{2}\frac{\partial}{\partial x_j}\overline{u_i^\prime u_j^\prime} U_i$")
-        turb_lines()
-        ax = plt.axes()
-        ax.set_aspect(2)
-        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if save:
-            plt.savefig(savepath+"/Kturbtrans"+savetype)
+        plot_contours("Kturbtrans", values=tt,
+                      levels=np.linspace(-0.16, 0.16, 21))
 
     if "meancontquiv" in plotlist or "all" in plotlist:
         plt.figure(figsize=figsize_vertical_quiver)
