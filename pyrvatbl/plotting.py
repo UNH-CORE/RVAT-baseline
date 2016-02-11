@@ -9,7 +9,7 @@ from pxl.styleplot import set_sns, label_subplot
 
 labels = {"k": r"$k/U_\infty^2$",
           "xvorticity": r"$\Omega_x$",
-          "meanupup": r"$\overline{u^\prime u^\prime}/U_\infty^2$"
+          "meanupup": r"$\overline{u^\prime u^\prime}/U_\infty^2$",
           "meanupvp": r"$\overline{u^\prime v^\prime}/U_\infty^2$",
           "meanupwp": r"$\overline{u^\prime w^\prime}/U_\infty^2$",
           "meanvpvp": r"$\overline{v^\prime v^\prime}/U_\infty^2$",
@@ -394,6 +394,22 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
         plt.tight_layout()
         if save:
             plt.savefig(savepath + "/" + quantity + "cont" + savetype)
+    def plot_2tsrs(quantity, values=None):
+        """Plot specified quantity for TSR=1.9 and TSR=1.4."""
+        global labels
+        plt.figure()
+        runs = getruns(0.25, 1.9)
+        ind = [run-1 for run in runs]
+        plt.plot(y_R, df[quantity][ind], marker="o", label=r"$\lambda = 1.9$")
+        runs = getruns(0.25, 1.4)
+        ind = [run-1 for run in runs]
+        plt.plot(y_R, df[quantity][ind], marker="^", label=r"$\lambda=1.4$")
+        plt.xlabel(r"$y/R$")
+        plt.ylabel(labels[quantity])
+        plt.legend(loc="best")
+        plt.tight_layout()
+        if save:
+            plt.savefig(savepath + "/{}_2tsrs".format(quantity) + savetype)
     if "v-wquiver" in plotlist or "all" in plotlist:
         # Make quiver plot of v and w velocities
         plt.figure(figsize=(10,5))
@@ -420,50 +436,13 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
             plt.savefig(savepath+"/v-wquiver"+savetype)
     if "meanu_2tsrs" in plotlist or "all" in plotlist:
         # Plot mean velocities at two different TSRs
-        plt.figure()
-        runs = getruns(0.25, 1.9)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.meanu[ind], marker="o", label=r"$\lambda = 1.9$")
-        runs = getruns(0.25, 1.4)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.meanu[ind], marker="^", label=r"$\lambda=1.4$")
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$U/U_\infty$")
-        plt.legend(loc=4)
-        styleplot()
-        if save:
-            plt.savefig(savepath + "/meanu_2tsrs" + savetype)
+        plot_2tsrs("meanu")
     if "meanv_2tsrs" in plotlist or "all" in plotlist:
         # Plot mean cross stream velocity profiles at two TSRs
-        plt.figure()
-        runs = getruns(0.25, 1.9)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.meanv[ind], marker="o", label=r"$\lambda = 1.9$")
-        runs = getruns(0.25, 1.4)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.meanv[ind], marker="^", label=r"$\lambda=1.4$")
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$V/U_\infty$")
-        plt.ylim(-0.1501, 0.1001)
-        plt.legend(loc=4)
-        styleplot()
-        if save:
-            plt.savefig(savepath+"/meanv_2tsrs"+savetype)
+        plot_2tsrs("meanv")
     if "meanw_2tsrs" in plotlist or "all" in plotlist:
         # Plot mean vertical velocity profiles at two TSRs
-        plt.figure()
-        runs = getruns(0.25, 1.9)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.meanw[ind], marker="o", label=r"$\lambda = 1.9$")
-        runs = getruns(0.25, 1.4)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.meanw[ind], marker="^", label=r"$\lambda=1.4$")
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$W/U_\infty$")
-        plt.legend(loc=4)
-        styleplot()
-        if save:
-            plt.savefig(savepath + "/meanw_2tsrs" + savetype)
+        plot_2tsrs("meanw")
     if "meanvel_vs_tsr" in plotlist or "all" in plotlist:
         # Plot mean velocity components vs TSR
         tsr = df.tsr.values
@@ -487,55 +466,13 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
             plt.savefig(savepath + "/mean_vel_vs_tsr" + savetype)
     if "k_2tsrs" in plotlist or "all" in plotlist:
         # Plot mean velocities at two different TSRs
-        plt.figure()
-        runs = getruns(z_H=0.25, tsr=1.9)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.k[ind], marker="o", label=r"$\lambda = 1.9$")
-        runs = getruns(z_H=0.25, tsr=1.4)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.k[ind], marker="^", label=r"$\lambda=1.4$")
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$k/U_\infty^2$")
-        plt.legend(loc="upper right")
-        styleplot()
-        if save:
-            plt.savefig(savepath + "/k_2tsrs" + savetype)
+        plot_2tsrs("k")
     if "stdu_2tsrs" in plotlist or "all" in plotlist:
         # Plot stdu velocities at two different TSRs
-        plt.figure()
-        runs = getruns(0.25, 1.9)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.stdu[ind], "-ok", markerfacecolor="none",
-                 label=r"$\lambda = 1.9$")
-        plt.hold(True)
-        runs = getruns(0.25, 1.4)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.stdu[ind], "--^k", markerfacecolor="none",
-                 label=r"$\lambda=1.4$")
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$\sigma_u/U_\infty$")
-        plt.legend(loc=1)
-        styleplot()
-        if save:
-            plt.savefig(savepath+"/stdu_2tsrs"+savetype)
+        plot_2tsrs("stdu")
     if "uw_2tsrs" in plotlist or "all" in plotlist:
         # Plot uw Re stress at two different TSRs
-        plt.figure()
-        runs = getruns(0.25, 1.9)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.meanupwp[ind], "-ok", markerfacecolor="none",
-                 label=r"$\lambda = 1.9$")
-        plt.hold(True)
-        runs = getruns(0.25, 1.4)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.meanupwp[ind], "--^k", markerfacecolor="none",
-                 label=r"$\lambda=1.4$")
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$\overline{u'w'}$")
-        plt.legend(loc=4)
-        styleplot()
-        if save:
-            plt.savefig(savepath+"/uw_2tsrs"+savetype)
+        plot_2tsrs("meanupwp")
     if "meanucont" in plotlist or "all" in plotlist:
         # Plot contours of mean streamwise velocity
         plot_contours("meanu")
@@ -547,58 +484,13 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
         plot_contours("meanupvp")
     if "stdv_2tsrs" in plotlist or "all" in plotlist:
         # Plot stdv velocities at two different TSRs
-        plt.figure()
-        runs = getruns(0.25, 1.9)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.stdv[ind], "-ok", markerfacecolor="none",
-                 label=r"$\lambda = 1.9$")
-        plt.hold(True)
-        runs = getruns(0.25, 1.4)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.stdv[ind], "--^k", markerfacecolor="none",
-                 label=r"$\lambda=1.4$")
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$\sigma_v/U_\infty$")
-        plt.legend(loc=1)
-        styleplot()
-        if save:
-            plt.savefig(savepath+"/stdv_2tsrs"+savetype)
+        plot_2tsrs("stdv")
     if "stdw_2tsrs" in plotlist or "all" in plotlist:
         # Plot stdw velocities at two different TSRs
-        plt.figure()
-        runs = getruns(0.25, 1.9)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.stdw[ind], "-ok", markerfacecolor="none",
-                 label=r"$\lambda = 1.9$")
-        plt.hold(True)
-        runs = getruns(0.25, 1.4)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.stdw[ind], "--^k", markerfacecolor="none",
-                 label=r"$\lambda=1.4$")
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$\sigma_w/U_\infty$")
-        plt.legend(loc=1)
-        styleplot()
-        if save:
-            plt.savefig(savepath+"/stdw_2tsrs"+savetype)
+        plot_2tsrs("stdw")
     if "uv_2tsrs" in plotlist or "all" in plotlist:
         # Plot uv Re stress at two different TSRs
-        plt.figure()
-        runs = getruns(0.25, 1.9)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.meanupvp[ind], "-ok", markerfacecolor="none",
-                 label=r"$\lambda = 1.9$")
-        plt.hold(True)
-        runs = getruns(0.25, 1.4)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.meanupvp[ind], "--^k", markerfacecolor="none",
-                 label=r"$\lambda=1.4$")
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$\overline{u'v'}$")
-        plt.legend()
-        styleplot()
-        if save:
-            plt.savefig(savepath+"/uv_2tsrs"+savetype)
+        plot_2tsrs("meanupvp")
     if "kcont" in plotlist or "all" in plotlist:
         # Plot contours of k
         plot_contours("k")
@@ -619,22 +511,7 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
         plot_contours("stdw")
     if "vw_2tsrs" in plotlist or "all" in plotlist:
         # Plot vw Re stress at two different TSRs
-        plt.figure()
-        runs = getruns(0.25, 1.9)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.meanvpwp[ind], "-ok", markerfacecolor="none",
-                 label=r"$\lambda = 1.9$")
-        plt.hold(True)
-        runs = getruns(0.25, 1.4)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.meanvpwp[ind], "--^k", markerfacecolor="none",
-                 label=r"$\lambda=1.4$")
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$\overline{v'w'}$")
-        plt.legend(loc=4)
-        styleplot()
-        if save:
-            plt.savefig(savepath+"/vw_2tsrs"+savetype)
+        plot_2tsrs("meanvpwp")
     if "vwcont" in plotlist or "all" in plotlist:
         # Plot contours of vw Reynolds stress
         plot_contours("meanvpwp")
@@ -652,22 +529,7 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
         plot_contours("meanupup")
     if "vv_2tsrs" in plotlist or "all" in plotlist:
         # Plot vw Re stress at two different TSRs
-        plt.figure()
-        runs = getruns(0.25, 1.9)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.meanvpvp[ind], "-ok", markerfacecolor="none",
-                 label=r"$\lambda = 1.9$")
-        plt.hold(True)
-        runs = getruns(0.25, 1.4)
-        ind = [run-1 for run in runs]
-        plt.plot(y_R, df.meanvpvp[ind], "--^k", markerfacecolor="none",
-                 label=r"$\lambda=1.4$")
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$\overline{v^\prime v^\prime}$")
-        plt.legend()
-        styleplot()
-        if save:
-            plt.savefig(savepath+"/vv_2tsrs"+savetype)
+        plot_2tsrs("meanvpvp")
     if "fpeak_u" in plotlist or "all" in plotlist:
         plot_contours("fpeak_u", levels=np.linspace(0, 10, 21))
     if "fstrength_u" in plotlist or "all" in plotlist:
@@ -715,7 +577,6 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
         tt, tty, ttz = calc_meankturbtrans()
         plot_contours("Kturbtrans", values=tt,
                       levels=np.linspace(-0.16, 0.16, 21))
-
     if "meancontquiv" in plotlist or "all" in plotlist:
         plt.figure(figsize=figsize_vertical_quiver)
         # Add contours of mean velocity
