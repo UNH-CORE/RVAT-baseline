@@ -9,8 +9,11 @@ from pxl.styleplot import set_sns, label_subplot
 
 labels = {"k": r"$k/U_\infty^2$",
           "xvorticity": r"$\Omega_x$",
+          "meanupup": r"$\overline{u^\prime u^\prime}/U_\infty^2$"
           "meanupvp": r"$\overline{u^\prime v^\prime}/U_\infty^2$",
           "meanupwp": r"$\overline{u^\prime w^\prime}/U_\infty^2$",
+          "meanvpvp": r"$\overline{v^\prime v^\prime}/U_\infty^2$",
+          "meanwpwp": r"$\overline{w^\prime w^\prime}/U_\infty^2$",
           "meanu": r"$U/U_\infty$",
           "meanv": r"$V/U_\infty$",
           "meanw": r"$W/U_\infty$",
@@ -21,7 +24,8 @@ labels = {"k": r"$k/U_\infty^2$",
           "fpeak_w": r"$f_{\mathrm{peak},w}/f_{\mathrm{turbine}}$",
           "fstrength_u": r"$\Psi_u$",
           "fstrength_v": r"$\Psi_v$",
-          "fstrength_w": r"$\Psi_w$"}
+          "fstrength_w": r"$\Psi_w$",
+          "kprod": r"$-\overline{u_i' u_j'}\frac{\partial U_i}{\partial x_j}$"}
 
 
 def setpltparams(seaborn=True, fontsize=18, latex=True):
@@ -600,82 +604,19 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
         plot_contours("k")
     if "meankcont" in plotlist or "all" in plotlist:
         # Plot contours of k
-        plt.figure(figsize=(10,5))
-        cs = plt.contourf(y_R, z_H, grdata["meank"]/(0.5*1**2), 20,
-                          cmap=plt.cm.coolwarm)
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$z/H$")
-        cb = plt.colorbar(cs, shrink=1, extend="both",
-                          orientation="horizontal", pad=0.18)
-        cb.set_label(r"$K/\frac{1}{2}U_\infty^2$")
-        turb_lines()
-        ax = plt.axes()
-        ax.set_aspect(2)
-        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        styleplot()
-        if save:
-            plt.savefig(savepath+"/meankcont"+savetype)
+        plot_contours("meank")
     if "meanvcont" in plotlist or "all" in plotlist:
         # Plot contours of meanv
-        plt.figure(figsize=(10,5))
-        cmv = plt.contourf(y_R, z_H, meanv, 20)
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$z/H$")
-        styleplot()
-        cbmv = plt.colorbar(cmv, shrink=1, extend="both",
-                          orientation="horizontal", pad=0.18)
-        cbmv.set_label(r"$\overline{v}/U_{\infty}$")
-        turb_lines()
-        ax = plt.axes()
-        ax.set_aspect(2)
-        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if save:
-            plt.savefig(savepath+"/meanvcont"+savetype)
+        plot_contours("meanv")
     if "stdvcont" in plotlist or "all" in plotlist:
         # Plot contours of stdv
-        plt.figure(figsize=(10,5))
-        cs = plt.contourf(y_R, z_H, grdata["stdv"], 20)
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$z/H$")
-        styleplot()
-        cb = plt.colorbar(cs, shrink=1, extend="both",
-                          orientation="horizontal", pad=0.18)
-        cb.set_label(r"$\sigma_v/U_{\infty}$")
-        turb_lines()
-        ax = plt.axes()
-        ax.set_aspect(2)
-        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if save:
-            plt.savefig(savepath+"/stdvcont"+savetype)
+        plot_contours("stdv")
     if "meanwcont" in plotlist or "all" in plotlist:
         # Plot contours of meanw
-        plt.figure(figsize=(10,5))
-        cmv = plt.contourf(y_R, z_H, meanw, 20)
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$z/H$")
-        styleplot()
-        cbmv = plt.colorbar(cmv, shrink=1, extend="both",
-                          orientation="horizontal", pad=0.18)
-        cbmv.set_label(r"$\overline{w}/U_{\infty}$")
-        turb_lines()
-        if save:
-            plt.savefig(savepath+"/meanwcont"+savetype)
+        plot_contours("meanw")
     if "stdwcont" in plotlist or "all" in plotlist:
         # Plot contours of stdw
-        plt.figure(figsize=(10,5))
-        cmv = plt.contourf(y_R, z_H, grdata["stdw"], 20)
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$z/H$")
-        styleplot()
-        cbmv = plt.colorbar(cmv, shrink=1, extend="both",
-                          orientation="horizontal", pad=0.18)
-        cbmv.set_label(r"$\sigma_w/U_{\infty}$")
-        turb_lines()
-        ax = plt.axes()
-        ax.set_aspect(2)
-        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if save:
-            plt.savefig(savepath+"/stdwcont"+savetype)
+        plot_contours("stdw")
     if "vw_2tsrs" in plotlist or "all" in plotlist:
         # Plot vw Re stress at two different TSRs
         plt.figure()
@@ -696,75 +637,19 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
             plt.savefig(savepath+"/vw_2tsrs"+savetype)
     if "vwcont" in plotlist or "all" in plotlist:
         # Plot contours of vw Reynolds stress
-        plt.figure(figsize=(10,5))
-        cs2 = plt.contourf(y_R, z_H, vw, 20, cmap=plt.cm.coolwarm)
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$z/H$")
-        cb2 = plt.colorbar(cs2, shrink=1, extend="both",
-                           orientation="horizontal", pad=0.3)
-        cb2.set_label(r"$\overline{v^\prime w^\prime}/U_\infty^2$")
-        cb2.set_ticks(np.linspace(-.008,.006,6), update_ticks=True)
-        turb_lines()
-        ax = plt.axes()
-        ax.set_aspect(2)
-        styleplot()
-        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if save:
-            plt.savefig(savepath+"/vwcont"+savetype)
+        plot_contours("meanvpwp")
     if "uwcont" in plotlist or "all" in plotlist:
         # Plot contours of vw Reynolds stress
         plot_contours("meanupwp")
     if "vvcont" in plotlist or "all" in plotlist:
         # Plot contours of vv Reynolds stress
-        plt.figure(figsize=(10,5))
-        cs2 = plt.contourf(y_R, z_H, vv, 20)
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$z/H$")
-        styleplot()
-        cb2 = plt.colorbar(cs2, shrink=1, extend="both",
-                          orientation="horizontal", pad=0.18)
-        cb2.set_label(r"$\overline{v^\prime v^\prime}$")
-#        cb2.set_ticks(np.linspace(-.015,.013,6), update_ticks=True)
-        turb_lines()
-        ax = plt.axes()
-        ax.set_aspect(2)
-        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if save:
-            plt.savefig(savepath+"/vvcont"+savetype)
+        plot_contours("meanvpvp")
     if "wwcont" in plotlist or "all" in plotlist:
-        # Plot contours of vv Reynolds stress
-        plt.figure(figsize=(10,5))
-        cs2 = plt.contourf(y_R, z_H, ww, 20)
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$z/H$")
-        styleplot()
-        cb2 = plt.colorbar(cs2, shrink=1, extend="both",
-                          orientation="horizontal", pad=0.18)
-        cb2.set_label(r"$\overline{w^\prime w^\prime}$")
-#        cb2.set_ticks(np.linspace(-.015,.013,6), update_ticks=True)
-        turb_lines()
-        ax = plt.axes()
-        ax.set_aspect(2)
-        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if save:
-            plt.savefig(savepath+"/wwcont"+savetype)
+        # Plot contours of ww Reynolds stress
+        plot_contours("meanwpwp")
     if "uucont" in plotlist or "all" in plotlist:
         # Plot contours of uu Reynolds stress
-        plt.figure(figsize=(10,5))
-        cs2 = plt.contourf(y_R, z_H, grdata.meanupup, 20)
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$z/H$")
-        styleplot()
-        cb2 = plt.colorbar(cs2, shrink=1, extend="both",
-                           orientation="horizontal", pad=0.18)
-        cb2.set_label(r"$\overline{u^\prime u^\prime}$")
-        cb2.set_ticks(np.linspace(0,.108,6), update_ticks=True)
-        turb_lines()
-        ax = plt.axes()
-        ax.set_aspect(2)
-        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if save:
-            plt.savefig(savepath+"/uucont"+savetype)
+        plot_contours("meanupup")
     if "vv_2tsrs" in plotlist or "all" in plotlist:
         # Plot vw Re stress at two different TSRs
         plt.figure()
@@ -798,20 +683,7 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
     # Plot estimate for production of turbulence kinetic energy
     if "kprod" in plotlist or "all" in plotlist:
         kprod, meandiss = calc_kprod_meandiss()
-        plt.figure(figsize=(10,5))
-        cs = plt.contourf(y_R, z_H, kprod, 20, cmap=plt.cm.coolwarm)
-        plt.xlabel(r"$y/R$")
-        plt.ylabel(r"$z/H$")
-        cb = plt.colorbar(cs, shrink=1, extend="both",
-                          orientation="horizontal", pad=0.18)
-        cb.set_label(r"$-\overline{u_i' u_j'}\frac{\partial U_i}{\partial x_j}$")
-        turb_lines()
-        ax = plt.axes()
-        ax.set_aspect(2)
-        styleplot()
-        plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
-        if save:
-            plt.savefig(savepath+"/kprod"+savetype)
+        plot_contours("kprod", values=kprod)
     if "meankadv" in plotlist or "all" in plotlist:
         dKdy, dKdz = calc_meankgrad()
         # Make quiver plot of K advection
@@ -873,7 +745,6 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
         styleplot()
         if save:
             plt.savefig(savepath+"/meancontquiv"+savetype)
-
     if "xvorticity" in plotlist or "all" in plotlist:
         # First calculate vorticity and add to grdata DataFrame
         z = 1.0*z_H
@@ -886,7 +757,6 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
             dVdz[:,n] = fdiff.second_order_diff(meanv.iloc[:,n], z)
         xvorticity = dWdy - dVdz
         plot_contours("xvorticity", values=xvorticity)
-
     if "Kbargraphs" in plotlist or "all" in plotlist:
         """Make a bar graph of terms contributing to dK/dx:
           * Cross-stream advection
@@ -931,7 +801,6 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
             plt.ylim((-0.2, 0.2))
         styleplot()
         plt.grid(False)
-
     if "Kbargraph" in plotlist or "all" in plotlist:
         """Make a bar graph of terms contributing to dK/dx:
           * Cross-stream advection
@@ -967,7 +836,6 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
                   2*np.sum(quantities)/(0.5*U**2)/D*100)
         if save:
             plt.savefig(savepath+"/Kbargraph"+savetype)
-
     if "mombargraph" in plotlist or "all" in plotlist:
         """Make a bar graph of terms contributing to dU/dx:
           * Cross-stream advection
