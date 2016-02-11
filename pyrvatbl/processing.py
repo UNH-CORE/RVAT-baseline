@@ -171,7 +171,7 @@ def batchperf(t1=13, t2_guess=30):
                   "phase_cd", "amp_ct", "phase_ct"]
     for q in quantities:
         if not q in df:
-            df[q] = np.zeros(len(runs))
+            df[q] = np.zeros(len(runs))*np.nan
     for n in range(len(runs)):
         print("Processing performance data from run", runs[n], "of", \
         str(np.max(runs))+"...")
@@ -194,12 +194,16 @@ def batchperf(t1=13, t2_guess=30):
         ct_seg = ct_s[2000*t1:2000*t2]
         tsr_seg = tsr_s[2000*t1:2000*t2]
         angle_seg = np.deg2rad(angle[2000*t1:2000*t2])
-        df.amp_tsr[n], df.phase_tsr[n] = find_amp_phase(angle_seg, tsr_seg)
-        df.amp_cp[n], df.phase_cp[n] = find_amp_phase(angle_seg, cp_seg)
-        df.amp_cd[n], df.phase_cd[n] = find_amp_phase(angle_seg, cd_seg)
-        df.amp_ct[n], df.phase_ct[n] = find_amp_phase(angle_seg, ct_seg)
+        df.amp_tsr[n], df.phase_tsr[n] = find_amp_phase(angle_seg, tsr_seg,
+                min_phase=np.deg2rad(10))
+        df.amp_cp[n], df.phase_cp[n] = find_amp_phase(angle_seg, cp_seg,
+                min_phase=np.deg2rad(10))
+        df.amp_cd[n], df.phase_cd[n] = find_amp_phase(angle_seg, cd_seg,
+                min_phase=np.deg2rad(10))
+        df.amp_ct[n], df.phase_ct[n] = find_amp_phase(angle_seg, ct_seg,
+                min_phase=np.deg2rad(10))
     # Save to CSV
-    df.to_csv("Data/Processed/processed.csv", index=False)
+    df.to_csv("Data/Processed/processed.csv", index=False, na_rep="NaN")
 
 
 def getruns(z_H=0.0, tsr=1.9):
