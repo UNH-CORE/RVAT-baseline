@@ -214,7 +214,7 @@ def plotmultispec(save=False, savepath="Figures", savetype=".pdf",
     plt.annotate(r"$f^{-5/3}$", xy=(12, 1.5e-2), fontsize="small")
     plt.tight_layout()
     if save:
-        plt.savefig(savepath + "/multispec" + savetype)
+        plt.savefig(savepath + "/multispec" + savetype, bbox_inches="tight")
 
 
 def plot_vertical_lines(xlist, ymaxscale=1, color="gray"):
