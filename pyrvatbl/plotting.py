@@ -199,19 +199,19 @@ def plotmultispec(save=False, savepath="Figures", savetype=".pdf",
     plt.subplot(1, 3, 1)
     plotperfspec(y_R=-1, z_H=0.25, tsr=1.9, newfig=False, verbose=verbose,
                  n_band_average=n_band_average, plot_conf_int=plot_conf_int)
-    plt.title("(a)")
+    label_subplot(text="(a)", y=-0.4)
     plt.subplot(1, 3, 2)
     plotvelspec(y_R=-1, z_H=0.25, tsr=1.9, newfig=False, verbose=verbose,
                 n_band_average=n_band_average, plot_conf_int=plot_conf_int)
-    plt.title("(b)")
+    label_subplot(text="(b)", y=-0.4)
     plt.ylabel("")
-    plt.annotate(r"$f^{-5/3}$", xy=(12, 1.5e-2), fontsize=12)
+    plt.annotate(r"$f^{-5/3}$", xy=(12, 1.5e-2), fontsize="small")
     plt.subplot(1, 3, 3)
     plotvelspec(y_R=1.5, z_H=0.25, tsr=1.9, newfig=False, verbose=verbose,
                 n_band_average=n_band_average, plot_conf_int=plot_conf_int)
-    plt.title("(c)")
+    label_subplot(text="(c)", y=-0.4)
     plt.ylabel("")
-    plt.annotate(r"$f^{-5/3}$", xy=(12, 1.5e-2), fontsize=12)
+    plt.annotate(r"$f^{-5/3}$", xy=(12, 1.5e-2), fontsize="small")
     plt.tight_layout()
     if save:
         plt.savefig(savepath + "/multispec" + savetype)
