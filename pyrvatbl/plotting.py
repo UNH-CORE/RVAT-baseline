@@ -493,7 +493,7 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
         plot_2tsrs("meanupvp")
     if "kcont" in plotlist or "all" in plotlist:
         # Plot contours of k
-        plot_contours("k")
+        plot_contours("k", levels=np.linspace(0, 0.09, num=19))
     if "meankcont" in plotlist or "all" in plotlist:
         # Plot contours of k
         plot_contours("meank")
