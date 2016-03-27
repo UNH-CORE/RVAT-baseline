@@ -298,10 +298,11 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
     meanu, meanv, meanw = grdata["meanu"], grdata["meanv"], grdata["meanw"]
     uv, vv, vw = grdata["meanupvp"], grdata["meanvpvp"], grdata["meanvpwp"]
     uw, ww = grdata["meanupwp"], grdata["meanwpwp"]
-    def turb_lines():
-        plt.hlines(0.5, -1, 1, linestyles="solid", linewidth=2)
-        plt.vlines(-1, 0, 0.5, linestyles="solid", linewidth=2)
-        plt.vlines(1, 0, 0.5, linestyles="solid", linewidth=2)
+    def turb_lines(color="gray"):
+        plt.hlines(0.5, -1, 1, linestyles="solid", color=color, linewidth=2)
+        plt.hlines(-0.5, -1, 1, linestyles="solid", color=color, linewidth=2)
+        plt.vlines(-1, -0.5, 0.5, linestyles="solid", color=color, linewidth=2)
+        plt.vlines(1, -0.5, 0.5, linestyles="solid", color=color, linewidth=2)
     def calc_meankturbtrans():
         ddy_uvU = np.zeros(grdims)
         ddz_uwU = np.zeros(grdims)
@@ -387,9 +388,10 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
         cb = plt.colorbar(cs, shrink=1.0, #extend="both",
                           orientation="vertical", pad=vertical_cbar_pad)
         cb.set_label(labels[quantity])
-        turb_lines()
-        ax = plt.axes()
+        ax = plt.gca()
         ax.set_aspect(2)
+        turb_lines(color="black")
+        plt.ylim((0, 0.63))
         plt.yticks([0, 0.13, 0.25, 0.38, 0.5, 0.63])
         plt.tight_layout()
         if save:
@@ -589,17 +591,12 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
                        edgecolor="none")
         plt.xlabel(r"$y/R$")
         plt.ylabel(r"$z/H$")
+        turb_lines(color="gray")
         plt.ylim(-0.2, 0.78)
         plt.xlim(-3.2, 3.2)
         plt.quiverkey(q, 0.75, 0.08, 0.1, r"$0.1 U_\infty$",
                       labelpos="E", coordinates="figure",
                       fontproperties={"size": "small"})
-        plt.hlines(0.5, -1, 1, linestyles="solid", colors="gray",
-                   linewidth=3)
-        plt.vlines(-1, -0.2, 0.5, linestyles="solid", colors="gray",
-                   linewidth=3)
-        plt.vlines(1, -0.2, 0.5, linestyles="solid", colors="gray",
-                   linewidth=3)
         ax = plt.axes()
         ax.set_aspect(2)
         plt.yticks([0,0.13,0.25,0.38,0.5,0.63])
