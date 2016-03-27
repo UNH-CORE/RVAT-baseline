@@ -594,7 +594,7 @@ def plotwake(plotlist, scale=1, save=False, savepath="Figures",
         turb_lines(color="gray")
         plt.ylim(-0.2, 0.78)
         plt.xlim(-3.2, 3.2)
-        plt.quiverkey(q, 0.75, 0.08, 0.1, r"$0.1 U_\infty$",
+        plt.quiverkey(q, 0.65, 0.08, 0.1, r"$0.1 U_\infty$",
                       labelpos="E", coordinates="figure",
                       fontproperties={"size": "small"})
         ax = plt.axes()
